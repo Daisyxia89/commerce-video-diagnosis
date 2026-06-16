@@ -1,0 +1,55 @@
+{
+  "runtime": {
+    "source_platform": "抖音",
+    "trace_artifacts": true,
+    "enable_real_ocr_feedback": true,
+    "ocr_feedback_top_k": 4,
+    "provider_fallback_mode": "force_off"
+  },
+  "local_tools": {
+    "workspace_dir": "output/raw_video_regression/runtime"
+  },
+  "input": {
+    "video_path": "output/raw_video_regression/clip_8s.mp4",
+    "video_id": "raw-video-regression-8s",
+    "source_product_id": "3811830677083652287",
+    "request_id": "REQ_RAW_VIDEO_REGRESSION_8S"
+  },
+  "providers": {
+    "vlm": {
+      "enabled": true,
+      "provider": "openai_compatible_vlm",
+      "adapter": "openai_chat_vision_json",
+      "endpoint": "https://example.com/v1/chat/completions",
+      "api_key": "demo-key",
+      "model": "gpt-4o-mini",
+      "timeout_sec": 180,
+      "required": true
+    },
+    "asr": {
+      "enabled": true,
+      "provider": "openai_compatible_asr",
+      "adapter": "openai_audio_transcription",
+      "endpoint": "https://example.com/v1/audio/transcriptions",
+      "api_key": "demo-key",
+      "model": "whisper-1",
+      "timeout_sec": 180,
+      "required": true
+    },
+    "ocr": {
+      "enabled": true,
+      "provider": "openai_compatible_ocr",
+      "adapter": "openai_chat_vision_json",
+      "endpoint": "https://example.com/v1/chat/completions",
+      "api_key": "demo-key",
+      "model": "gpt-4o-mini",
+      "timeout_sec": 180,
+      "required": true
+    }
+  },
+  "output": {
+    "factpack_path": "output/raw_video_regression/factpack.json",
+    "request_path": "output/raw_video_regression/request.json",
+    "result_path": "output/raw_video_regression/result.json"
+  }
+}

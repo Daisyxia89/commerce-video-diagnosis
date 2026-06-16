@@ -1,0 +1,288 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/commerce-video-diagnosis/schema/output.schema.json",
+  "title": "commerce-video-diagnosis Output",
+  "description": "Unified response schema for commerce-video-diagnosis. diagnosis is always required. Developer-facing layers are optional and controlled by options.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["diagnosis"],
+  "properties": {
+    "diagnosis": { "$ref": "#/definitions/diagnosis" },
+    "blueprint": { "$ref": "#/definitions/blueprint" },
+    "fact_pack": { "$ref": "#/definitions/factPack" },
+    "workflow_report": { "$ref": "#/definitions/workflowReport" },
+    "provenance_report": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/provenanceItem" }
+    },
+    "trace": { "$ref": "#/definitions/trace" }
+  },
+  "definitions": {
+    "hecLabelCode": {
+      "type": "string",
+      "pattern": "^[HEC][0-9]+$",
+      "description": "HEC label code such as H1-H7, E0-E7, or C1-C5."
+    },
+    "scoreInterpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "interpretation"],
+      "properties": {
+        "score": {
+          "type": "number"
+        },
+        "interpretation": {
+          "type": "string"
+        }
+      }
+    },
+    "diagnosis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "video_summary",
+        "primary_hec",
+        "secondary_effects",
+        "persuasion_chain",
+        "signal_scores",
+        "segment_summary",
+        "risk_notes",
+        "product_diagnosis"
+      ],
+      "properties": {
+        "video_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["platform", "duration_sec", "segment_count", "bundle_count"],
+          "properties": {
+            "platform": { "type": "string" },
+            "duration_sec": { "type": "number", "minimum": 0 },
+            "segment_count": { "type": "integer", "minimum": 0 },
+            "bundle_count": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "primary_hec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "hook_label",
+            "hook_label_name",
+            "effect_label",
+            "effect_label_name",
+            "cta_label",
+            "cta_label_name",
+            "reason"
+          ],
+          "properties": {
+            "hook_label": {
+              "type": "string",
+              "enum": ["H1", "H2", "H3", "H4", "H5", "H6", "H7"]
+            },
+            "hook_label_name": {
+              "type": "string",
+              "enum": ["痛点/焦虑直击", "利益/价格前置", "反差结果前置", "即时操作展示", "反常识与悬念", "场景/人群代入", "明星/权威同款"]
+            },
+            "effect_label": {
+              "type": "string",
+              "enum": ["E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7"]
+            },
+            "effect_label_name": {
+              "type": "string",
+              "enum": ["单点演示", "效果测评", "暴力实测", "对比/拉踩", "感官实证", "保姆级教程", "成分/参数科普", "产地溯源/工厂实录"]
+            },
+            "cta_label": {
+              "type": "string",
+              "enum": ["C1", "C2", "C3", "C4", "C5"]
+            },
+            "cta_label_name": {
+              "type": "string",
+              "enum": ["利益/价格逼单", "福利/保障机制", "指令行动", "人群/场景总结", "效果留白/情绪定格"]
+            },
+            "reason": { "type": "string" }
+          }
+        },
+        "secondary_effects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["effect_label", "effect_label_name", "reason"],
+            "properties": {
+              "effect_label": {
+                "type": "string",
+                "enum": ["E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7"]
+              },
+              "effect_label_name": {
+                "type": "string",
+                "enum": ["单点演示", "效果测评", "暴力实测", "对比/拉踩", "感官实证", "保姆级教程", "成分/参数科普", "产地溯源/工厂实录"]
+              },
+              "reason": { "type": "string" }
+            }
+          }
+        },
+        "persuasion_chain": {
+          "type": "string"
+        },
+        "signal_scores": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["visual", "audio", "proof", "cta"],
+          "properties": {
+            "visual": { "$ref": "#/definitions/scoreInterpretation" },
+            "audio": { "$ref": "#/definitions/scoreInterpretation" },
+            "proof": { "$ref": "#/definitions/scoreInterpretation" },
+            "cta": { "$ref": "#/definitions/scoreInterpretation" }
+          }
+        },
+        "segment_summary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "segment_id",
+              "start_sec",
+              "end_sec",
+              "hec_tag",
+              "hec_tag_name",
+              "persuasion_function",
+              "asr_summary"
+            ],
+            "properties": {
+              "segment_id": { "type": "string" },
+              "start_sec": { "type": "number", "minimum": 0 },
+              "end_sec": { "type": "number", "minimum": 0 },
+              "hec_tag": { "$ref": "#/definitions/hecLabelCode" },
+              "hec_tag_name": { "type": "string" },
+              "persuasion_function": { "type": "string" },
+              "asr_summary": { "type": "string" }
+            }
+          }
+        },
+        "risk_notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "product_diagnosis": {
+          "$ref": "product-diagnosis.schema.json",
+          "description": "Module 3 output layer for Module 4 consumption. candidate_set is mandatory inside product_diagnosis and must follow the 7-field CandidateSet contract. Intermediate intent variables such as category_strategy_intent, product_strategy_intent, intent_coordinates, and modifiers are forbidden and must not appear in the final output."
+        }
+      }
+    },
+    "blueprint": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "blueprint_id",
+        "video_id",
+        "primary_hec",
+        "secondary_effects",
+        "slider_signature",
+        "storyboard_source",
+        "semantic_bundles",
+        "segment_to_bundle_map",
+        "bundle_to_segment_range",
+        "storyboard_segments"
+      ],
+      "properties": {
+        "blueprint_id": { "type": "string" },
+        "video_id": { "type": "string" },
+        "primary_hec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hook_label", "effect_label", "cta_label"],
+          "properties": {
+            "hook_label": { "type": "string" },
+            "effect_label": { "type": "string" },
+            "cta_label": { "type": "string" }
+          }
+        },
+        "secondary_effects": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "slider_signature": { "type": "object" },
+        "storyboard_source": { "type": "string" },
+        "semantic_bundles": { "type": "array" },
+        "segment_to_bundle_map": { "type": "object" },
+        "bundle_to_segment_range": { "type": "object" },
+        "storyboard_segments": { "type": "array" }
+      }
+    },
+    "factPack": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["video_meta", "segments"],
+      "properties": {
+        "video_meta": { "type": "object" },
+        "segments": { "type": "array" }
+      },
+      "description": "Returned fact_pack should follow the same protocol as input fact_pack."
+    },
+    "workflowReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow_version", "request_id", "video_id", "blueprint_id", "gate_checks", "stage_sequence"],
+      "properties": {
+        "workflow_version": { "type": "string" },
+        "request_id": { "type": "string" },
+        "video_id": { "type": "string" },
+        "blueprint_id": { "type": "string" },
+        "gate_checks": { "type": "array" },
+        "stage_sequence": { "type": "array" }
+      }
+    },
+    "provenanceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_path", "producer_type", "source_type", "source_refs"],
+      "properties": {
+        "field_path": { "type": "string" },
+        "producer_type": { "type": "string" },
+        "source_type": { "type": "string" },
+        "source_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "trace": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "provider_resolution_trace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["environment_mode", "fallback_protocol_mode", "asr", "vlm", "ocr"],
+          "properties": {
+            "environment_mode": {
+              "type": "string"
+            },
+            "fallback_protocol_mode": {
+              "type": "string",
+              "enum": ["auto", "force_on", "force_off"],
+              "description": "Mirror of runtime.provider_fallback_mode. force_off is the default in the public repository; auto and force_on are reserved protocol values and do not activate any built-in fallback implementation."
+            },
+            "asr": { "$ref": "#/definitions/providerResolutionNode" },
+            "vlm": { "$ref": "#/definitions/providerResolutionNode" },
+            "ocr": { "$ref": "#/definitions/providerResolutionNode" }
+          }
+        }
+      }
+    },
+    "providerResolutionNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_provider_mode", "provider_name", "fallback_used", "fallback_reason"],
+      "properties": {
+        "selected_provider_mode": {
+          "type": "string",
+          "enum": ["disabled", "fixture", "byok", "error", "fallback_stub"]
+        },
+        "provider_name": { "type": "string" },
+        "fallback_used": { "type": "boolean" },
+        "fallback_reason": { "type": "string" }
+      }
+    }
+  }
+}

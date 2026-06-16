@@ -1,0 +1,85 @@
+{
+  "runtime": {
+    "source_platform": "抖音",
+    "trace_artifacts": true,
+    "enable_real_ocr_feedback": false,
+    "provider_runtime_max_retries": 2,
+    "provider_runtime_backoff_sec": 2
+  },
+  "local_tools": {
+    "workspace_dir": "output/byok_volcengine_upload/runtime"
+  },
+  "input": {
+    "video_path": "output/raw_video_regression/clip_8s.mp4",
+    "video_id": "demo-volcengine-asr-upload-8s",
+    "source_product_id": "3811830677083652287",
+    "request_id": "REQ_DEMO_VOLCENGINE_ASR_UPLOAD_8S"
+  },
+  "providers": {
+    "vlm": {
+      "enabled": true,
+      "provider": "openai_gpt4o_vision",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "gpt-4o",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_vlm_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    },
+    "asr": {
+      "enabled": true,
+      "provider": "volcengine_asr",
+      "endpoint": "https://openspeech.bytedance.com/api/v3/auc/bigmodel/submit",
+      "api_key": "<YOUR_VOLCENGINE_ACCESS_KEY>",
+      "model": "bigmodel",
+      "timeout_sec": 300,
+      "required": true,
+      "adapter": "volcengine_asr",
+      "extra": {
+        "upload_provider": "tos",
+        "upload_endpoint": "tos-cn-beijing.volces.com",
+        "upload_bucket": "<YOUR_TOS_BUCKET>",
+        "upload_region": "cn-beijing",
+        "upload_access_key_id": "<YOUR_TOS_ACCESS_KEY_ID>",
+        "upload_access_key_secret": "<YOUR_TOS_ACCESS_KEY_SECRET>",
+        "upload_object_prefix": "commerce-video-diagnosis/audio",
+        "upload_public_base_url": "https://<YOUR_PUBLIC_TOS_DOMAIN>",
+        "app_key": "<YOUR_VOLCENGINE_APP_KEY>",
+        "resource_id": "volc.seedasr.auc",
+        "query_endpoint": "https://openspeech.bytedance.com/api/v3/auc/bigmodel/query",
+        "poll_interval_sec": 2,
+        "request": {
+          "enable_itn": true,
+          "show_utterances": true
+        }
+      },
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    },
+    "ocr": {
+      "enabled": true,
+      "provider": "openai_gpt4o_vision",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "gpt-4o",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_ocr_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    }
+  },
+  "output": {
+    "factpack_path": "output/byok_volcengine_upload/factpack.json",
+    "request_path": "output/byok_volcengine_upload/request.json",
+    "result_path": "output/byok_volcengine_upload/result.json"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "runtime": {
+    "source_platform": "抖音",
+    "trace_artifacts": true,
+    "enable_real_ocr_feedback": false,
+    "provider_runtime_max_retries": 2,
+    "provider_runtime_backoff_sec": 2
+  },
+  "local_tools": {
+    "workspace_dir": "output/byok_aliyun_upload/runtime"
+  },
+  "input": {
+    "video_path": "output/raw_video_regression/clip_8s.mp4",
+    "video_id": "demo-aliyun-asr-upload-8s",
+    "source_product_id": "3811830677083652287",
+    "request_id": "REQ_DEMO_ALIYUN_ASR_UPLOAD_8S"
+  },
+  "providers": {
+    "vlm": {
+      "enabled": true,
+      "provider": "openai_gpt4o_vision",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "gpt-4o",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_vlm_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    },
+    "asr": {
+      "enabled": true,
+      "provider": "aliyun_asr",
+      "endpoint": "https://dashscope.aliyuncs.com/api/v1/services/audio/asr/transcription",
+      "api_key": "<YOUR_DASHSCOPE_API_KEY>",
+      "model": "paraformer-v2",
+      "timeout_sec": 300,
+      "required": true,
+      "adapter": "aliyun_asr",
+      "extra": {
+        "upload_provider": "oss",
+        "upload_endpoint": "oss-cn-shanghai.aliyuncs.com",
+        "upload_bucket": "<YOUR_OSS_BUCKET>",
+        "upload_access_key_id": "<YOUR_OSS_ACCESS_KEY_ID>",
+        "upload_access_key_secret": "<YOUR_OSS_ACCESS_KEY_SECRET>",
+        "upload_object_prefix": "commerce-video-diagnosis/audio",
+        "upload_public_base_url": "https://<YOUR_PUBLIC_OSS_DOMAIN>",
+        "poll_interval_sec": 2,
+        "parameters": {
+          "timestamp_alignment_enabled": true
+        }
+      },
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    },
+    "ocr": {
+      "enabled": true,
+      "provider": "openai_gpt4o_vision",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "gpt-4o",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_ocr_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    }
+  },
+  "output": {
+    "factpack_path": "output/byok_aliyun_upload/factpack.json",
+    "request_path": "output/byok_aliyun_upload/request.json",
+    "result_path": "output/byok_aliyun_upload/result.json"
+  }
+}

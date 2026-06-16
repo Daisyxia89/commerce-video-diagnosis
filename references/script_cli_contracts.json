@@ -1,0 +1,76 @@
+{
+  "argparse_required_scripts": [
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/run_extractor.py",
+      "probe_args": ["--config", "dummy.json", "--mode", "validate-only"],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/run_two_stage_smoke.py",
+      "probe_args": [
+        "--factpack",
+        "dummy.json",
+        "--video-id",
+        "v1",
+        "--source-product-id",
+        "p1",
+        "--request-output",
+        "req.json",
+        "--result-output",
+        "res.json"
+      ],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/run_raw_video_smoke.py",
+      "probe_args": ["--video", "dummy.mp4", "--video-id", "v1", "--source-product-id", "p1"],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/run_smoke_gate.py",
+      "probe_args": [
+        "--video",
+        "dummy.mp4",
+        "--video-id",
+        "v1",
+        "--source-product-id",
+        "p1",
+        "--workspace",
+        "tmp-workspace",
+        "--decision-log",
+        "tmp-workspace/smoke_gate_log.json"
+      ],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/run_raw_video_ocr_feedback_regression.py",
+      "probe_args": [],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/resolve_test_targets.py",
+      "probe_args": ["--layer", "unit"],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/assert_full_smoke_outputs.py",
+      "probe_args": ["--workspace", "missing-dir"],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/build_request.py",
+      "probe_args": ["--factpack", "dummy.json", "--video-id", "v1", "--source-product-id", "p1", "--output", "req.json"],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/run_v2.py",
+      "probe_args": ["--payload", "dummy.json"],
+      "must_fail_on_unknown_args": true
+    },
+    {
+      "path": "user_skills/commerce-video-diagnosis/scripts/check_workflow_contract.py",
+      "probe_args": [],
+      "must_fail_on_unknown_args": true
+    }
+  ]
+}

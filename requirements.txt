@@ -1,0 +1,8 @@
+# Runtime dependency notes
+# - Python: 3.10+
+# - System tools required: ffmpeg, ffprobe
+# - Install system tools separately; they are not pip packages.
+
+opencv-python-headless>=4.8
+pydantic>=1.10,<3
+pytest>=7.0

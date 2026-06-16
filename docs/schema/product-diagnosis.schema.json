@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/commerce-video-diagnosis/schema/product-diagnosis.schema.json",
+  "title": "Product Diagnosis",
+  "description": "Machine-readable schema for the product diagnosis layer. Encodes the stable semantic structure described in the product diagnosis dictionary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target_people",
+    "difference_type",
+    "differentiator",
+    "difference_fact_pack",
+    "conclusion",
+    "evidence_chain",
+    "resistance_profile",
+    "category_bottleneck",
+    "core_intent",
+    "hec_recommendation",
+    "diagnosis_notes",
+    "candidate_set"
+  ],
+  "properties": {
+    "target_people": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      ]
+    },
+    "difference_type": {
+      "type": "string",
+      "enum": [
+        "functional_result",
+        "efficiency",
+        "ingredient_or_technology",
+        "sensory_experience",
+        "price_value",
+        "scenario_fit",
+        "trust_or_professional"
+      ]
+    },
+    "differentiator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "difference_fact_pack": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        {
+          "type": "object",
+          "additionalProperties": true
+        }
+      ]
+    },
+    "conclusion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_chain": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "resistance_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trial_and_error_cost", "trust_stock", "operation_threshold", "price_sensitivity"],
+      "properties": {
+        "trial_and_error_cost": {
+          "$ref": "#/definitions/level3"
+        },
+        "trust_stock": {
+          "$ref": "#/definitions/level3"
+        },
+        "operation_threshold": {
+          "$ref": "#/definitions/level3"
+        },
+        "price_sensitivity": {
+          "$ref": "#/definitions/level3"
+        }
+      }
+    },
+    "category_bottleneck": {
+      "type": "string",
+      "enum": [
+        "打破购买惯性",
+        "制造替换动机",
+        "建立有效性信任",
+        "降低使用门槛",
+        "降低选型难度",
+        "降低价格顾虑"
+      ]
+    },
+    "core_intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hec_recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recommended_hook", "recommended_effect", "recommended_cta", "reason"],
+      "properties": {
+        "recommended_hook": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["H5"]
+          }
+        },
+        "recommended_effect": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["E1", "E5", "E6"]
+          }
+        },
+        "recommended_cta": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["C1"]
+          }
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "diagnosis_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "candidate_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_task",
+        "main_persuasion_route",
+        "r_rule",
+        "p_rule",
+        "candidate_h_pool",
+        "core_e_list",
+        "core_c_list"
+      ],
+      "properties": {
+        "product_task": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Anchor task for the candidate set. Must stay consistent with product_fact_vector.product_task and must use the same level-1 JTBD task label name, for example: 降本增效/懒人替代."
+        },
+        "main_persuasion_route": {
+          "type": "string",
+          "minLength": 1
+        },
+        "r_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "p_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "candidate_h_pool": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^H[0-9]+$"
+          }
+        },
+        "core_e_list": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^E[0-9]+$"
+          }
+        },
+        "core_c_list": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^C[0-9]+$"
+          }
+        }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["category_strategy_intent"] },
+          { "required": ["product_strategy_intent"] },
+          { "required": ["intent_coordinates"] },
+          { "required": ["modifiers"] }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "level3": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    }
+  }
+}

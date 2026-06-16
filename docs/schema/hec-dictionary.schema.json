@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/commerce-video-diagnosis/schema/hec-dictionary.schema.json",
+  "title": "HEC Dictionary Entry",
+  "description": "Machine-readable schema for current HEC business dictionary entries. Validates the latest label inventory and field structure defined in docs/hec_dictionary.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["code", "name", "bucket", "definition", "appeal", "notes"],
+  "properties": {
+    "code": {
+      "type": "string",
+      "enum": [
+        "H1", "H2", "H3", "H4", "H5", "H6", "H7",
+        "E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7",
+        "C1", "C2", "C3", "C4", "C5"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "enum": [
+        "痛点/焦虑直击", "利益/价格前置", "反差结果前置", "即时操作展示", "反常识与悬念", "场景/人群代入", "明星/权威同款",
+        "单点演示", "效果测评", "暴力实测", "对比/拉踩", "感官实证", "保姆级教程", "成分/参数科普", "产地溯源/工厂实录",
+        "利益/价格逼单", "福利/保障机制", "指令行动", "人群/场景总结", "效果留白/情绪定格"
+      ]
+    },
+    "bucket": {
+      "type": "string",
+      "enum": ["H", "E", "C"]
+    },
+    "definition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "appeal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "oneOf": [
+    { "properties": { "code": { "const": "H1" }, "name": { "const": "痛点/焦虑直击" }, "bucket": { "const": "H" } } },
+    { "properties": { "code": { "const": "H2" }, "name": { "const": "利益/价格前置" }, "bucket": { "const": "H" } } },
+    { "properties": { "code": { "const": "H3" }, "name": { "const": "反差结果前置" }, "bucket": { "const": "H" } } },
+    { "properties": { "code": { "const": "H4" }, "name": { "const": "即时操作展示" }, "bucket": { "const": "H" } } },
+    { "properties": { "code": { "const": "H5" }, "name": { "const": "反常识与悬念" }, "bucket": { "const": "H" } } },
+    { "properties": { "code": { "const": "H6" }, "name": { "const": "场景/人群代入" }, "bucket": { "const": "H" } } },
+    { "properties": { "code": { "const": "H7" }, "name": { "const": "明星/权威同款" }, "bucket": { "const": "H" } } },
+
+    { "properties": { "code": { "const": "E0" }, "name": { "const": "单点演示" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E1" }, "name": { "const": "效果测评" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E2" }, "name": { "const": "暴力实测" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E3" }, "name": { "const": "对比/拉踩" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E4" }, "name": { "const": "感官实证" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E5" }, "name": { "const": "保姆级教程" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E6" }, "name": { "const": "成分/参数科普" }, "bucket": { "const": "E" } } },
+    { "properties": { "code": { "const": "E7" }, "name": { "const": "产地溯源/工厂实录" }, "bucket": { "const": "E" } } },
+
+    { "properties": { "code": { "const": "C1" }, "name": { "const": "利益/价格逼单" }, "bucket": { "const": "C" } } },
+    { "properties": { "code": { "const": "C2" }, "name": { "const": "福利/保障机制" }, "bucket": { "const": "C" } } },
+    { "properties": { "code": { "const": "C3" }, "name": { "const": "指令行动" }, "bucket": { "const": "C" } } },
+    { "properties": { "code": { "const": "C4" }, "name": { "const": "人群/场景总结" }, "bucket": { "const": "C" } } },
+    { "properties": { "code": { "const": "C5" }, "name": { "const": "效果留白/情绪定格" }, "bucket": { "const": "C" } } }
+  ]
+}

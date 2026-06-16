@@ -1,0 +1,30 @@
+[
+  {
+    "segment_id": "SEG01",
+    "start_sec": 0.0,
+    "end_sec": 3.5,
+    "visual_facts": {
+      "shot_size": "close_up",
+      "camera_movement": "static",
+      "visual_subject": "一双手正在掰一根粉色的棒棒冰，背景有一个装着棒棒冰的篮子和几包儿童棒棒冰包装袋",
+      "lighting_tone": "flat_neutral",
+      "key_objects": ["手", "粉色棒棒冰", "篮子", "儿童棒棒冰包装袋"],
+      "actions": [{"action_name": "掰", "physical_intensity": "medium"}]
+    },
+    "rhythm_facts": {"transition_type": "hard_cut", "pace_marker": "normal"}
+  },
+  {
+    "segment_id": "SEG02",
+    "start_sec": 3.5,
+    "end_sec": 7.0,
+    "visual_facts": {
+      "shot_size": "close_up",
+      "camera_movement": "static",
+      "visual_subject": "一双手拿着一根棒棒冰，然后又拿着几根不同颜色的棒棒冰",
+      "lighting_tone": "flat_neutral",
+      "key_objects": ["手", "棒棒冰", "不同颜色的棒棒冰"],
+      "actions": [{"action_name": "拿", "physical_intensity": "low"}]
+    },
+    "rhythm_facts": {"transition_type": "hard_cut", "pace_marker": "normal"}
+  }
+]

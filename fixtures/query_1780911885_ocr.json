@@ -1,0 +1,20 @@
+[
+  {
+    "segment_id": "SEG01",
+    "start_sec": 0.0,
+    "end_sec": 3.5,
+    "ocr_facts": [
+      {"text": "30多度的天", "position": {"x": 0.38, "y": 0.69, "w": 0.24, "h": 0.03}, "color": "#000000", "font_family": "Source Han Sans", "font_weight": "regular", "font_size_level": "medium", "stroke_style": "none", "text_effect_style": "solid_fill"},
+      {"text": "孩子馋棒棒冰太正常了", "position": {"x": 0.28, "y": 0.69, "w": 0.44, "h": 0.03}, "color": "#000000", "font_family": "Source Han Sans", "font_weight": "regular", "font_size_level": "medium", "stroke_style": "none", "text_effect_style": "solid_fill"}
+    ]
+  },
+  {
+    "segment_id": "SEG02",
+    "start_sec": 3.5,
+    "end_sec": 7.0,
+    "ocr_facts": [
+      {"text": "那外面那种全是添加剂的", "position": {"x": 0.28, "y": 0.69, "w": 0.44, "h": 0.03}, "color": "#000000", "font_family": "Source Han Sans", "font_weight": "regular", "font_size_level": "medium", "stroke_style": "none", "text_effect_style": "solid_fill"},
+      {"text": "谁敢给小朋友吃", "position": {"x": 0.35, "y": 0.69, "w": 0.29, "h": 0.03}, "color": "#000000", "font_family": "Source Han Sans", "font_weight": "regular", "font_size_level": "medium", "stroke_style": "none", "text_effect_style": "solid_fill"}
+    ]
+  }
+]

@@ -1,0 +1,67 @@
+{
+  "runtime": {
+    "source_platform": "抖音",
+    "trace_artifacts": true,
+    "enable_real_ocr_feedback": false,
+    "provider_runtime_max_retries": 2,
+    "provider_runtime_backoff_sec": 2
+  },
+  "local_tools": {
+    "workspace_dir": "output/byok_openai/runtime"
+  },
+  "input": {
+    "video_path": "output/raw_video_regression/clip_8s.mp4",
+    "video_id": "demo-openai-byok-8s",
+    "source_product_id": "3811830677083652287",
+    "request_id": "REQ_DEMO_OPENAI_BYOK_8S"
+  },
+  "providers": {
+    "vlm": {
+      "enabled": true,
+      "provider": "openai_gpt4o_vision",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "gpt-4o",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_vlm_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    },
+    "asr": {
+      "enabled": true,
+      "provider": "openai_whisper",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "whisper-1",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_asr_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    },
+    "ocr": {
+      "enabled": true,
+      "provider": "openai_gpt4o_vision",
+      "endpoint": "https://api.openai.com/v1",
+      "api_key": "<YOUR_OPENAI_API_KEY>",
+      "model": "gpt-4o",
+      "timeout_sec": 180,
+      "required": true,
+      "adapter": "default_ocr_adapter",
+      "retry_policy": {
+        "max_retries": 2,
+        "backoff_sec": 2
+      }
+    }
+  },
+  "output": {
+    "factpack_path": "output/byok_openai/factpack.json",
+    "request_path": "output/byok_openai/request.json",
+    "result_path": "output/byok_openai/result.json"
+  }
+}

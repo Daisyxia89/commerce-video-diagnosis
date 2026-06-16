@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/commerce-video-diagnosis/schema/error.schema.json",
+  "title": "commerce-video-diagnosis Error",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["error"],
+  "properties": {
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message", "details"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "INVALID_INPUT_MODE",
+            "MISSING_VIDEO_INPUT",
+            "MISSING_FACTPACK_INPUT",
+            "MISSING_PRODUCT_INFO",
+            "INCOMPLETE_PRODUCT_INFO",
+            "PROVIDER_NOT_CONFIGURED",
+            "INTERNAL_FALLBACK_DISABLED",
+            "FACTPACK_SCHEMA_INVALID",
+            "UNDERSTANDING_FAILED"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

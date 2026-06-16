@@ -1,0 +1,35 @@
+{
+  "cases": [
+    {
+      "case_id": "R01",
+      "type": "factpack_artifact",
+      "path": "output/raw_video_smoke_ci/factpack.json",
+      "expected": {
+        "semantic_bundle_min": 1,
+        "second_filter_trace_required": true
+      }
+    },
+    {
+      "case_id": "R02",
+      "type": "commerce_video_diagnosis_request",
+      "payload": "output/raw_video_smoke_ci/request.json",
+      "output": "output/test_replay_commerce_video_diagnosis_r02.json",
+      "expected": {
+        "storyboard_source": "segments",
+        "semantic_bundle_min": 1
+      }
+    }
+  ],
+  "case_meta": {
+    "R01": {
+      "source_section": "replay",
+      "title": "Smoke 产物 FactPack 结构回放校验",
+      "acceptance_focus": "确认真实 smoke 产出的 factpack 具备 semantic_bundles 与 second_filter_trace，协议结构完整。"
+    },
+    "R02": {
+      "source_section": "replay",
+      "title": "Smoke request 下游 commerce-video-diagnosis 回放校验",
+      "acceptance_focus": "确认真实 smoke request 能驱动下游推理，并稳定产出 segments 视角的 blueprint。"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "segment_id": "SEG01",
+    "start_sec": 0.0,
+    "end_sec": 3.5,
+    "audio_facts": {
+      "asr_text": "30多度的天，孩子馋棒棒冰太正常了",
+      "sfx_events": [],
+      "bgm_events": []
+    }
+  },
+  {
+    "segment_id": "SEG02",
+    "start_sec": 3.5,
+    "end_sec": 7.0,
+    "audio_facts": {
+      "asr_text": "那外面那种全是添加剂的，谁敢给小朋友吃",
+      "sfx_events": [],
+      "bgm_events": []
+    }
+  }
+]

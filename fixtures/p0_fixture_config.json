@@ -1,0 +1,45 @@
+{
+  "runtime": {
+    "source_platform": "抖音",
+    "trace_artifacts": true
+  },
+  "local_tools": {
+    "workspace_dir": "output/commerce_video_diagnosis_runtime"
+  },
+  "input": {
+    "video_id": "query-1780911885",
+    "source_product_id": "3811830677083652287",
+    "request_id": "REQ_QUERY_1780911885_P0"
+  },
+  "providers": {
+    "vlm": {
+      "enabled": true,
+      "provider": "fixture_file",
+      "path": "user_skills/commerce-video-diagnosis/fixtures/query_1780911885_vlm.json",
+      "timeout_sec": 60,
+      "required": true,
+      "adapter": "default_vlm_adapter"
+    },
+    "asr": {
+      "enabled": true,
+      "provider": "fixture_file",
+      "path": "user_skills/commerce-video-diagnosis/fixtures/query_1780911885_asr.json",
+      "timeout_sec": 60,
+      "required": true,
+      "adapter": "default_asr_adapter"
+    },
+    "ocr": {
+      "enabled": true,
+      "provider": "fixture_file",
+      "path": "user_skills/commerce-video-diagnosis/fixtures/query_1780911885_ocr.json",
+      "timeout_sec": 60,
+      "required": true,
+      "adapter": "default_ocr_adapter"
+    }
+  },
+  "output": {
+    "factpack_path": "output/p0_fixture_factpack.json",
+    "request_path": "output/p0_fixture_request.json",
+    "result_path": "output/p0_fixture_result.json"
+  }
+}

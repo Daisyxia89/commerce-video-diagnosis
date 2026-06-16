@@ -1,0 +1,381 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/commerce-video-diagnosis/schema/input.schema.json",
+  "title": "commerce-video-diagnosis Input",
+  "description": "Unified request schema for commerce-video-diagnosis. Supports exactly two input modes: video or factpack. product_info is always required and must be supplied externally by the caller.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request_id", "input_mode", "product_info"],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique request identifier."
+    },
+    "input_mode": {
+      "type": "string",
+      "enum": ["video", "factpack"],
+      "description": "Primary input mode. Only video or factpack is allowed."
+    },
+    "video": {
+      "$ref": "#/definitions/videoInput"
+    },
+    "fact_pack": {
+      "$ref": "#/definitions/factPack"
+    },
+    "product_info": {
+      "$ref": "#/definitions/productInfo"
+    },
+    "providers": {
+      "$ref": "#/definitions/providers"
+    },
+    "options": {
+      "$ref": "#/definitions/options"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "input_mode": { "const": "video" }
+        },
+        "required": ["input_mode"]
+      },
+      "then": {
+        "required": ["video", "providers"],
+        "properties": {
+          "video": {
+            "allOf": [
+              { "$ref": "#/definitions/videoInput" },
+              {
+                "anyOf": [
+                  { "required": ["video_path"] },
+                  { "required": ["video_url"] }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "input_mode": { "const": "factpack" }
+        },
+        "required": ["input_mode"]
+      },
+      "then": {
+        "required": ["fact_pack"]
+      }
+    }
+  ],
+  "definitions": {
+    "videoInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "video_path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Local filesystem path to the video file."
+        },
+        "video_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Publicly accessible video URL."
+        }
+      },
+      "description": "At least one of video_path or video_url should be provided in video mode."
+    },
+    "factPack": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["video_meta", "segments"],
+      "properties": {
+        "video_meta": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["source_platform", "duration_sec", "fps", "resolution"],
+          "properties": {
+            "source_platform": {
+              "type": "string",
+              "minLength": 1
+            },
+            "duration_sec": {
+              "type": "number",
+              "minimum": 0
+            },
+            "fps": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "resolution": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "segments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/factPackSegment" }
+        }
+      }
+    },
+    "factPackSegment": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "segment_id",
+        "start_sec",
+        "end_sec",
+        "visual_facts",
+        "audio_facts",
+        "ocr_facts",
+        "rhythm_facts"
+      ],
+      "properties": {
+        "segment_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_sec": {
+          "type": "number",
+          "minimum": 0
+        },
+        "end_sec": {
+          "type": "number",
+          "minimum": 0
+        },
+        "visual_facts": {
+          "type": "object"
+        },
+        "audio_facts": {
+          "type": "object"
+        },
+        "ocr_facts": {
+          "type": "array"
+        },
+        "rhythm_facts": {
+          "type": "object"
+        }
+      }
+    },
+    "productInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basic_product_info",
+        "full_product_info",
+        "product_fact_vector"
+      ],
+      "properties": {
+        "basic_product_info": {
+          "$ref": "#/definitions/basicProductInfo"
+        },
+        "full_product_info": {
+          "$ref": "#/definitions/fullProductInfo"
+        },
+        "product_fact_vector": {
+          "$ref": "#/definitions/productFactVector"
+        }
+      },
+      "allOf": [
+        {
+          "not": {
+            "anyOf": [
+              { "required": ["candidate_set"] },
+              { "required": ["category_strategy_intent"] },
+              { "required": ["product_strategy_intent"] },
+              { "required": ["intent_coordinates"] },
+              { "required": ["modifiers"] }
+            ]
+          }
+        }
+      ],
+      "description": "Caller-supplied product facts. Only the first three layers are allowed on input: basic_product_info, full_product_info, and product_fact_vector. CandidateSet and module-3 intermediate variables are strictly forbidden on the input side."
+    },
+    "basicProductInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "leaf_category",
+        "shop_name",
+        "item_name",
+        "price",
+        "core_selling_points"
+      ],
+      "properties": {
+        "leaf_category": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Leaf category. Must be a sufficiently specific product category."
+        },
+        "shop_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Seller shop name supplied by caller as original text."
+        },
+        "item_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable product title or item name corresponding to the sold product."
+        },
+        "price": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string", "minLength": 1 }
+          ],
+          "description": "Current external price used for diagnosis. Internal product lookup is not allowed as fallback."
+        },
+        "core_selling_points": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Core selling point list recognized by caller."
+        }
+      },
+      "description": "Basic Product Info: minimum identity layer describing what product this is."
+    },
+    "fullProductInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_people", "differentiator"],
+      "properties": {
+        "target_people": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          ],
+          "description": "Primary target people for the product. Can be a string or an array of strings."
+        },
+        "differentiator": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Natural-language expression of the product's most memorable differentiating selling point."
+        }
+      },
+      "description": "Full Product Info: business expression layer describing who the product is mainly for and what differentiates it."
+    },
+    "productFactVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_task",
+        "cognitive_attribute",
+        "frequency_attribute",
+        "trust_attribute",
+        "price_attribute",
+        "endorsement_attribute",
+        "channel_risk_attribute"
+      ],
+      "properties": {
+        "product_task": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Core user task the product helps complete. Must use a level-1 JTBD task label name from the task dictionary, for example: 生存/运转维系, 缺陷修复/冲突消除, 降本增效/懒人替代, 物理安全与风险规避, 情绪安心/主观降险, 新奇探索/瞬时刺激, 自我犒赏与秩序掌控, 照护与责任履行, 礼赠与关系表达, or 圈层认同（圈层归属/身份锚定）."
+        },
+        "cognitive_attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribute describing cognitive understanding threshold."
+        },
+        "frequency_attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribute describing usage or purchase frequency."
+        },
+        "trust_attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribute describing prior trust level."
+        },
+        "price_attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribute describing category-relative price level or price resistance."
+        },
+        "endorsement_attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribute describing available authority, professional, creator, or official endorsement."
+        },
+        "channel_risk_attribute": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Attribute describing expression risk under the current channel."
+        }
+      },
+      "description": "Product Fact Vector: structured diagnostic fact layer used as the precondition for downstream reasoning."
+    },
+    "providerConfig": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["provider", "endpoint", "api_key", "model"],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "endpoint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "api_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "providers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asr": { "$ref": "#/definitions/providerConfig" },
+        "vlm": { "$ref": "#/definitions/providerConfig" },
+        "ocr": { "$ref": "#/definitions/providerConfig" }
+      },
+      "required": ["asr", "vlm", "ocr"],
+      "description": "Required in video mode unless runtime policy explicitly handles fallback. In extractor runtime config, use runtime.provider_fallback_mode to express fallback protocol intent; default is force_off. auto and force_on are reserved protocol values and do not enable any built-in fallback implementation in the public repository."
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "include_factpack": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_blueprint": {
+          "type": "boolean",
+          "default": true
+        },
+        "include_trace": {
+          "type": "boolean",
+          "default": false
+        },
+        "include_provenance": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "unit": {
+    "files": [
+      "user_skills/commerce-video-diagnosis/tests/test_preprocess_pipeline.py",
+      "user_skills/commerce-video-diagnosis/tests/test_run_extractor.py",
+      "user_skills/commerce-video-diagnosis/tests/test_second_filter_trace_schema.py",
+      "user_skills/commerce-video-diagnosis/tests/test_workflow_contract.py"
+    ]
+  },
+  "integration": {
+    "files": [
+      "user_skills/commerce-video-diagnosis/tests/test_preprocess_pipeline.py",
+      "user_skills/commerce-video-diagnosis/tests/test_run_extractor.py"
+    ]
+  },
+  "smoke": {
+    "files": [
+      "user_skills/commerce-video-diagnosis/tests/test_run_extractor.py"
+    ],
+    "keyword": "test_full_smoke_outputs_from_workspace"
+  }
+}
