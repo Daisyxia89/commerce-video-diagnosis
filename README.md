@@ -321,6 +321,10 @@ cd <repo-root> && python3 user_skills/commerce-video-diagnosis/scripts/run_v2.py
 
 ## 公开版边界
 
+### 功能限制说明
+
+- Understanding阶段 - 已完全可用（需配置 `OPENAI_BASE_URL` 和 `OPENAI_API_KEY`，支持 BYOK 模式）
+
 - 公开版仅支持 `fixture_file` 与外部 BYOK provider；
 - 公开仓库不内置任何私有执行路径；
 - `runtime.provider_fallback_mode` 保留为协议字段，但当前公开版没有内置 fallback 实现；
