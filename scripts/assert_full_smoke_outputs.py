@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 TESTS_ROOT = SKILL_ROOT / "tests"
 for candidate in (str(REPO_ROOT), str(SKILL_ROOT), str(TESTS_ROOT)):

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import sys
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / '.github/workflows/commerce-video-diagnosis-regression.yml'
 TEMPLATE = REPO_ROOT / 'ci/commerce-video-diagnosis-regression.template.yaml'
 LOCAL_CI = REPO_ROOT / 'user_skills/commerce-video-diagnosis/scripts/local_ci.sh'

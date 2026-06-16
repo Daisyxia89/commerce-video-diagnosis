@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 for candidate in (str(REPO_ROOT), str(SKILL_ROOT)):
     if candidate not in sys.path:

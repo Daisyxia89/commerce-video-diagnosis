@@ -1,0 +1,37 @@
+{
+  "SKU_TOILET_CLEANER_001": {
+    "source_product_id": "SKU_TOILET_CLEANER_001",
+    "original_product_name": "马桶清洁泡泡粉",
+    "original_jtbd": "缺陷修复/冲突消除",
+    "category_strategy_intent": "降低家务处理门槛",
+    "product_strategy_intent": "补齐效果可信度"
+  },
+  "SKU_CHILD_GIFT_001": {
+    "source_product_id": "SKU_CHILD_GIFT_001",
+    "original_product_name": "德芙六一儿童节巧克力礼盒",
+    "original_jtbd": "礼赠与关系表达",
+    "category_strategy_intent": "强化节日仪式感",
+    "product_strategy_intent": "放大礼盒惊喜感"
+  },
+  "P67": {
+    "source_product_id": "P67",
+    "original_product_name": "马桶清洁泡泡粉(挂篮款)",
+    "original_jtbd": "降本增效/懒人替代",
+    "category_strategy_intent": "存量同类替换",
+    "product_strategy_intent": "放大旧方案隐患或损失 + E3 替代论证"
+  },
+  "DY-7642756503007583653-HELTIQ": {
+    "source_product_id": "DY-7642756503007583653-HELTIQ",
+    "original_product_name": "HeltiQ 冷冻除疣喷雾剂",
+    "original_jtbd": "缺陷修复/冲突消除",
+    "category_strategy_intent": "降低家庭处理皮肤疣问题的认知门槛与安全顾虑",
+    "product_strategy_intent": "用医疗器械资质、适应症说明与规范使用方法建立正规、安全、可操作的居家处理信任"
+  },
+  "3745629990528614807": {
+    "source_product_id": "3745629990528614807",
+    "original_product_name": "小野轻煮干锅酱",
+    "original_jtbd": "照护与责任履行",
+    "category_strategy_intent": "降低家庭做饭调味门槛并兼顾孩子饮食顾虑",
+    "product_strategy_intent": "用一酱成菜、双口味选择与零添加安全表达，建立家庭餐桌场景下的省事与放心信任"
+  }
+}
