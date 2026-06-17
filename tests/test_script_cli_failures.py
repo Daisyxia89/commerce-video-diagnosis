@@ -16,7 +16,17 @@ def _resolve_repo_path(path_value: str) -> Path:
     candidate = Path(path_value)
     if candidate.is_absolute():
         return candidate
-    return REPO_ROOT / candidate
+    # 历史写法 user_skills/<skill-name>/... 自动剖离，改为相对 SKILL_ROOT 解析，
+    # 这样 skill 无论被放在哪里都能找到脚本。
+    parts = candidate.parts
+    if len(parts) >= 2 and parts[0] == "user_skills":
+        return SKILL_ROOT / Path(*parts[2:])
+    # 其余相对路径优先相对 SKILL_ROOT，再回退到 REPO_ROOT。
+    skill_candidate = SKILL_ROOT / candidate
+    if skill_candidate.exists():
+        return skill_candidate
+    # 回退：优先落在仓库内（SKILL_ROOT），避免 clone 到浅目录时 REPO_ROOT 算成 "/"。
+    return skill_candidate
 
 
 def _load_manifest() -> list[dict[str, object]]:

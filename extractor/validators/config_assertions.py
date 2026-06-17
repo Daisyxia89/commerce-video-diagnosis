@@ -5,6 +5,7 @@ from pathlib import Path
 
 from ..errors import ConfigViolation, DependencyViolation
 from ..models.config_models import ExtractorConfig, ProviderConfig
+from ..utils.paths import resolve_resource_path
 
 
 
@@ -16,8 +17,11 @@ def _validate_provider(name: str, cfg: ProviderConfig) -> None:
     if cfg.provider == "fixture_file":
         if not cfg.path:
             raise ConfigViolation(f"provider {name} 缺少 path")
-        if not Path(cfg.path).exists():
-            raise ConfigViolation(f"provider {name} path 不存在: {cfg.path}")
+        resolved = resolve_resource_path(cfg.path)
+        if not resolved.exists():
+            raise ConfigViolation(
+                f"provider {name} path 不存在: {cfg.path} (已尝试解析为 {resolved})"
+            )
         return
     missing = [field for field in ("provider", "adapter", "model", "timeout_sec") if not getattr(cfg, field)]
     if missing:

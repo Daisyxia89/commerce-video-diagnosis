@@ -15,6 +15,17 @@ for candidate in (str(SKILL_ROOT), str(REPO_ROOT)):
 
 import pytest
 
+# 集成用例依赖的视频切片由 smoke/回归阶段生成，不随公开版发布。
+# 优先相对 SKILL_ROOT 解析，回退到 REPO_ROOT；缺失时由 _skip_if_clip_missing 跳过。
+_CLIP_REL = "output/raw_video_regression/clip_8s.mp4"
+CLIP_8S = SKILL_ROOT / _CLIP_REL if (SKILL_ROOT / _CLIP_REL).exists() else REPO_ROOT / _CLIP_REL
+
+
+def _skip_if_clip_missing() -> str:
+    if not Path(CLIP_8S).is_file():
+        pytest.skip(f"集成用例依赖 smoke 阶段视频切片，未生成则跳过: {CLIP_8S}")
+    return str(CLIP_8S)
+
 from extractor.errors import PreprocessViolation
 from extractor.preprocess.pipeline import (
     _annotate_segment_types,
@@ -387,8 +398,9 @@ def _build_preprocess_payload(*, duration_sec: float, segments: list[dict], has_
 def test_run_preprocess_multi_frames() -> None:
     case_id = "P_INT_01"
     workspace = "output/test_preprocess_multi_frames"
+    clip = _skip_if_clip_missing()
     result = run_preprocess(
-        video_path=str(REPO_ROOT / "output/raw_video_regression/clip_8s.mp4"),
+        video_path=clip,
         workspace_dir=workspace,
         ffmpeg_path="ffmpeg",
         ffprobe_path="ffprobe",
@@ -485,8 +497,9 @@ def test_run_preprocess_multi_frames() -> None:
 def test_decision_report_summary_and_reason_codes() -> None:
     case_id = "P_INT_02"
     workspace = "output/test_preprocess_reason_codes"
+    clip = _skip_if_clip_missing()
     run_preprocess(
-        video_path=str(REPO_ROOT / "output/raw_video_regression/clip_8s.mp4"),
+        video_path=clip,
         workspace_dir=workspace,
         ffmpeg_path="ffmpeg",
         ffprobe_path="ffprobe",
@@ -625,8 +638,9 @@ def test_decision_report_marks_dropped_after_real_ocr_rescoring() -> None:
     )
     case_id = "P_INT_03"
     workspace = "output/test_preprocess_real_ocr_feedback"
+    clip = _skip_if_clip_missing()
     run_preprocess(
-        video_path=str(REPO_ROOT / "output/raw_video_regression/clip_8s.mp4"),
+        video_path=clip,
         workspace_dir=workspace,
         ffmpeg_path="ffmpeg",
         ffprobe_path="ffprobe",

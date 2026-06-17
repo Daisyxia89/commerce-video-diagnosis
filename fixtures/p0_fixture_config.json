@@ -15,7 +15,7 @@
     "vlm": {
       "enabled": true,
       "provider": "fixture_file",
-      "path": "user_skills/commerce-video-diagnosis/fixtures/query_1780911885_vlm.json",
+      "path": "fixtures/query_1780911885_vlm.json",
       "timeout_sec": 60,
       "required": true,
       "adapter": "default_vlm_adapter"
@@ -23,7 +23,7 @@
     "asr": {
       "enabled": true,
       "provider": "fixture_file",
-      "path": "user_skills/commerce-video-diagnosis/fixtures/query_1780911885_asr.json",
+      "path": "fixtures/query_1780911885_asr.json",
       "timeout_sec": 60,
       "required": true,
       "adapter": "default_asr_adapter"
@@ -31,7 +31,7 @@
     "ocr": {
       "enabled": true,
       "provider": "fixture_file",
-      "path": "user_skills/commerce-video-diagnosis/fixtures/query_1780911885_ocr.json",
+      "path": "fixtures/query_1780911885_ocr.json",
       "timeout_sec": 60,
       "required": true,
       "adapter": "default_ocr_adapter"

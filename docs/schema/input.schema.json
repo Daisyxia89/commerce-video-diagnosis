@@ -277,10 +277,7 @@
         "product_task",
         "cognitive_attribute",
         "frequency_attribute",
-        "trust_attribute",
-        "price_attribute",
-        "endorsement_attribute",
-        "channel_risk_attribute"
+        "endorsement_attribute"
       ],
       "properties": {
         "product_task": {
@@ -301,22 +298,17 @@
         "trust_attribute": {
           "type": "string",
           "minLength": 1,
-          "description": "Attribute describing prior trust level."
+          "description": "Internal-derived prior trust level. Derived from shop_name through brand_whitelist.csv and store_suffix_trust_dict.csv; callers do not need to provide it."
         },
         "price_attribute": {
           "type": "string",
           "minLength": 1,
-          "description": "Attribute describing category-relative price level or price resistance."
+          "description": "Internal-derived category-relative price level or price resistance. Derived from payload.engine_node.relative_price_level; callers do not need to provide it."
         },
         "endorsement_attribute": {
           "type": "string",
           "minLength": 1,
           "description": "Attribute describing available authority, professional, creator, or official endorsement."
-        },
-        "channel_risk_attribute": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Attribute describing expression risk under the current channel."
         }
       },
       "description": "Product Fact Vector: structured diagnostic fact layer used as the precondition for downstream reasoning."

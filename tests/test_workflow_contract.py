@@ -20,7 +20,15 @@ def _repo_path(path_value: str) -> Path:
     candidate = Path(path_value)
     if candidate.is_absolute():
         return candidate
-    return REPO_ROOT / candidate
+    # 历史写法 user_skills/<skill-name>/... 自动剖离，改为相对 SKILL_ROOT 解析。
+    parts = candidate.parts
+    if len(parts) >= 2 and parts[0] == "user_skills":
+        return SKILL_ROOT / Path(*parts[2:])
+    skill_candidate = SKILL_ROOT / candidate
+    if skill_candidate.exists():
+        return skill_candidate
+    # 回退：优先落在仓库内（SKILL_ROOT），避免 clone 到浅目录时 REPO_ROOT 算成 "/"。
+    return skill_candidate
 
 from scripts.check_workflow_contract import scan_required_cli_args, validate_contracts
 from scripts.run_smoke_gate import run_smoke_gate
@@ -34,6 +42,11 @@ RESOLVER_PATH = SKILL_ROOT / "scripts" / "resolve_test_targets.py"
 @pytest.mark.unit
 def test_ci_entrypoints_are_isomorphic() -> None:
     assert REPO_ROOT == EXPECTED_REPO_ROOT
+    # 私有 CI 产物（.github/workflows/*.yml、ci/*.template.yaml）不随公开版发布；
+    # 缺失时跳过该契约校验，避免公开版 pytest 误报红。
+    ci_workflow = SKILL_ROOT / ".github" / "workflows" / "commerce-video-diagnosis-regression.yml"
+    if not ci_workflow.is_file():
+        pytest.skip("私有 CI workflow 未随公开版发布，跳过 CI 契约校验")
     validate_contracts()
 
 
@@ -133,7 +146,7 @@ def test_static_required_args_snapshot() -> None:
         "user_skills/commerce-video-diagnosis/scripts/check_workflow_contract.py": [],
     }
     actual = {
-        path: scan_required_cli_args(REPO_ROOT / path)
+        path: scan_required_cli_args(_repo_path(path))
         for path in expected
     }
     assert actual == expected

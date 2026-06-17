@@ -85,8 +85,7 @@
       "frequency_attribute": "高频",
       "trust_attribute": "中",
       "price_attribute": "中",
-      "endorsement_attribute": "无明确背书",
-      "channel_risk_attribute": "低"
+      "endorsement_attribute": "无明确背书"
     }
   },
   "providers": {
@@ -238,8 +237,7 @@
     "frequency_attribute": "高频",
     "trust_attribute": "中",
     "price_attribute": "中",
-    "endorsement_attribute": "无明确背书",
-    "channel_risk_attribute": "低"
+    "endorsement_attribute": "无明确背书"
   }
 }
 ```
@@ -276,17 +274,16 @@
 | `product_task` | string | **必填** | 商品核心任务 |
 | `cognitive_attribute` | string | **必填** | 认知门槛属性 |
 | `frequency_attribute` | string | **必填** | 购买 / 使用频次属性 |
-| `trust_attribute` | string | **必填** | 信任存量属性 |
-| `price_attribute` | string | **必填** | 价格带属性 |
+| `trust_attribute` | string | 内部推导 | 信任存量属性；由 `shop_name` 经品牌白名单（`brand_whitelist.csv` + `store_suffix_trust_dict.csv`）推导得出，调用方无需传入 |
+| `price_attribute` | string | 内部推导 | 价格带属性；由 `payload.engine_node.relative_price_level` 推导得出，调用方无需传入 |
 | `endorsement_attribute` | string | **必填** | 背书属性 |
-| `channel_risk_attribute` | string | **必填** | 渠道风险属性 |
 
 ### 强约束
 1. `product_info` 是统一 skill 的**强制输入对象**；
 2. 无论 `input_mode=video` 还是 `factpack`，都必须传；
 3. 不允许系统内部自动查商品库补齐；
 4. 不允许仅凭 `source_product_id` 自动反查商品标题、类目、价格、店铺名；
-5. 若 `product_info` 缺失、前 3 层不完整或字段为空，系统必须直接报错；
+5. 若 `product_info` 缺失、调用方必填字段为空，或内部推导字段无法由系统侧稳定得出，系统必须直接报错；
 6. `CandidateSet` **不是输入字段**，不得提前混入 `product_info`。
 
 ### 模块边界说明

@@ -8,6 +8,7 @@ from typing import Any, Callable
 
 from ..errors import ProviderExecutionViolation
 from ..models.config_models import ExtractorConfig, ProviderConfig
+from ..utils.paths import resolve_resource_path
 from .runtime_governance import ProviderRuntimeGovernance
 
 BYOK_PROVIDER = Path(__file__).resolve().with_name("byok_provider.py")
@@ -125,7 +126,7 @@ class ProviderOrchestrator:
         return bool(provider.enabled and provider.endpoint and provider.api_key)
 
     def _run_fixture_provider(self, name: str, provider: ProviderConfig) -> Any:
-        path = Path(provider.path)
+        path = resolve_resource_path(provider.path)
         try:
             return json.loads(path.read_text(encoding="utf-8"))
         except Exception as exc:

@@ -17,6 +17,21 @@ for candidate in (str(SKILL_ROOT), str(REPO_ROOT)):
     if candidate not in sys.path:
         sys.path.insert(0, candidate)
 
+
+def _repo_path(path_value: str) -> Path:
+    candidate = Path(path_value)
+    if candidate.is_absolute():
+        return candidate
+    # 历史写法 user_skills/<skill-name>/... 自动剖离，改为相对 SKILL_ROOT 解析。
+    parts = candidate.parts
+    if len(parts) >= 2 and parts[0] == "user_skills":
+        return SKILL_ROOT / Path(*parts[2:])
+    skill_candidate = SKILL_ROOT / candidate
+    if skill_candidate.exists():
+        return skill_candidate
+    # 回退：优先落在仓库内（SKILL_ROOT），避免 clone 到浅目录时 REPO_ROOT 算成 "/"。
+    return skill_candidate
+
 from extractor.errors import FactPackViolation  # noqa: E402
 from extractor.validators.factpack_assertions import assert_factpack_schema  # noqa: E402
 from tests.case_meta_helpers import (  # noqa: E402
@@ -60,7 +75,11 @@ def test_replay_pipeline_cases(case: dict) -> None:
     case_id = case["case_id"]
 
     if case["type"] == "factpack_artifact":
-        factpack_path = REPO_ROOT / case["path"]
+        factpack_path = _repo_path(case["path"])
+        if not factpack_path.is_file():
+            pytest.skip(
+                f"集成用例依赖 smoke 阶段产物，未生成则跳过: {factpack_path}"
+            )
         _assert_true_with_case_context(
             factpack_path.is_file(),
             case_id=case_id,
@@ -134,8 +153,12 @@ def test_replay_pipeline_cases(case: dict) -> None:
         return
 
     if case["type"] == "commerce_video_diagnosis_request":
-        payload_path = REPO_ROOT / case["payload"]
-        output_path = REPO_ROOT / case["output"]
+        payload_path = _repo_path(case["payload"])
+        output_path = _repo_path(case["output"])
+        if not payload_path.is_file():
+            pytest.skip(
+                f"集成用例依赖 smoke 阶段产物，未生成则跳过: {payload_path}"
+            )
         _assert_true_with_case_context(
             payload_path.is_file(),
             case_id=case_id,
@@ -144,7 +167,7 @@ def test_replay_pipeline_cases(case: dict) -> None:
         )
         command = [
             sys.executable,
-            str(REPO_ROOT / "user_skills/commerce-video-diagnosis/scripts/run_v2.py"),
+            str(_repo_path("user_skills/commerce-video-diagnosis/scripts/run_v2.py")),
             "--payload",
             str(payload_path),
             "--output",

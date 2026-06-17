@@ -2,9 +2,14 @@
 # - Python: 3.10+
 # - System tools required: ffmpeg, ffprobe
 # - Install system tools separately; they are not pip packages.
+#
+# IMPORTANT: 本项目的数据模型基于 pydantic v1 语法（@validator / class Config 等）。
+#            必须使用 pydantic 1.x；pydantic 2.x 下会因校验器语法不兼容而直接报错。
+#            若全局环境已是 pydantic 2.x 且不能降级，请参考 README 的隔离安装说明
+#            （pip install --target ./vendor_pydantic1 "pydantic<2" + PYTHONPATH）。
 
 opencv-python-headless>=4.8
-pydantic>=1.10,<3
+pydantic>=1.10,<2
 pytest>=7.0
 requests>=2.31
 PyYAML>=6.0

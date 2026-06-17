@@ -76,8 +76,7 @@
       "frequency_attribute": "高频",
       "trust_attribute": "中",
       "price_attribute": "中",
-      "endorsement_attribute": "无明确权威背书",
-      "channel_risk_attribute": "低"
+      "endorsement_attribute": "无明确权威背书"
     }
   }
 }
@@ -277,10 +276,9 @@
 | `product_task` | string | 是 | 商品要帮助用户完成的核心任务 |
 | `cognitive_attribute` | string | 是 | 商品在认知理解维度上的属性 |
 | `frequency_attribute` | string | 是 | 商品消费/使用频次属性 |
-| `trust_attribute` | string | 是 | 商品在信任存量维度上的属性 |
-| `price_attribute` | string | 是 | 商品在价格水位/价格阻力维度上的属性 |
+| `trust_attribute` | string | 内部推导 | 信任存量属性；由 `shop_name` 经品牌白名单（`brand_whitelist.csv` + `store_suffix_trust_dict.csv`）推导得出，调用方无需传入 |
+| `price_attribute` | string | 内部推导 | 价格水位/价格阻力属性；由 `payload.engine_node.relative_price_level` 推导得出，调用方无需传入 |
 | `endorsement_attribute` | string | 是 | 商品是否具有可用的权威/专业/官方背书 |
-| `channel_risk_attribute` | string | 是 | 当前渠道表达风险属性 |
 
 ### 4.3.3 字段定义与边界
 
@@ -352,10 +350,14 @@
 
 #### `trust_attribute`
 
-定义：商品在用户先验信任基础上的属性。
+定义：商品在用户先验信任基础上的内部推导属性。
 
 作用：
 - 为信任阻力、背书需求、品牌侧表达强度判断提供输入。
+
+推导来源：
+- 由 `shop_name` 经品牌白名单（`brand_whitelist.csv` + `store_suffix_trust_dict.csv`）推导得出；
+- 调用方无需传入。
 
 示例值：
 - `低`
@@ -363,16 +365,20 @@
 - `高`
 
 边界：
-- 该字段是供诊断使用的输入属性，不是模型自由发挥的结论；
-- 若调用方没有可信来源，宁可不传并报错，也不要主观乱定；
-- 后续若接品牌白名单等字典，应以字典裁决为准。
+- 该字段是系统内部诊断属性，不是调用方输入字段；
+- 禁止调用方主观传入或覆盖；
+- 推导结果必须以品牌白名单和店铺后缀字典裁决为准。
 
 #### `price_attribute`
 
-定义：商品在价格水位或价格阻力上的属性。
+定义：商品在价格水位或价格阻力上的内部推导属性。
 
 作用：
 - 为价格敏感度、性价比表达、促销承接强度提供输入。
+
+推导来源：
+- 由 `payload.engine_node.relative_price_level` 推导得出；
+- 调用方无需传入。
 
 示例值：
 - `低`
@@ -382,7 +388,8 @@
 边界：
 - 这是相对品类语境的价格属性，不是绝对价格高低；
 - 不得脱离类目语境孤立判断；
-- 不能把“客单价高”机械等于“高价格阻力”。
+- 不能把“客单价高”机械等于“高价格阻力”；
+- 禁止调用方主观传入或覆盖。
 
 #### `endorsement_attribute`
 
@@ -400,23 +407,6 @@
 边界：
 - 必须是可被调用方明确说明的背书，不得凭空想象；
 - 若只是普通店播口播，不应强行上升为“专业背书”。
-
-#### `channel_risk_attribute`
-
-定义：商品在当前投放渠道下的表达风险属性。
-
-作用：
-- 为内容审核、违规营销、极限词、效果承诺等风险控制提供前置输入。
-
-示例值：
-- `低`
-- `中`
-- `高`
-
-边界：
-- 这里指渠道表达风险，不是商品功效真假判断；
-- 高风险常见于强功效、强对比、易触发违规承诺的商品；
-- 若风险未知，不应默认填低。
 
 ---
 
@@ -667,8 +657,7 @@ Schema 文档中建议只保留：
       "frequency_attribute": "高频",
       "trust_attribute": "中",
       "price_attribute": "中",
-      "endorsement_attribute": "无明确背书",
-      "channel_risk_attribute": "低"
+      "endorsement_attribute": "无明确背书"
     }
   }
 }

@@ -168,9 +168,18 @@ HEC 是视频诊断的核心阅读框架：
 ### 1. 安装 Python 依赖
 
 ```bash
-cd user_skills/commerce-video-diagnosis
+cd commerce-video-diagnosis
 python3 -m pip install -r requirements.txt
 ```
+
+> ⚠️ **pydantic 版本要求**：本仓库的数据模型基于 pydantic **v1** 语法（`@validator` / `class Config` 等），
+> `requirements.txt` 已锁定 `pydantic>=1.10,<2`。若你的全局环境已是 pydantic 2.x 且不便降级，
+> 可隔离安装后通过 `PYTHONPATH` 优先加载：
+>
+> ```bash
+> pip install --target ./vendor_pydantic1 "pydantic<2"
+> PYTHONPATH=./vendor_pydantic1 python3 scripts/run_extractor.py ...
+> ```
 
 ### 2. 安装系统依赖
 
@@ -185,30 +194,48 @@ ffprobe -version
 
 ## 快速开始
 
+> 所有命令均假设你已 `cd` 进入仓库根目录（即包含 `SKILL.md` / `requirements.txt` 的目录）。
+> 配置文件中的相对路径会自动相对仓库根目录解析，无需关心仓库被放在什么位置。
+
+### 场景零：零配置 fixture demo（无需任何 API Key）
+
+```bash
+python3 scripts/run_extractor.py \
+  --config fixtures/p0_fixture_config.json \
+  --mode two-stage-run
+```
+
+这是最快验证链路是否打通的方式：它用仓库自带的 ASR / VLM / OCR fixture 回放，
+**不需要任何 API Key**，即可跑出完整的 `diagnosis / blueprint / workflow_report / triad_assets`。
+建议新装环境第一步先跑它。
+
+> 注意：fixture 回放只验证**链路**。HEC 判定、CandidateSet 等"诊断大脑"在没有 LLM 时
+> 会走 `rule_fallback`（关键词兜底），结论可能不准，仅用于打通流程。详见下方"公开版边界"。
+
 ### 场景一：只执行抽取
 
 ```bash
-cd user_skills/commerce-video-diagnosis && python3 scripts/run_extractor.py \
+python3 scripts/run_extractor.py \
   --config fixtures/examples/openai_whisper_gpt4o_config.json \
   --mode extract-only
 ```
 
-适用于你只想验证 provider、预处理和 `FactPack` 构建是否正常的场景。
+适用于你只想验证 provider、预处理和 `FactPack` 构建是否正常的场景。（需配置 BYOK key）
 
 ### 场景二：执行完整两阶段链路
 
 ```bash
-cd user_skills/commerce-video-diagnosis && python3 scripts/run_extractor.py \
+python3 scripts/run_extractor.py \
   --config fixtures/examples/openai_whisper_gpt4o_config.json \
   --mode two-stage-run
 ```
 
-适用于你从原始视频起步，希望直接得到 `diagnosis / blueprint / workflow_report / triad_assets` 的场景。
+适用于你从原始视频起步，希望直接得到 `diagnosis / blueprint / workflow_report / triad_assets` 的场景。（需配置 BYOK key）
 
 ### 场景三：已有 FactPack，直接跑理解阶段
 
 ```bash
-cd <repo-root> && python3 user_skills/commerce-video-diagnosis/scripts/run_v2.py \
+python3 scripts/run_v2.py \
   --payload <payload.json> \
   --output <output.json>
 ```
@@ -331,6 +358,18 @@ cd <repo-root> && python3 user_skills/commerce-video-diagnosis/scripts/run_v2.py
 - `product_info` 必须由调用方显式输入；
 - 调用方不得在输入中混入 `CandidateSet` 或其他中间变量；
 - provider 未配置时，公开版必须显式报错，不做 silent fallback。
+
+### ⚠️ 关于 LLM 与诊断质量（必读）
+
+本 skill 的"诊断大脑"（HEC 标签判定、CandidateSet 生成、四维评分等）**依赖一个 OpenAI 兼容的 LLM**（BYOK，通过环境变量 `OPENAI_BASE_URL` / `OPENAI_API_KEY` / `OPENAI_MODEL` 注入）。
+
+- **配了 LLM**：走 LLM-first 主路径，这是设计上的正确用法，诊断质量取决于你用的模型。
+- **没配 LLM**：自动退化到 `rule_fallback`（关键词硬匹配）。它只保证**链路可跑通**，
+  **不保证判定准确**。实测中，rule_fallback 可能把 Hook / Effect / CTA 标签判错（例如把"跟竞品对比"
+  误判为"自比"）。因此 fixture demo / 无 LLM 模式的输出仅适合验证流程与集成，
+  **不要直接拿 rule_fallback 的结论当作真实诊断依据**。
+
+输出中的 `inference_mode` 字段（例如 `blueprint.risk_flags.inference_mode`、`workflow_report.inference_mode`）会标记本次裁决是来自 LLM 还是 rule_fallback；`risk_flags.hec_reason` 会给出可读理由。请据此判断输出可信度。
 
 ## 常见报错
 

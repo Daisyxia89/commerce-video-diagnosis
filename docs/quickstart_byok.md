@@ -174,7 +174,7 @@
 ### 只抽取 FactPack
 
 ```bash
-cd user_skills/commerce-video-diagnosis && python3 scripts/run_extractor.py \
+cd commerce-video-diagnosis && python3 scripts/run_extractor.py \
   --config fixtures/examples/openai_whisper_gpt4o_config.json \
   --mode extract-only
 ```
@@ -182,7 +182,7 @@ cd user_skills/commerce-video-diagnosis && python3 scripts/run_extractor.py \
 ### 跑完整两段式链路
 
 ```bash
-cd user_skills/commerce-video-diagnosis && python3 scripts/run_extractor.py \
+cd commerce-video-diagnosis && python3 scripts/run_extractor.py \
   --config fixtures/examples/openai_whisper_gpt4o_config.json \
   --mode two-stage-run
 ```
