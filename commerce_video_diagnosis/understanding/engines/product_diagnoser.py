@@ -282,9 +282,28 @@ PAPER_HARD_VETO_RULES: dict[str, dict[str, Any]] = {
 HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS: dict[str, dict[str, Any]] = {
     "family_env_cleaning": {
         "category_terms": {"家庭环境清洁", "马桶清洁剂/洁厕剂", "多用途清洁剂", "洁厕剂", "清洁喷雾", "地面清洁剂", "家庭玻璃清洁剂", "果蔬专用清洁剂", "水垢清洁剂/除垢剂", "油污清洁剂", "洁厕凝胶", "洁瓷剂", "洗洁精", "管道疏通剂", "铁锈清洁剂", "锅底黑垢清洁剂"},
-        "problem_object_terms": {"马桶": "马桶", "灶台": "灶台", "台面": "台面", "油烟机": "油烟机", "地板": "地面", "瓷砖": "瓷砖"},
-        "problem_state_terms": {"黄垢": "黄垢残留", "水垢": "水垢残留", "尿渍": "尿渍残留", "油垢": "油垢残留", "污膜": "污膜残留", "污渍": "污渍残留"},
-        "action_mechanism_terms": {"除垢": "去除", "去黄": "去除", "去污": "去除", "清洁": "去除", "溶解": "溶解", "擦除": "去除"},
+        "problem_object_terms": {"马桶": "马桶", "灶台": "灶台", "台面": "台面", "油烟机": "油烟机", "地板": "地面", "瓷砖": "瓷砖", "厨房": "厨房表面"},
+        "problem_state_terms": {"黄垢": "黄垢残留", "水垢": "水垢残留", "尿渍": "尿渍残留", "油垢": "油垢残留", "污膜": "污膜残留", "污渍": "污渍残留", "油污": "油污残留", "重油污": "油污残留", "厚重油污": "油污残留"},
+        "action_mechanism_terms": {"除垢": "去除", "去黄": "去除", "去污": "去除", "清洁": "去除", "溶解": "溶解", "擦除": "去除", "干净": "去除"},
+        "fact_groups": [
+            {
+                "group_name": "defect_repair",
+                "problem_object_terms": {"马桶": "马桶", "灶台": "灶台", "台面": "台面", "油烟机": "油烟机", "地板": "地面", "瓷砖": "瓷砖", "厨房": "厨房表面"},
+                "problem_state_terms": {"黄垢": "黄垢残留", "水垢": "水垢残留", "尿渍": "尿渍残留", "油垢": "油垢残留", "污膜": "污膜残留", "污渍": "污渍残留", "油污": "油污残留", "重油污": "油污残留", "厚重油污": "油污残留"},
+                "action_mechanism_terms": {"除垢": "去除", "去黄": "去除", "去污": "去除", "清洁": "去除", "溶解": "溶解", "擦除": "去除", "干净": "去除"},
+                "default_object": "厨房表面",
+            },
+            {
+                "group_name": "operation_ease",
+                "problem_object_terms": {"刷洗": "刷洗流程", "清洗": "清洗流程", "操作": "操作流程"},
+                "problem_state_terms": {"刷洗": "刷洗费力", "省事": "费力麻烦"},
+                "action_mechanism_terms": {"一喷一擦": "简化", "免刷洗": "简化", "省事": "简化"},
+                "default_object": "刷洗流程",
+                "allow_action_only_without_object": True,
+                "default_state_when_action_only": "费力麻烦",
+                "group_candidate_task": "降本增效/懒人替代",
+            },
+        ],
         "negative_terms": {"居家可用", "多用途", "轻松擦拭", "日常可用"},
         "match_threshold": 3,
         "candidate_task": "缺陷修复/冲突消除",
@@ -2241,26 +2260,12 @@ class ProductDiagnosisEngine:
         }
 
         if subcategory_context in HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS and not candidate_pool and subcategory_context != "paper_products":
-            weak_reason = "仅命中 Common Skeleton 弱事实或类目壳信息，Stage B 不直接锁主候选，交由 Stage C 在功能候选内继续仲裁。"
-            candidates = ["生存/运转维系", "缺陷修复/冲突消除"]
-            candidate_reasons = {
-                "生存/运转维系": [weak_reason],
-                "缺陷修复/冲突消除": [weak_reason],
-            }
-            candidate_pool = [
-                {
-                    "task_name": "生存/运转维系",
-                    "supporting_fact_ids": [],
-                    "mapping_reason": weak_reason,
-                    "priority": "sub_pack_weak",
-                },
-                {
-                    "task_name": "缺陷修复/冲突消除",
-                    "supporting_fact_ids": [],
-                    "mapping_reason": weak_reason,
-                    "priority": "sub_pack_weak",
-                },
-            ]
+            candidate_pool = self._build_dynamic_household_weak_candidates(module1_output, functional_facts, text)
+            if candidate_pool:
+                candidates = [entry["task_name"] for entry in candidate_pool]
+                candidate_reasons = {
+                    entry["task_name"]: [entry["mapping_reason"]] for entry in candidate_pool
+                }
 
         excluded_tasks: dict[str, list[str]] = {}
         default_excluded_reasons = {
@@ -2461,14 +2466,34 @@ class ProductDiagnosisEngine:
         if not pack:
             return []
 
-        object_matches = self._extract_keyword_matches(clause, pack.get("problem_object_terms", {}))
-        state_matches = self._extract_keyword_matches(clause, pack.get("problem_state_terms", {}))
-        action_matches = self._extract_keyword_matches(clause, pack.get("action_mechanism_terms", {}))
-        default_object = str(pack.get("default_object") or "").strip()
-        allow_action_only_with_object = bool(pack.get("allow_action_only_with_object"))
-        allow_action_only_without_object = bool(pack.get("allow_action_only_without_object"))
-        default_state_when_action_only = str(pack.get("default_state_when_action_only") or "").strip()
-        action_only_terms = set(pack.get("action_only_terms", set()))
+        fact_groups = list(pack.get("fact_groups") or [])
+        if not fact_groups:
+            fact_groups = [pack]
+
+        facts: list[dict[str, Any]] = []
+        for group in fact_groups:
+            fact = self._build_subcategory_fact_from_group(subcategory_context, clause, module1_output, pack, group)
+            if fact:
+                facts.append(fact)
+        return facts
+
+    def _build_subcategory_fact_from_group(
+        self,
+        subcategory_context: str,
+        clause: str,
+        module1_output: Module1Output,
+        pack: Mapping[str, Any],
+        group: Mapping[str, Any],
+    ) -> dict[str, Any] | None:
+        object_matches = self._extract_keyword_matches(clause, group.get("problem_object_terms") or pack.get("problem_object_terms", {}))
+        state_matches = self._extract_keyword_matches(clause, group.get("problem_state_terms") or pack.get("problem_state_terms", {}))
+        action_matches = self._extract_keyword_matches(clause, group.get("action_mechanism_terms") or pack.get("action_mechanism_terms", {}))
+        default_object = str(group.get("default_object") or pack.get("default_object") or "").strip()
+        allow_action_only_with_object = bool(group.get("allow_action_only_with_object", pack.get("allow_action_only_with_object")))
+        allow_action_only_without_object = bool(group.get("allow_action_only_without_object", pack.get("allow_action_only_without_object")))
+        default_state_when_action_only = str(group.get("default_state_when_action_only") or pack.get("default_state_when_action_only") or "").strip()
+        action_only_terms = set(group.get("action_only_terms") or pack.get("action_only_terms", set()))
+
         if not object_matches and default_object and state_matches and action_matches:
             object_matches = [default_object]
         if (
@@ -2491,27 +2516,27 @@ class ProductDiagnosisEngine:
             state_matches = [default_state_when_action_only or "维持正常"]
 
         if not (object_matches and state_matches and action_matches):
-            return []
+            return None
 
-        return [
-            {
-                "problem_object": object_matches[0],
-                "problem_state": state_matches[0],
-                "action_mechanism": action_matches[0],
-                "benefit_target": object_matches[0],
-                "usage_scene": module1_output.leaf_category,
-                "evidence_text": clause,
-                "fact_layer": "subcategory_pack",
-                "subcategory_context": subcategory_context,
-                "source_type": f"household_subcategory_pack:{subcategory_context}",
-                "confidence": "high",
-                "matched_terms": {
-                    "object_terms": object_matches,
-                    "state_terms": state_matches,
-                    "action_terms": action_matches,
-                },
-            }
-        ]
+        return {
+            "problem_object": object_matches[0],
+            "problem_state": state_matches[0],
+            "action_mechanism": action_matches[0],
+            "benefit_target": object_matches[0],
+            "usage_scene": module1_output.leaf_category,
+            "evidence_text": clause,
+            "fact_layer": "subcategory_pack",
+            "subcategory_context": subcategory_context,
+            "source_type": f"household_subcategory_pack:{subcategory_context}:{group.get('group_name', 'default')}",
+            "confidence": "high",
+            "matched_terms": {
+                "object_terms": object_matches,
+                "state_terms": state_matches,
+                "action_terms": action_matches,
+            },
+            "group_name": str(group.get("group_name") or "default"),
+            "group_candidate_task": str(group.get("group_candidate_task") or "").strip(),
+        }
 
     def _extract_general_clause_facts(self, clause: str, module1_output: Module1Output) -> list[dict[str, Any]]:
         facts: list[dict[str, Any]] = []
@@ -2694,17 +2719,127 @@ class ProductDiagnosisEngine:
             return self._build_hair_removal_candidate_pool(sub_pack_facts)
 
         pack = HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS[subcategory_context]
-        strong_fact_ids = [fact["fact_id"] for fact in sub_pack_facts]
-        if not strong_fact_ids:
-            return [], []
-        return [
-            {
-                "task_name": str(pack.get("candidate_task") or "缺陷修复/冲突消除"),
-                "supporting_fact_ids": strong_fact_ids,
-                "mapping_reason": f"{subcategory_context} 子包已形成对象×状态×动作闭环，由子包事实直接承接强候选。",
-                "priority": "sub_pack_strong",
-            }
-        ], []
+        candidate_pool: list[dict[str, Any]] = []
+
+        default_task = str(pack.get("candidate_task") or "缺陷修复/冲突消除")
+        strong_fact_ids = [
+            fact["fact_id"]
+            for fact in sub_pack_facts
+            if (fact.get("group_candidate_task") or default_task) == default_task
+        ]
+        if strong_fact_ids:
+            candidate_pool.append(
+                {
+                    "task_name": default_task,
+                    "supporting_fact_ids": strong_fact_ids,
+                    "mapping_reason": f"{subcategory_context} 子包已形成对象×状态×动作闭环，由子包事实直接承接强候选。",
+                    "priority": "sub_pack_strong",
+                }
+            )
+
+        efficiency_fact_ids = [
+            fact["fact_id"]
+            for fact in facts
+            if (
+                fact.get("group_candidate_task") == "降本增效/懒人替代"
+                or (
+                    fact.get("problem_object") in FACT_PROCESS_OBJECTS
+                    and fact.get("action_mechanism") in {"简化", "替代", "压缩", "提速"}
+                )
+            )
+        ]
+        if efficiency_fact_ids:
+            candidate_pool.append(
+                {
+                    "task_name": "降本增效/懒人替代",
+                    "supporting_fact_ids": efficiency_fact_ids,
+                    "mapping_reason": f"{subcategory_context} 子包命中流程负担与简化/替代动作，按子包强候选 ∪ 通用效率候选取并集输出。",
+                    "priority": "sub_pack_efficiency_union",
+                }
+            )
+
+        if candidate_pool:
+            return self._dedupe_candidate_pool(candidate_pool), []
+        return [], []
+
+    def _dedupe_candidate_pool(self, candidate_pool: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        deduped: list[dict[str, Any]] = []
+        seen_tasks: set[str] = set()
+        for entry in candidate_pool:
+            task_name = entry["task_name"]
+            if task_name in seen_tasks:
+                continue
+            seen_tasks.add(task_name)
+            deduped.append(entry)
+        return deduped
+
+    def _build_dynamic_household_weak_candidates(
+        self,
+        module1_output: Module1Output,
+        facts: list[dict[str, Any]],
+        text: str,
+    ) -> list[dict[str, Any]]:
+        weak_reason = "仅命中 Common Skeleton 弱事实或类目壳信息，Stage B 先保留可被事实支撑的弱候选，交由 Stage C 继续仲裁。"
+        candidate_pool: list[dict[str, Any]] = []
+
+        weak_defect_fact_ids = [
+            fact["fact_id"]
+            for fact in facts
+            if fact.get("fact_layer") != "subcategory_pack"
+            and (
+                any(keyword in str(fact.get("problem_state") or "") for keyword in {"残留", "困扰", "异常", "附着", "发黄", "堵塞", "不适"})
+                or fact.get("action_mechanism") in {"去除", "溶解", "改善", "修复", "缓解", "消除"}
+            )
+        ]
+        if weak_defect_fact_ids:
+            candidate_pool.append(
+                {
+                    "task_name": "缺陷修复/冲突消除",
+                    "supporting_fact_ids": weak_defect_fact_ids,
+                    "mapping_reason": weak_reason,
+                    "priority": "sub_pack_weak",
+                }
+            )
+
+        weak_efficiency_fact_ids = [
+            fact["fact_id"]
+            for fact in facts
+            if fact.get("fact_layer") != "subcategory_pack"
+            and fact.get("action_mechanism") in {"简化", "替代", "压缩", "提速"}
+        ]
+        if (
+            weak_efficiency_fact_ids
+            or module1_output.differentiator.difference_type in {"步骤压缩", "新形态替代", "成本优化"}
+            or self._contains_any(text, OPERATION_EASE_TOKENS)
+        ):
+            candidate_pool.append(
+                {
+                    "task_name": "降本增效/懒人替代",
+                    "supporting_fact_ids": weak_efficiency_fact_ids,
+                    "mapping_reason": weak_reason,
+                    "priority": "sub_pack_weak",
+                }
+            )
+
+        maintenance_fact_ids = [
+            fact["fact_id"]
+            for fact in facts
+            if fact.get("fact_layer") != "subcategory_pack"
+            and (
+                fact.get("problem_object") in FACT_SUPPLY_OBJECTS | FACT_MAINTENANCE_OBJECTS
+                or fact.get("problem_object") == "口腹/能量补给"
+            )
+        ]
+        if maintenance_fact_ids:
+            candidate_pool.append(
+                {
+                    "task_name": "生存/运转维系",
+                    "supporting_fact_ids": maintenance_fact_ids,
+                    "mapping_reason": weak_reason,
+                    "priority": "sub_pack_weak",
+                }
+            )
+        return candidate_pool
 
     def _build_laundry_candidate_pool(
         self,
