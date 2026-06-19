@@ -7,7 +7,7 @@ import re
 from dataclasses import asdict, dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Callable, Literal, Mapping
+from typing import Any, Callable, Literal, Mapping, Optional
 
 import requests
 from commerce_video_diagnosis.understanding.llm_provider import build_chat_headers, require_llm_config, resolve_llm_config
@@ -71,6 +71,9 @@ BLUE_OCEAN_TOKENS = set(get_string_list("product_diagnoser.jtbd.blue_ocean_token
 FAST_MOVING_TOKENS = set(get_string_list("product_diagnoser.frequency.fast_moving_tokens"))
 DURABLE_TOKENS = set(get_string_list("product_diagnoser.frequency.durable_tokens"))
 ORDINARY_DAILY_TOKENS = set(get_string_list("product_diagnoser.jtbd.ordinary_daily_tokens"))
+PHYSICAL_SAFETY_TOKENS = set(get_string_list("product_diagnoser.jtbd.physical_safety_tokens"))
+PROTECTION_SEMANTIC_TOKENS = set(get_string_list("product_diagnoser.jtbd.protection_semantic_tokens"))
+PROTECTION_RISK_CATEGORY_TOKENS = set(get_string_list("product_diagnoser.jtbd.protection_risk_category_tokens"))
 CARE_TOKENS = {"宝宝", "婴儿", "儿童", "家人", "父母", "老人", "宠物"}
 GIFT_TOKENS = {"礼盒", "礼物", "送礼", "伴手礼", "谢礼", "回礼", "节日礼物"}
 EMOTIONAL_PREMIUM_TOKENS = set(get_string_list("product_diagnoser.jtbd.emotional_premium_tokens"))
@@ -846,6 +849,203 @@ class JTBDProposal(BaseModel):
         return values
 
 
+
+# =============================================================================
+# 说服要求建模模块（Persuasion Requirement Modeling）协议族 —— V3.1 一期
+# =============================================================================
+DecisionGap = Literal[
+    "need_gap",
+    "fit_gap",
+    "value_gap",
+    "proof_gap",
+    "trust_gap",
+    "risk_gap",
+    "action_gap",
+]
+ContentGoal = Literal[
+    "conversion",
+    "purchase",
+    "add_to_cart",
+    "coupon_claim",
+    "shop_entry",
+    "seeding",
+    "education",
+    "brand_awareness",
+    "unknown",
+]
+Priority = Literal["high", "medium", "low"]
+JTBDTemplateStatus = Literal["matched", "fallback_generic"]
+RequirementCompletionStatus = Literal["completed", "partial", "missing", "not_applicable"]
+ACTION_GOALS: frozenset[str] = frozenset({"conversion", "purchase", "add_to_cart", "coupon_claim", "shop_entry"})
+ACTIVE_REQUIREMENT_WHITELIST: tuple[str, ...] = (
+    "expose_current_pain",
+    "clarify_usage_scenario",
+    "identify_target_user",
+    "prove_user_fit",
+    "prove_scenario_fit",
+    "prove_spec_fit",
+    "prove_core_benefit",
+    "prove_new_solution_efficiency",
+    "establish_clear_difference",
+    "prove_replacement_value",
+    "prove_price_reasonableness",
+    "provide_visible_result",
+    "prove_effect_not_degraded",
+    "prove_quality_stability",
+    "establish_basic_trust",
+    "prove_source_credibility",
+    "provide_authority_endorsement",
+    "reduce_trial_risk",
+    "resolve_quality_risk",
+    "resolve_safety_risk",
+    "resolve_value_risk",
+    "prove_current_purchase_reason",
+    "clarify_purchase_threshold",
+)
+REQUIREMENT_STATUS_ENUM: tuple[str, ...] = ("completed", "partial", "missing", "not_applicable")
+DIAGNOSIS_DIMENSIONS: tuple[str, ...] = (
+    "whether_requirement_appears",
+    "whether_evidence_is_sufficient",
+    "whether_sequence_is_reasonable",
+    "whether_risk_is_resolved",
+)
+
+
+class StrictBaseModel(BaseModel):
+    class Config:
+        extra = "forbid"
+        anystr_strip_whitespace = True
+        validate_assignment = True
+
+
+class PersuasionRequirement(StrictBaseModel):
+    requirement_id: str
+    requirement_name: str
+    decision_gap: DecisionGap
+    source: list[str] = Field(default_factory=list)
+    priority: Priority
+    required: bool
+    sequence_rank: int = Field(ge=10, le=59)
+    success_criteria: str
+    related_decision_criteria: list[str] = Field(default_factory=list)
+    required_evidence_requirements: list[str] = Field(default_factory=list)
+    risk_points: list[str] = Field(default_factory=list)
+
+    @validator("requirement_id")
+    def _requirement_in_whitelist(cls, value: str) -> str:
+        if value not in ACTIVE_REQUIREMENT_WHITELIST:
+            raise ValueError(f"requirement_id={value} 不在 23 条 active MVP 白名单内。")
+        return value
+
+    @validator("source")
+    def _source_not_empty(cls, value: list[str]) -> list[str]:
+        if not value:
+            raise ValueError("persuasion_requirement.source 不允许为空。")
+        return value
+
+
+class NotApplicableRequirement(StrictBaseModel):
+    requirement_id: str
+    decision_gap: DecisionGap
+    status: Literal["not_applicable"] = "not_applicable"
+    reason: str
+
+    @validator("requirement_id")
+    def _requirement_in_whitelist(cls, value: str) -> str:
+        if value not in ACTIVE_REQUIREMENT_WHITELIST:
+            raise ValueError(f"not_applicable requirement_id={value} 不在 23 条 active 白名单内。")
+        return value
+
+
+class PrimaryJTBD(StrictBaseModel):
+    level1: str
+    level2: str
+
+
+class CategoryResistance(StrictBaseModel):
+    rule: str
+    summary: str
+
+
+class ProductConversionBarrier(StrictBaseModel):
+    rule: str
+    summary: str
+
+
+class MainPersuasionRoute(StrictBaseModel):
+    primary_jtbd: PrimaryJTBD
+    category_resistance: CategoryResistance
+    product_conversion_barrier: ProductConversionBarrier
+
+
+class ActivatedCategoryRequirements(StrictBaseModel):
+    category_group: str
+    routing_confidence: str = ""
+    activated_decision_criteria: list[str] = Field(default_factory=list)
+    activated_evidence_requirements: list[str] = Field(default_factory=list)
+    activated_risk_points: list[str] = Field(default_factory=list)
+
+
+class RequirementCompletionSchema(StrictBaseModel):
+    status_enum: list[RequirementCompletionStatus] = Field(default_factory=lambda: list(REQUIREMENT_STATUS_ENUM))
+    minimum_required_requirements: list[str] = Field(default_factory=list)
+    diagnosis_dimensions: list[str] = Field(default_factory=lambda: list(DIAGNOSIS_DIMENSIONS))
+
+    @validator("status_enum")
+    def _status_enum_fixed(cls, value: list[str]) -> list[str]:
+        if list(value) != list(REQUIREMENT_STATUS_ENUM):
+            raise ValueError(f"status_enum 必须固定为 {list(REQUIREMENT_STATUS_ENUM)}。")
+        return value
+
+    @validator("minimum_required_requirements")
+    def _minimum_in_whitelist(cls, value: list[str]) -> list[str]:
+        illegal = [rid for rid in value if rid not in ACTIVE_REQUIREMENT_WHITELIST]
+        if illegal:
+            raise ValueError(f"minimum_required_requirements 含非白名单项 {illegal}。")
+        return value
+
+    @validator("diagnosis_dimensions")
+    def _dimensions_fixed(cls, value: list[str]) -> list[str]:
+        if list(value) != list(DIAGNOSIS_DIMENSIONS):
+            raise ValueError(f"diagnosis_dimensions 必须固定为 {list(DIAGNOSIS_DIMENSIONS)}。")
+        return value
+
+
+class DiagnosisContract(StrictBaseModel):
+    requirement_completion_schema: RequirementCompletionSchema
+
+
+class PersuasionRequirementProfile(StrictBaseModel):
+    profile_version: str = "v3.1"
+    content_goal: ContentGoal
+    category_group: str
+    jtbd_template_status: JTBDTemplateStatus
+    requirement_dictionary_version: str
+    category_purchase_criteria_version: str = ""
+    main_persuasion_route: MainPersuasionRoute
+    activated_category_requirements: ActivatedCategoryRequirements
+    persuasion_requirements: list[PersuasionRequirement] = Field(default_factory=list)
+    not_applicable_requirements: list[NotApplicableRequirement] = Field(default_factory=list)
+    diagnosis_contract: DiagnosisContract
+
+    @root_validator
+    def _action_gap_governance(cls, values: dict[str, Any]) -> dict[str, Any]:
+        content_goal = values.get("content_goal")
+        requirements = values.get("persuasion_requirements") or []
+        if content_goal not in ACTION_GOALS:
+            leaked = [
+                r.requirement_id
+                for r in requirements
+                if getattr(r, "decision_gap", None) == "action_gap"
+            ]
+            if leaked:
+                raise ValueError(
+                    f"content_goal={content_goal} 非转化目标，action_gap 要求 {leaked} "
+                    "不得进入 persuasion_requirements，必须输出 not_applicable。"
+                )
+        return values
+
+
 class CategoryIntentMatrix(BaseModel):
     ocean: Literal["蓝海", "红海"]
     competition_focus: Literal["核心", "破圈"] | None = None
@@ -887,6 +1087,7 @@ class ProductDiagnosisOutput(BaseModel):
     product_intent_matrix: ProductIntentMatrix
     reasoning_path: list[str]
     warnings: list[str] = Field(default_factory=list)
+    persuasion_requirement_profile: Optional[PersuasionRequirementProfile] = None
 
     category: str
     jtbd: str
@@ -1445,6 +1646,40 @@ class ProductDiagnosisEngine:
                 return people_label
         return "具体需求人群"
 
+    def _inject_protection_risk_implicit_comparison(
+        self,
+        payload: DiagnosticInput,
+        bridge_source_evidence: list[str],
+        bridge_comparison_object: str,
+    ) -> tuple[str, str, str, str] | None:
+        """P2：防护/防虫/防晒/安全等风险类目的隐式对比对象注入。
+
+        当商品类目命中防护风险类目，且证据中存在风险/防护锚点，而调用方未显式提供
+        comparison_object 时，注入隐式旧方案基线（语义为“未使用任何驱避/防护产品”），
+        把 difference_type 从“自身卖点陈述”改写为“风险降低”，避免被降级为纯自身卖点。
+        返回 (difference_domain, difference_type, comparison_object, comparison_object_evidence_type)；
+        不满足注入条件时返回 None，保持原“自身卖点陈述清空 comparison_object”协议。
+        """
+        # 调用方已显式提供 comparison_object 时不注入，尊重上游输入。
+        if bridge_comparison_object:
+            return None
+        category_text = f"{payload.leaf_category} {payload.product_name}"
+        category_keyword = self._find_first_keyword(category_text, PROTECTION_RISK_CATEGORY_TOKENS)
+        if not category_keyword:
+            return None
+        joined_evidence = " ".join(str(item).strip() for item in bridge_source_evidence if str(item).strip())
+        risk_anchor_tokens = DIFFERENTIATOR_RELATIVE_DIFFERENCE_TYPE_ANCHORS.get("风险降低", set())
+        # 证据缺少风险/防护锚点时不注入，避免下游相对锚点断言 Crash Early。
+        if not self._contains_any(joined_evidence, risk_anchor_tokens):
+            return None
+        self._record_keyword_rule_trace(
+            field_name="protection_risk_implicit_comparison",
+            output_value="同类旧方案",
+            rule_path="product_diagnoser.jtbd.protection_risk_category_tokens",
+            matched_keyword=category_keyword,
+        )
+        return ("functional", "风险降低", "同类旧方案", "jtbd_inferred")
+
     def _normalize_differentiator(self, payload: DiagnosticInput) -> StructuredDifferentiator:
         raw = payload.differentiator
         if isinstance(raw, Mapping):
@@ -1489,8 +1724,23 @@ class ProductDiagnosisEngine:
             if bridge_comparison_object_evidence_type != "null":
                 raise ValueError("桥接层 comparison_object 为空时，comparison_object_evidence_type 必须为 null。")
         if bridge_difference_type == "自身卖点陈述":
-            bridge_comparison_object = ""
-            bridge_comparison_object_evidence_type = "null"
+            # P2：防护/防虫/防晒/安全等风险类目命中且证据含风险锚点时，注入隐式对比对象，
+            # 不直接降级为纯“自身卖点陈述”；否则保持原协议清空 comparison_object。
+            injected = self._inject_protection_risk_implicit_comparison(
+                payload,
+                bridge_source_evidence,
+                bridge_comparison_object,
+            )
+            if injected is not None:
+                (
+                    bridge_difference_domain,
+                    bridge_difference_type,
+                    bridge_comparison_object,
+                    bridge_comparison_object_evidence_type,
+                ) = injected
+            else:
+                bridge_comparison_object = ""
+                bridge_comparison_object_evidence_type = "null"
         if bridge_comparison_object and bridge_comparison_object_evidence_type == "null":
             raise ValueError("桥接层已提供 comparison_object，但 comparison_object_evidence_type= null，按 PRD 必须 Crash Early。")
         if not bridge_comparison_object and bridge_comparison_object_evidence_type != "null":
@@ -2219,7 +2469,9 @@ class ProductDiagnosisEngine:
         return evidence_chain
 
     def _is_physical_safety_fact(self, text: str) -> bool:
-        return self._contains_any(text, {"烫伤", "触电", "跌落", "滑倒", "晒伤", "受伤", "割伤", "刮伤", "划伤", "刺痛", "坠落", "漏电", "火灾", "磕碰"})
+        # P0：物理安全前置词表统一走业务字典 product_diagnoser.jtbd.physical_safety_tokens，
+        # 已覆盖防虫/防护类风险词（驱蚊/防虫/蚊虫叮咬/瘙痒/红肿/过敏等），避免驱蚊液在 Stage A 漏判。
+        return self._contains_any(text, PHYSICAL_SAFETY_TOKENS)
 
     def _infer_social_task(self, text: str) -> str | None:
         if self._contains_any(text, {"送礼", "礼赠", "伴手礼", "回礼", "礼盒"}):
@@ -2286,16 +2538,35 @@ class ProductDiagnosisEngine:
             excluded_tasks[task_name] = reasons
 
         if not candidates:
-            candidates.append("生存/运转维系")
-            candidate_reasons["生存/运转维系"] = ["未抽取到足够事实时，回落到基础正常运转维系。"]
-            candidate_pool = [
-                {
-                    "task_name": "生存/运转维系",
-                    "supporting_fact_ids": [],
-                    "mapping_reason": "候选事实不足，按 PRD 回退到基础正常运转维系待 Stage C 审核。",
-                    "priority": "fallback",
-                }
-            ]
+            negative_term_veto_hit = False
+            if subcategory_context in HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS:
+                pack_negative = HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS[subcategory_context].get("negative_terms") or set()
+                negative_term_veto_hit = bool(pack_negative and any(term in text for term in pack_negative))
+            if negative_term_veto_hit:
+                # PRD 6.2.6C Rule 2：negative_terms 命中导致子包强候选被 veto，Stage B 不得直接锁死，
+                # 必须广播多候选交 Stage C 仲裁，且 candidate_pool 保持为空。
+                candidates = ["缺陷修复/冲突消除", "降本增效/懒人替代", "生存/运转维系"]
+                veto_reason = "PRD 6.2.6C Rule 2：negative_terms 命中，子包强候选被 veto，转交 Stage C 仲裁。"
+                candidate_reasons = {task: [veto_reason] for task in candidates}
+                excluded_tasks = {}
+                candidate_pool = []
+            else:
+                has_maintenance_fact = any(
+                    (fact.get("problem_object") in FACT_SUPPLY_OBJECTS | FACT_MAINTENANCE_OBJECTS)
+                    or fact.get("problem_object") == "口腹/能量补给"
+                    for fact in functional_facts
+                )
+                if has_maintenance_fact or self._supports_maintenance_task(module1_output, text):
+                    candidates.append("生存/运转维系")
+                    candidate_reasons["生存/运转维系"] = ["命中供给/维持事实或常识可支撑维持任务，按 PRD 回退到基础正常运转维系。"]
+                    candidate_pool = [
+                        {
+                            "task_name": "生存/运转维系",
+                            "supporting_fact_ids": [],
+                            "mapping_reason": "候选事实不足但具备供给/维持类支撑，按 PRD 回退到基础正常运转维系待 Stage C 审核。",
+                            "priority": "fallback",
+                        }
+                    ]
 
         return {
             "candidate_tasks": list(dict.fromkeys(candidates)),
@@ -2412,6 +2683,12 @@ class ProductDiagnosisEngine:
         if not clause:
             return []
         if subcategory_context in HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS:
+            pack = HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS[subcategory_context]
+            negative_terms = pack.get("negative_terms") or set()
+            if negative_terms and any(term in clause for term in negative_terms):
+                # PRD 6.2.6C Rule 2：family_env_cleaning 等子包的 negative_terms 命中即硬性 veto，
+                # 子句不得形成 subcategory_pack 强候选或 common_skeleton 弱候选事实，统一下沉到 Stage C 仲裁。
+                return []
             common_facts = self._extract_common_functional_facts(clause, module1_output, subcategory_context=subcategory_context)
             subcategory_facts = self._extract_subcategory_facts(subcategory_context, clause, module1_output)
             return common_facts + subcategory_facts
@@ -2700,6 +2977,21 @@ class ProductDiagnosisEngine:
         module1_output: Module1Output,
         text: str,
     ) -> tuple[list[dict[str, Any]], list[str]]:
+        # PRD 6.2.6C Rule 2 后置断言：若有 subcategory_pack 强候选事实其 evidence_text 命中 negative_terms，
+        # 说明上游 veto 失效，必须 Crash Early 阻断输出，绝不允许污染候选池。
+        pack_def = HOUSEHOLD_STAGEB_SUBCATEGORY_PACKS.get(subcategory_context, {})
+        pack_negative_terms = pack_def.get("negative_terms") or set()
+        if pack_negative_terms:
+            for fact in facts:
+                if fact.get("fact_layer") != "subcategory_pack":
+                    continue
+                evidence_text = str(fact.get("evidence_text") or "")
+                hit = [t for t in pack_negative_terms if t in evidence_text]
+                if hit:
+                    raise AssertionError(
+                        f"PRD 6.2.6C Rule 2 violation: subcategory_pack 强候选事实 {fact.get('fact_id')} "
+                        f"在 {subcategory_context} 包内命中 negative_terms={hit}，evidence_text={evidence_text!r}"
+                    )
         sub_pack_facts = [fact for fact in facts if fact.get("fact_layer") == "subcategory_pack"]
         if subcategory_context == "paper_products":
             return self._build_paper_candidate_pool(module1_output, text, sub_pack_facts)
@@ -3249,6 +3541,10 @@ class ProductDiagnosisEngine:
             return False
         return self._has_defect_problem_state_evidence(text) and self._has_defect_remediation_evidence(module1_output, text)
 
+    def _has_risk_or_protection_semantic(self, text: str) -> bool:
+        # P1：判断文本是否携带任何风险/防护语义（物理安全风险词 或 防护语义词）。
+        return self._is_physical_safety_fact(text) or self._contains_any(text, PROTECTION_SEMANTIC_TOKENS)
+
     def _supports_maintenance_task(self, module1_output: Module1Output, text: str) -> bool:
         if self._has_strong_defect_signal(module1_output, text):
             return False
@@ -3261,6 +3557,11 @@ class ProductDiagnosisEngine:
         if self._is_ordinary_daily_category(module1_output):
             return True
         if diff_type == "自身卖点陈述" and not self._contains_any(text, EFFICIENCY_TOKENS.union(OPERATION_EASE_TOKENS)):
+            # P1：difference_type=自身卖点陈述 不再单独充分支撑维持任务；
+            # 必须叠加“无任何风险/防护/缺陷语义”的硬约束，否则交回上游任务本体裁决，
+            # 避免驱蚊液等功能型风险规避商品被错误降级为“生存/运转维系”。
+            if self._has_risk_or_protection_semantic(text):
+                return False
             return True
         return False
 

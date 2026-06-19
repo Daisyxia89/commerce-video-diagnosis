@@ -397,7 +397,8 @@
         "candidate_h_pool": ["H5"],
         "core_e_list": ["E1", "E5"],
         "core_c_list": ["C1"]
-      }
+      },
+      "persuasion_requirement_profile": null
     }
   },
   "blueprint": {},
@@ -563,6 +564,9 @@
 - 关键约束：
   - 前 3 层商品事实来自输入侧 `product_info`；
   - `candidate_set` 是**模块 3 输出给模块 4** 的候选表达协议层；
+  - `persuasion_requirement_profile` 是说服要求建模 V3.1 的可选旁路字段，类型为 `object | null`，不迁移 `ProductDiagnosisOutput`，只在原位扩展；
+  - `persuasion_requirement_profile` 顶层协议字段固定为 11 项：`profile_version`、`content_goal`、`category_group`、`jtbd_template_status`、`requirement_dictionary_version`、`category_purchase_criteria_version`、`main_persuasion_route`、`activated_category_requirements`、`persuasion_requirements`、`not_applicable_requirements`、`diagnosis_contract`；
+  - `persuasion_requirement_profile` 不得包含旧版 `persuasion_profile` / `required_persuasion_tasks`，也不得包含 HEC 或动作映射字段；
   - 模块 4 只允许消费已经裁决完成的 `candidate_set`，不得依赖 `category_strategy_intent`、`product_strategy_intent`、`intent_coordinates`、`modifiers` 等中间变量；
   - 若输出中混入上述中间变量，应视为协议越界并直接报错。
 

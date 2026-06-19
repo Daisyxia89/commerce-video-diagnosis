@@ -128,5 +128,23 @@
     "habit_switch_barrier_level": "high",
     "diagnosis_version": "caller_product_diagnosis_v1",
     "diagnosis_generated_at": "2026-06-15T14:07:02.804635+00:00"
+  },
+  "RUNBEN_QSY_7643812223105994217": {
+    "source_product_id": "RUNBEN_QSY_7643812223105994217",
+    "leaf_category_id": "LC_UNKNOWN_RUNBEN_QSY_7643812223105994217",
+    "leaf_category_name": "驱蚊喷雾",
+    "product_name": "润本派卡瑞丁驱蚊液加量版（大瓶+便携小瓶）",
+    "brand_name": "润本官方旗舰店",
+    "shop_name": "润本官方旗舰店",
+    "brand_asset_level": "high",
+    "price_band": "high",
+    "price_source": "caller_provided",
+    "financial_risk_level": "high",
+    "core_jtbd": "生存/运转维系",
+    "trust_barrier_level": "low",
+    "cognitive_barrier_level": "low",
+    "habit_switch_barrier_level": "high",
+    "diagnosis_version": "caller_product_diagnosis_v1",
+    "diagnosis_generated_at": "2026-06-19T08:11:53.655666+00:00"
   }
 }

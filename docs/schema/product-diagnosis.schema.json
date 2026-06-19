@@ -29,7 +29,10 @@
         {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       ]
     },
@@ -53,7 +56,9 @@
       "oneOf": [
         {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         {
           "type": "object",
@@ -70,7 +75,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["type", "value"],
+        "required": [
+          "type",
+          "value"
+        ],
         "properties": {
           "type": {
             "type": "string",
@@ -86,7 +94,12 @@
     "resistance_profile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["trial_and_error_cost", "trust_stock", "operation_threshold", "price_sensitivity"],
+      "required": [
+        "trial_and_error_cost",
+        "trust_stock",
+        "operation_threshold",
+        "price_sensitivity"
+      ],
       "properties": {
         "trial_and_error_cost": {
           "$ref": "#/definitions/level3"
@@ -120,27 +133,40 @@
     "hec_recommendation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["recommended_hook", "recommended_effect", "recommended_cta", "reason"],
+      "required": [
+        "recommended_hook",
+        "recommended_effect",
+        "recommended_cta",
+        "reason"
+      ],
       "properties": {
         "recommended_hook": {
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["H5"]
+            "enum": [
+              "H5"
+            ]
           }
         },
         "recommended_effect": {
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["E1", "E5", "E6"]
+            "enum": [
+              "E1",
+              "E5",
+              "E6"
+            ]
           }
         },
         "recommended_cta": {
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["C1"]
+            "enum": [
+              "C1"
+            ]
           }
         },
         "reason": {
@@ -212,18 +238,468 @@
       },
       "not": {
         "anyOf": [
-          { "required": ["category_strategy_intent"] },
-          { "required": ["product_strategy_intent"] },
-          { "required": ["intent_coordinates"] },
-          { "required": ["modifiers"] }
+          {
+            "required": [
+              "category_strategy_intent"
+            ]
+          },
+          {
+            "required": [
+              "product_strategy_intent"
+            ]
+          },
+          {
+            "required": [
+              "intent_coordinates"
+            ]
+          },
+          {
+            "required": [
+              "modifiers"
+            ]
+          }
         ]
       }
+    },
+    "persuasion_requirement_profile": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/persuasionRequirementProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Optional side-channel output for Persuasion Requirement Modeling V3.1. It is not consumed by CandidateSet and must not contain HEC/action mapping fields."
     }
   },
   "definitions": {
     "level3": {
       "type": "string",
-      "enum": ["low", "medium", "high"]
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "decisionGap": {
+      "type": "string",
+      "enum": [
+        "need_gap",
+        "fit_gap",
+        "value_gap",
+        "proof_gap",
+        "trust_gap",
+        "risk_gap",
+        "action_gap"
+      ]
+    },
+    "contentGoal": {
+      "type": "string",
+      "enum": [
+        "conversion",
+        "purchase",
+        "add_to_cart",
+        "coupon_claim",
+        "shop_entry",
+        "seeding",
+        "education",
+        "brand_awareness",
+        "unknown"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "requirementId": {
+      "type": "string",
+      "enum": [
+        "expose_current_pain",
+        "clarify_usage_scenario",
+        "identify_target_user",
+        "prove_user_fit",
+        "prove_scenario_fit",
+        "prove_spec_fit",
+        "prove_core_benefit",
+        "prove_new_solution_efficiency",
+        "establish_clear_difference",
+        "prove_replacement_value",
+        "prove_price_reasonableness",
+        "provide_visible_result",
+        "prove_effect_not_degraded",
+        "prove_quality_stability",
+        "establish_basic_trust",
+        "prove_source_credibility",
+        "provide_authority_endorsement",
+        "reduce_trial_risk",
+        "resolve_quality_risk",
+        "resolve_safety_risk",
+        "resolve_value_risk",
+        "prove_current_purchase_reason",
+        "clarify_purchase_threshold"
+      ]
+    },
+    "primaryJTBD": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level1",
+        "level2"
+      ],
+      "properties": {
+        "level1": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level2": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "categoryResistance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule",
+        "summary"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "productConversionBarrier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule",
+        "summary"
+      ],
+      "properties": {
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "mainPersuasionRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_jtbd",
+        "category_resistance",
+        "product_conversion_barrier"
+      ],
+      "properties": {
+        "primary_jtbd": {
+          "$ref": "#/definitions/primaryJTBD"
+        },
+        "category_resistance": {
+          "$ref": "#/definitions/categoryResistance"
+        },
+        "product_conversion_barrier": {
+          "$ref": "#/definitions/productConversionBarrier"
+        }
+      }
+    },
+    "activatedCategoryRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category_group"
+      ],
+      "properties": {
+        "category_group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "routing_confidence": {
+          "type": "string"
+        },
+        "activated_decision_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "activated_evidence_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "activated_risk_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "persuasionRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_id",
+        "requirement_name",
+        "decision_gap",
+        "source",
+        "priority",
+        "required",
+        "sequence_rank",
+        "success_criteria"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "#/definitions/requirementId"
+        },
+        "requirement_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "decision_gap": {
+          "$ref": "#/definitions/decisionGap"
+        },
+        "source": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "priority": {
+          "$ref": "#/definitions/priority"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "sequence_rank": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 59
+        },
+        "success_criteria": {
+          "type": "string",
+          "minLength": 1
+        },
+        "related_decision_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_evidence_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "risk_points": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notApplicableRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_id",
+        "decision_gap",
+        "status",
+        "reason"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "#/definitions/requirementId"
+        },
+        "decision_gap": {
+          "$ref": "#/definitions/decisionGap"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "not_applicable"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "requirementCompletionSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status_enum",
+        "minimum_required_requirements",
+        "diagnosis_dimensions"
+      ],
+      "properties": {
+        "status_enum": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "partial",
+              "missing",
+              "not_applicable"
+            ]
+          }
+        },
+        "minimum_required_requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/requirementId"
+          }
+        },
+        "diagnosis_dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "whether_requirement_appears",
+              "whether_evidence_is_sufficient",
+              "whether_sequence_is_reasonable",
+              "whether_risk_is_resolved"
+            ]
+          }
+        }
+      }
+    },
+    "diagnosisContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_completion_schema"
+      ],
+      "properties": {
+        "requirement_completion_schema": {
+          "$ref": "#/definitions/requirementCompletionSchema"
+        }
+      }
+    },
+    "persuasionRequirementProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_version",
+        "content_goal",
+        "category_group",
+        "jtbd_template_status",
+        "requirement_dictionary_version",
+        "category_purchase_criteria_version",
+        "main_persuasion_route",
+        "activated_category_requirements",
+        "persuasion_requirements",
+        "not_applicable_requirements",
+        "diagnosis_contract"
+      ],
+      "properties": {
+        "profile_version": {
+          "type": "string",
+          "enum": [
+            "v3.1"
+          ]
+        },
+        "content_goal": {
+          "$ref": "#/definitions/contentGoal"
+        },
+        "category_group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jtbd_template_status": {
+          "type": "string",
+          "enum": [
+            "matched",
+            "fallback_generic"
+          ]
+        },
+        "requirement_dictionary_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category_purchase_criteria_version": {
+          "type": "string"
+        },
+        "main_persuasion_route": {
+          "$ref": "#/definitions/mainPersuasionRoute"
+        },
+        "activated_category_requirements": {
+          "$ref": "#/definitions/activatedCategoryRequirements"
+        },
+        "persuasion_requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/persuasionRequirement"
+          }
+        },
+        "not_applicable_requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/notApplicableRequirement"
+          }
+        },
+        "diagnosis_contract": {
+          "$ref": "#/definitions/diagnosisContract"
+        }
+      },
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "persuasion_profile"
+            ]
+          },
+          {
+            "required": [
+              "required_persuasion_tasks"
+            ]
+          },
+          {
+            "required": [
+              "task_id"
+            ]
+          },
+          {
+            "required": [
+              "task_name"
+            ]
+          },
+          {
+            "required": [
+              "task_type"
+            ]
+          },
+          {
+            "required": [
+              "hec_task_mapping"
+            ]
+          }
+        ]
+      }
     }
   }
 }
