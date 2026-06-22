@@ -84,8 +84,7 @@ profile = build_persuasion_requirement_profile(
       "summary": "leaf_category=速食拌面 路由到食品生鲜"
     },
     "product_conversion_barrier": {
-      "rule": "product_fact_risk_points",
-      "summary": "担心不好吃；担心分量不足"
+      "rule": "product_fact_risk_points"
     }
   },
   "activated_category_requirements": {

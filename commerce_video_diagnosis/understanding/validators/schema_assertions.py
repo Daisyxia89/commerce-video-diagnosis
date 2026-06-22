@@ -46,6 +46,7 @@ ALLOWED_PRODUCT_HEC_KEYS = REQUIRED_HEC_KEYS | {
     "cta_label",
     "activation_tags",
     "risk_flags",
+    "risk_tag",
     "soft_constraint_results",
     "route_tags",
 }

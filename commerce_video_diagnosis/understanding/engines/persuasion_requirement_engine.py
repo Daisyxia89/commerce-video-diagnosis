@@ -559,19 +559,43 @@ class PersuasionRequirementEngine:
     def _build_main_route(
         self, product_fact: Mapping[str, Any], jtbd_level1: str, jtbd_level2: str
     ) -> MainPersuasionRoute:
-        cognitive = str(product_fact.get("cognitive_attribute", "") or "未知认知")
-        frequency = str(product_fact.get("frequency_attribute", "") or "未知频次")
-        trust = str(product_fact.get("trust_attribute", "") or "未知信任")
-        price = str(product_fact.get("price_attribute", "") or "未知价格")
+        # PRD 8.5 偏差 8 — 四属性缺失必须 Crash Early，禁止任何静默兜底默认值。
+        # 责任上游：模块 2 商品诊断 / 商品事实向量生成节点。
+        cognition_raw = product_fact.get("cognition_attribute")
+        if cognition_raw in (None, "") and "cognitive_attribute" in product_fact:
+            # 兼容历史命名 cognitive_attribute（仅作字段读取兼容，不做默认填充）
+            cognition_raw = product_fact.get("cognitive_attribute")
+        frequency_raw = product_fact.get("frequency_attribute")
+        trust_raw = product_fact.get("trust_attribute")
+        price_raw = product_fact.get("price_attribute")
+
+        _PLACEHOLDER_VALUES = {None, "", "未知", "未知品类竞争态势", "未知频次", "未知信任", "未知价格"}
+        for field_name, value in (
+            ("cognition_attribute", cognition_raw),
+            ("frequency_attribute", frequency_raw),
+            ("trust_attribute", trust_raw),
+            ("price_attribute", price_raw),
+        ):
+            normalized = value.strip() if isinstance(value, str) else value
+            if normalized in _PLACEHOLDER_VALUES:
+                raise ValueError(
+                    f"[Crash Early] 主说服路线四属性校验失败：字段 `{field_name}` 缺失或为占位值 "
+                    f"(原始值={value!r})；上游责任节点：模块 2 商品诊断 / 商品事实向量生成节点；"
+                    f"阻断原因：禁止使用 None/空串/'未知'/语义占位默认值进入主路由构建（PRD 8.5 偏差 8）。"
+                )
+
+        cognition = str(cognition_raw)
+        frequency = str(frequency_raw)
+        trust = str(trust_raw)
+        price = str(price_raw)
         return MainPersuasionRoute(
             primary_jtbd=PrimaryJTBD(level1=jtbd_level1, level2=jtbd_level2),
             category_resistance=CategoryResistance(
-                rule=f"{cognitive} × {frequency}",
-                summary=f"在{cognitive}、{frequency}的品类认知下组织购买判断主路径。",
+                rule=f"{cognition} × {frequency}",
+                summary=f"在{cognition}、{frequency}的品类竞争态势下组织购买判断主路径。",
             ),
             product_conversion_barrier=ProductConversionBarrier(
                 rule=f"{trust} × {price}",
-                summary=f"在{trust}信任存量、{price}价格水位下处理转化阻力。",
             ),
         )
 

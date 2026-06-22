@@ -53,6 +53,22 @@ CTA_LABEL_FALLBACK = {
     "C5": "C5 效果留白/情绪定格",
 }
 
+# PRD 7.3.1 H→C 匹配规则总表：
+#   default_legal  = 推荐收口（默认合法），(H, C) 直接放行，不打风险标记。
+#   conditional    = 条件合法（软约束），保留组合但需进一步判定：
+#       - C1/C2（H5/H6/H7）：复用 hook 软约束契约判定，未满足前置能力时打 risk_tag。
+#       - C4/C5（H1/H2）：受 7.3.2 C4/C5 独立准入门槛约束。
+#   不在 default_legal ∪ conditional 内的 (H, C) → 硬约束排除（直接剔除）。
+H_TO_C_LEGALITY: dict[str, dict[str, frozenset[str]]] = {
+    "H1": {"default_legal": frozenset({"C1", "C2", "C3"}), "conditional": frozenset({"C4", "C5"})},
+    "H2": {"default_legal": frozenset({"C1", "C2", "C3"}), "conditional": frozenset({"C4", "C5"})},
+    "H3": {"default_legal": frozenset({"C1", "C2", "C3", "C4", "C5"}), "conditional": frozenset()},
+    "H4": {"default_legal": frozenset({"C1", "C2", "C3", "C4", "C5"}), "conditional": frozenset()},
+    "H5": {"default_legal": frozenset({"C3", "C4", "C5"}), "conditional": frozenset({"C1", "C2"})},
+    "H6": {"default_legal": frozenset({"C3", "C4", "C5"}), "conditional": frozenset({"C1", "C2"})},
+    "H7": {"default_legal": frozenset({"C3", "C4", "C5"}), "conditional": frozenset({"C1", "C2"})},
+}
+
 
 @dataclass(slots=True)
 class ProductVariantAssembler:
@@ -140,6 +156,15 @@ class ProductVariantAssembler:
             if self._should_prune(jtbd, candidate_variant):
                 continue
             soft_constraint_results, risk_flags = self._evaluate_hook_soft_constraints(hook=hook, skeleton=skeleton)
+            # PRD 7.3.1 H→C 约束匹配（替代旧版全笛卡尔积）：硬约束剔除非法 (H, C)，
+            # 软约束保留组合并打 risk_tag；C4/C5 复用 7.3.2 独立准入门槛。
+            is_legal, risk_tag = self._match_hook_to_cta(
+                hook_tag=hook["hook_tag"],
+                skeleton=skeleton,
+                risk_flags=risk_flags,
+            )
+            if not is_legal:
+                continue
             activation_tags = self._build_activation_tags(
                 hook_tag=hook["hook_tag"],
                 effect_tag=skeleton["effect_tag"],
@@ -156,6 +181,7 @@ class ProductVariantAssembler:
                 cta_label=skeleton["cta_label"],
                 activation_tags=activation_tags,
                 risk_flags=risk_flags,
+                risk_tag=risk_tag,
                 soft_constraint_results=soft_constraint_results,
                 route_tags=list(activation_tags),
             ).to_dict()
@@ -434,6 +460,54 @@ class ProductVariantAssembler:
             risk_flag=None,
         ).to_dict()
         return [result], []
+
+    def _match_hook_to_cta(
+        self,
+        *,
+        hook_tag: str,
+        skeleton: dict[str, Any],
+        risk_flags: list[str],
+    ) -> tuple[bool, str]:
+        """PRD 7.3.1 H→C 匹配规则总表 + 7.3.2 C4/C5 准入门槛。
+
+        返回 ``(is_legal, risk_tag)``：
+        - 推荐收口（默认合法）→ ``(True, "")``，直接放行不打标。
+        - 条件合法（软约束）→ 保留组合，未满足条件时携带对应 ``risk_tag``。
+        - 既不在默认合法也不在条件合法 → ``(False, "")``，调用方硬约束剔除。
+        """
+        cta_tag = str(skeleton["cta_tag"]).strip().upper()
+        rule = H_TO_C_LEGALITY.get(str(hook_tag).strip().upper())
+        if rule is None:
+            # Hook 不在 7.3.1 总表内，按硬约束排除。
+            return False, ""
+        if cta_tag in rule["default_legal"]:
+            return True, ""
+        if cta_tag in rule["conditional"]:
+            if cta_tag in {"C4", "C5"}:
+                # 7.3.2 C4/C5 独立准入门槛：复用 EC 骨架层已落地的准入/降级逻辑。
+                return self._evaluate_c45_admission(skeleton)
+            # C1/C2 软约束（H5/H6/H7）：复用 hook 软约束契约判定结果。
+            # 前置能力满足 → risk_flags 为空 → 放行不打标；未满足 → 打对应 risk_tag。
+            return True, (risk_flags[0] if risk_flags else "")
+        # 硬约束排除。
+        return False, ""
+
+    def _evaluate_c45_admission(self, skeleton: dict[str, Any]) -> tuple[bool, str]:
+        """7.3.2 C4/C5 独立准入门槛复用判定。
+
+        当前 7.3.2 门槛已在 ``assemble_product_ec_skeletons`` 落地（passive_close 的
+        ``required_effect_capabilities_any`` + 准入失败强制降级到 C1/C2/C3）。能进入本阶段且
+        ``cta_tag`` 仍为 C4/C5 的骨架，均已通过该门槛，故直接放行、不打风险标记。
+
+        若未来 7.3.2 门槛迁移/未实现，可在此返回 ``(True, "requires_c45_gate")`` 留桩，
+        交由下游补齐独立准入校验。
+        """
+        resolution = skeleton.get("cta_resolution") or {}
+        resolution_type = str(resolution.get("resolution_type") or "").strip()
+        if resolution_type == "downgrade":
+            # 已被 7.3.2 降级的骨架不应再以 C4/C5 形态出现，保险起见硬约束排除。
+            return False, ""
+        return True, ""
 
     def _should_prune(self, jtbd: str, variant: dict[str, Any]) -> bool:
         cta_tag = str(variant.get("cta_tag") or "").strip().upper()

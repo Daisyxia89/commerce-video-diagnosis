@@ -519,6 +519,7 @@ class ProductHEC:
     cta_label: str = ""
     activation_tags: list[str] = field(default_factory=list)
     risk_flags: list[str] = field(default_factory=list)
+    risk_tag: str = ""
     soft_constraint_results: list[SoftConstraintResult | JSONDict] = field(default_factory=list)
     route_tags: list[str] = field(default_factory=list)
 

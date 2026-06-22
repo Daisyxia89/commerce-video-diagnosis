@@ -83,6 +83,69 @@ EMOTIONAL_BREAKOUT_TOKENS = {"替代", "场景", "惊喜", "盲盒", "解闷", "
 EMOTIONAL_CORE_TOKENS = {"香氛", "助眠", "疗愈", "悦己", "犒赏", "松弛", "仪式感", "氛围感"}
 SOCIAL_BREAKOUT_TOKENS = {"礼物", "送礼", "通行证", "身份", "圈层", "玩家", "社群", "替代", "跨界", "节日"}
 SOCIAL_CORE_CARRIER_TOKENS = {"礼盒", "香水", "鲜花", "首饰", "箱包", "穿搭", "配饰", "玩具礼盒", "文具礼盒"}
+
+# === PRD §5.1.5 社会任务硬门槛证据词表 ===
+# 关系对象 / 礼赠对象（必须命中明确实体，而非泛化营销词）
+SOCIAL_RELATIONSHIP_OBJECT_TOKENS = {
+    "长辈", "父母", "爸妈", "妈妈", "爸爸", "爷爷", "奶奶", "外婆", "外公", "姥姥", "姥爷",
+    "孩子", "宝宝", "婴儿", "幼儿", "儿童", "孕妇",
+    "妻子", "丈夫", "老公", "老婆", "伴侣", "男友", "女友", "对象",
+    "朋友", "闺蜜", "同事", "客户", "领导", "老师",
+    "宠物", "猫咪", "狗狗", "毛孩子", "家人", "家庭",
+}
+# 照护 / 责任履行动作
+SOCIAL_CAREGIVING_VERB_TOKENS = {
+    "照护", "护理", "看护", "照顾", "照料", "陪伴", "守护",
+    "喂养", "哺乳", "辅食", "换尿布", "洗澡护理",
+    "责任", "履行",
+}
+# 礼赠场景
+SOCIAL_GIFT_SCENE_TOKENS = {
+    "送礼", "礼赠", "伴手礼", "回礼", "礼盒", "节日礼物", "谢礼",
+    "送父母", "送爸妈", "送长辈", "送朋友", "送同事", "送客户", "送女友", "送男友", "送老婆", "送老公",
+    "中秋", "春节", "端午", "新年", "生日礼物", "节日送礼",
+}
+# 可追溯的稳定圈层（必须是具名群体，泛化潮流词不计）
+SOCIAL_CIRCLE_IDENTITY_TOKENS = {
+    "露营圈", "骑行圈", "钓鱼圈", "登山圈", "户外圈",
+    "二次元", "lo娘", "lolita", "lo圈", "jk圈", "汉服圈", "汉服娘",
+    "谷子", "吧唧", "原神", "崩坏", "盲盒圈", "潮玩圈",
+    "母婴圈", "宠物圈", "猫奴", "狗奴",
+    "球鞋圈", "潮鞋圈", "高尔夫圈", "瑜伽圈", "健身圈", "格斗圈",
+    "职场通勤", "通勤穿搭", "商务精英", "极客圈", "电竞圈", "玩家身份",
+}
+# 阶层与审美发信 - 高外显性证据
+SOCIAL_STATUS_VISIBILITY_TOKENS = {
+    "穿搭", "佩戴", "随身", "出街", "见客户", "宴请", "商务场合", "出席",
+    "腕表", "手表", "包包", "首饰", "项链", "戒指", "耳饰", "珠宝", "皮带",
+    "外套", "西装", "礼服", "高跟鞋", "墨镜", "丝巾",
+}
+# 阶层与审美发信 - 获取门槛 / 稀缺性证据
+SOCIAL_STATUS_BARRIER_TOKENS = {
+    "限量", "稀缺", "限定", "孤品", "联名", "藏品", "收藏级",
+    "奢侈", "高端定制", "高定", "顶级", "高净值",
+    "手工", "匠造", "工艺大师", "原产地直供",
+}
+# 阶层与审美发信 - 圈层共识 / 审美共识证据
+SOCIAL_STATUS_CONSENSUS_TOKENS = {
+    "老钱风", "新中式高奢", "审美在线", "圈内认", "懂的人都懂", "行家",
+    "经典款", "传家", "icon", "信仰",
+}
+# 排除：基础功能型品类典型标记
+SOCIAL_BASIC_FUNCTIONAL_EXCLUDE_TOKENS = {
+    "清洁", "去污", "去渍", "除味", "收纳", "保暖", "防晒", "补水", "保湿",
+    "续航", "提效", "替换", "替芯", "维稳", "止汗", "防滑", "去屑", "驱蚊",
+    "防蚊", "杀菌", "消毒",
+}
+# 排除：低外显 / 私密自用品
+SOCIAL_LOW_VISIBILITY_EXCLUDE_TOKENS = {
+    "卫生巾", "护垫", "私护", "情趣", "成人尿不湿", "纸尿裤",
+    "卫生棉条", "内裤", "袜子", "保暖内衣",
+}
+# 仅营销修辞，不构成社会任务证据
+SOCIAL_MARKETING_RHETORIC_ONLY_TOKENS = {
+    "网红", "爆款", "同款", "高级感", "有面子", "潮流",
+}
 ENDORSEMENT_TOKENS = set(get_string_list("product_diagnoser.jtbd.endorsement_tokens"))
 
 FACT_OBJECT_TOKENS = {
@@ -969,7 +1032,6 @@ class CategoryResistance(StrictBaseModel):
 
 class ProductConversionBarrier(StrictBaseModel):
     rule: str
-    summary: str
 
 
 class MainPersuasionRoute(StrictBaseModel):
@@ -1115,8 +1177,19 @@ class ProductDiagnosisOutput(BaseModel):
         if expected_domain and domain != expected_domain:
             raise ValueError(f"输出 domain 与 primary_task 不一致: {domain} vs {primary_task}")
         joined_reasoning = " ".join(values.get("reasoning_path") or [])
-        if domain == SOCIAL_DOMAIN and "圈层共识" not in joined_reasoning:
-            raise ValueError("社会域输出缺少“圈层共识”依据，必须阻断。")
+        if domain == SOCIAL_DOMAIN:
+            # PRD §5.1.5：禁止把社会任务专有词作为模板写入 reasoning，必须绑定真实证据
+            if not (values.get("evidence_chain") or []):
+                raise ValueError("社会域输出缺少 evidence_chain（必须绑定商品属性证据）。")
+            if not (values.get("gate_reasons") or []):
+                raise ValueError("社会域输出缺少 gate_reasons（必须含真实命中的证据描述）。")
+            banned_template_fragments = (
+                "符合圈层共识，因此进入社会任务",
+                "命中社会域门槛",
+                "规则树直接判定为社会任务",
+            )
+            if any(frag in joined_reasoning for frag in banned_template_fragments):
+                raise ValueError("社会域 reasoning 命中预设模板文本，违反 PRD §5.1.5。")
         sub_task = values.get("sub_task")
         if primary_task == "阶层与审美发信":
             if sub_task not in ALLOWED_SUB_TASKS:
@@ -2265,7 +2338,7 @@ class ProductDiagnosisEngine:
                 return proposal, warnings
             except Exception as exc:  # noqa: BLE001
                 errors.append(str(exc))
-                if any(keyword in str(exc) for keyword in ("越权", "圈层共识", "缺少合法 sub_task")):
+                if any(keyword in str(exc) for keyword in ("越权", "圈层共识", "缺少合法 sub_task", "PRD §5.1.5", "evidence_chain", "gate_reasons")):
                     raise
         fallback = self._build_final_fallback(module1_output, errors, rule_context)
         warnings.append("[Task_Fallback_Warning] 规则树候选池内的分类连续失败，已降级为可审计兜底任务。")
@@ -2306,8 +2379,16 @@ class ProductDiagnosisEngine:
             raise ValueError(f"LLM 输出 domain 与 task 不一致: {proposal.domain} vs {proposal.primary_task}")
         if proposal.primary_task == "阶层与审美发信" and proposal.sub_task not in ALLOWED_SUB_TASKS:
             raise ValueError("LLM 输出阶层与审美发信时必须带合法 sub_task。")
-        if proposal.domain == SOCIAL_DOMAIN and "圈层共识" not in self._join_reasoning(proposal):
-            raise ValueError("社会域圈层门槛断言失败：reasoning_path 未明确包含“圈层共识”依据。")
+        if proposal.domain == SOCIAL_DOMAIN:
+            if not proposal.gate_reasons:
+                raise ValueError("社会域输出缺少 gate_reasons（必须含真实命中的证据描述）。")
+            banned_template_fragments = (
+                "符合圈层共识，因此进入社会任务",
+                "命中社会域门槛",
+                "规则树直接判定为社会任务",
+            )
+            if any(frag in self._join_reasoning(proposal) for frag in banned_template_fragments):
+                raise ValueError("社会域 reasoning 命中预设模板文本，违反 PRD §5.1.5。")
         if proposal.candidate_tasks and proposal.primary_task not in proposal.candidate_tasks:
             raise ValueError(f"JTBD 输出越权：{proposal.primary_task} 不在规则树候选池内。")
         if not proposal.triggered_rule.strip():
@@ -2374,9 +2455,10 @@ class ProductDiagnosisEngine:
                 "reasoning": "规则树前置锁定为物理安全与风险规避。",
             }
 
-        social_task = self._infer_social_task(text)
+        social_task, social_evidence_lines, social_rejection_reasons = self._infer_social_task(payload, module1_output, text)
         if social_task:
-            gate_reasons = ["Stage A 社会域门槛成立：存在关系义务、礼赠关系或圈层共识证据。"]
+            gate_reasons = list(social_evidence_lines)
+            reasoning_text = " ".join(social_evidence_lines)
             return {
                 "candidate_tasks": [social_task],
                 "candidate_reasons": {social_task: gate_reasons.copy()},
@@ -2390,17 +2472,17 @@ class ProductDiagnosisEngine:
                     {
                         "task_name": social_task,
                         "supporting_fact_ids": [],
-                        "mapping_reason": "Stage A 已基于社会域硬门槛完成候选唯一收敛。",
+                        "mapping_reason": social_evidence_lines[0] if social_evidence_lines else "Stage A 社会任务证据闭合。",
                         "priority": "hard_gate",
                     }
                 ],
                 "subcategory_context": "stage_a_hard_gate",
                 "veto_trace": [],
                 "reasoning_path": [
-                    f"Stage A：命中社会域门槛，候选收敛到 {social_task}。",
-                    "社会域只在存在明确关系义务、礼赠关系或圈层共识时成立。",
+                    f"Stage A：社会任务证据链成立，候选收敛到 {social_task}。",
+                    *social_evidence_lines,
                 ],
-                "reasoning": "规则树直接判定为社会任务。",
+                "reasoning": reasoning_text or f"Stage A 命中 {social_task} 的商品属性证据链。",
             }
 
         emotional_task = self._infer_emotional_task(payload, module1_output, text)
@@ -2473,16 +2555,112 @@ class ProductDiagnosisEngine:
         # 已覆盖防虫/防护类风险词（驱蚊/防虫/蚊虫叮咬/瘙痒/红肿/过敏等），避免驱蚊液在 Stage A 漏判。
         return self._contains_any(text, PHYSICAL_SAFETY_TOKENS)
 
-    def _infer_social_task(self, text: str) -> str | None:
-        if self._contains_any(text, {"送礼", "礼赠", "伴手礼", "回礼", "礼盒"}):
-            return "礼赠与关系表达"
-        if self._contains_any(text, {"照护", "护理责任", "家人护理", "宠物护理", "责任履行"}):
-            return "照护与责任履行"
-        if self._contains_any(text, {"圈层共识", "同好", "圈层", "玩家身份", "身份锚定"}):
-            return "圈层认同（圈层归属/身份锚定）"
-        if self._contains_any(text, {"阶层", "审美层级", "身份发信", "身份跃迁", "高端审美"}):
-            return "阶层与审美发信"
-        return None
+    def _infer_social_task(
+        self,
+        payload: DiagnosticInput,
+        module1_output: Module1Output,
+        text: str,
+    ) -> tuple[str | None, list[str], list[str]]:
+        """
+        PRD §5.1.5：社会任务必须基于商品属性证据链判定，关键词命中不构成证据。
+        返回 (task_or_none, evidence_lines, rejection_reasons)。
+        evidence_lines 仅写入本次真实命中的证据，禁止使用社会任务专有词作为模板。
+        证据不足时返回 None，并将缺失原因写入 rejection_reasons，由上游决定 Crash Early 或路由到非社会域。
+        """
+
+        def hits(tokens: set[str]) -> list[str]:
+            return sorted({t for t in tokens if t and t in text})
+
+        evidence_lines: list[str] = []
+        rejection_reasons: list[str] = []
+
+        # 排除规则：基础功能型 / 低外显私密自用品 / 仅营销修辞
+        basic_functional_hits = hits(SOCIAL_BASIC_FUNCTIONAL_EXCLUDE_TOKENS)
+        low_visibility_hits = hits(SOCIAL_LOW_VISIBILITY_EXCLUDE_TOKENS)
+        marketing_only_hits = hits(SOCIAL_MARKETING_RHETORIC_ONLY_TOKENS)
+
+        relationship_hits = hits(SOCIAL_RELATIONSHIP_OBJECT_TOKENS)
+        caregiving_hits = hits(SOCIAL_CAREGIVING_VERB_TOKENS)
+        gift_hits = hits(SOCIAL_GIFT_SCENE_TOKENS)
+        circle_hits = hits(SOCIAL_CIRCLE_IDENTITY_TOKENS)
+        visibility_hits = hits(SOCIAL_STATUS_VISIBILITY_TOKENS)
+        barrier_hits = hits(SOCIAL_STATUS_BARRIER_TOKENS)
+        consensus_hits = hits(SOCIAL_STATUS_CONSENSUS_TOKENS)
+        is_high_premium = self._is_high_premium(payload)
+
+        # 1. 照护与责任履行：必须同时存在【关系对象】+【照护/责任动作】，且非基础功能型/私密自用品
+        if relationship_hits and caregiving_hits and not basic_functional_hits and not low_visibility_hits:
+            evidence_lines.append(
+                f"商品文本同时出现关系对象（{', '.join(relationship_hits)}）"
+                f"与照护/责任语义（{', '.join(caregiving_hits)}），证明商品承担关系内照护交付任务。"
+            )
+            return "照护与责任履行", evidence_lines, rejection_reasons
+
+        # 2. 礼赠与关系表达：必须同时存在【礼赠场景】+【明确关系对象或礼赠对象】
+        if gift_hits and relationship_hits and not low_visibility_hits:
+            evidence_lines.append(
+                f"商品文本出现礼赠场景（{', '.join(gift_hits)}）"
+                f"与明确关系对象（{', '.join(relationship_hits)}），证明商品承担关系表达/送礼任务。"
+            )
+            return "礼赠与关系表达", evidence_lines, rejection_reasons
+
+        # 3. 圈层认同：必须有具名稳定圈层证据，泛化潮流词不计
+        if circle_hits and not basic_functional_hits:
+            evidence_lines.append(
+                f"商品文本出现可追溯的具名圈层证据（{', '.join(circle_hits)}），"
+                f"证明商品已被该群体稳定识别。"
+            )
+            return "圈层认同（圈层归属/身份锚定）", evidence_lines, rejection_reasons
+
+        # 4. 阶层与审美发信：必须同时满足三道硬门槛（高外显 + 获取门槛/稀缺 + 圈层/审美共识）
+        consensus_satisfied = bool(consensus_hits) or bool(circle_hits)
+        barrier_satisfied = bool(barrier_hits) or is_high_premium
+        if visibility_hits and barrier_satisfied and consensus_satisfied and not low_visibility_hits and not basic_functional_hits:
+            barrier_evidence_parts: list[str] = []
+            if barrier_hits:
+                barrier_evidence_parts.append(f"获取门槛/稀缺词（{', '.join(barrier_hits)}）")
+            if is_high_premium:
+                barrier_evidence_parts.append("价格水位达到高水位/高端门槛")
+            consensus_evidence_parts: list[str] = []
+            if consensus_hits:
+                consensus_evidence_parts.append(f"审美共识词（{', '.join(consensus_hits)}）")
+            if circle_hits:
+                consensus_evidence_parts.append(f"圈层识别证据（{', '.join(circle_hits)}）")
+            evidence_lines.append(
+                f"高外显证据（{', '.join(visibility_hits)}）；"
+                f"{'；'.join(barrier_evidence_parts)}；"
+                f"{'；'.join(consensus_evidence_parts)}。三道硬门槛全部命中。"
+            )
+            return "阶层与审美发信", evidence_lines, rejection_reasons
+
+        # 未命中任何社会任务 —— 收集拒绝理由，便于上游审计
+        if basic_functional_hits:
+            rejection_reasons.append(
+                f"命中基础功能型排除条件：{', '.join(basic_functional_hits)}，默认回落到功能任务。"
+            )
+        if low_visibility_hits:
+            rejection_reasons.append(
+                f"命中低外显/私密自用品排除条件：{', '.join(low_visibility_hits)}，不进入社会任务。"
+            )
+        if marketing_only_hits and not (relationship_hits or circle_hits or gift_hits or visibility_hits):
+            rejection_reasons.append(
+                f"仅出现营销修辞词（{', '.join(marketing_only_hits)}），缺少关系/圈层/礼赠/外显证据，拒绝判定为社会任务。"
+            )
+        # 关键词命中但证据链不闭合的情况——必须明确拒绝，不得静默降级
+        if (gift_hits and not relationship_hits) or (caregiving_hits and not relationship_hits):
+            rejection_reasons.append(
+                "出现照护/礼赠语义但缺少明确关系对象，拒绝判定为社会任务。"
+            )
+        if visibility_hits and not (barrier_satisfied and consensus_satisfied):
+            missing = []
+            if not barrier_satisfied:
+                missing.append("获取门槛/稀缺性")
+            if not consensus_satisfied:
+                missing.append("圈层/审美共识")
+            rejection_reasons.append(
+                f"高外显证据存在但缺少 {' / '.join(missing)}，三门槛未集齐，拒绝判定为阶层与审美发信。"
+            )
+        return None, evidence_lines, rejection_reasons
 
     def _infer_emotional_task(self, payload: DiagnosticInput, module1_output: Module1Output, text: str) -> str | None:
         if not self._contains_any(text, {"治愈", "放松", "犒赏", "奖励自己", "氛围感", "仪式感"}):
@@ -3657,8 +3835,18 @@ class ProductDiagnosisEngine:
         if current.domain == EMOTIONAL_DOMAIN and self._is_ordinary_daily_category(module1_output) and not self._is_high_premium(payload):
             raise ValueError("情绪域最小证据不足：基础功能品且不满足高端/享乐/疗愈门槛。")
 
-        if current.domain == SOCIAL_DOMAIN and "圈层共识" not in self._join_reasoning(current):
-            raise ValueError("社会域圈层门槛断言失败：reasoning_path 未明确包含“圈层共识”依据。")
+        if current.domain == SOCIAL_DOMAIN:
+            if not current.evidence_chain:
+                raise ValueError("社会域输出缺少 evidence_chain（必须绑定商品属性证据）。")
+            if not current.gate_reasons:
+                raise ValueError("社会域输出缺少 gate_reasons（必须含真实命中的证据描述）。")
+            banned_template_fragments = (
+                "符合圈层共识，因此进入社会任务",
+                "命中社会域门槛",
+                "规则树直接判定为社会任务",
+            )
+            if any(frag in self._join_reasoning(current) for frag in banned_template_fragments):
+                raise ValueError("社会域 reasoning 命中预设模板文本，违反 PRD §5.1.5。")
 
         if current.primary_task == "阶层与审美发信" and current.sub_task not in ALLOWED_SUB_TASKS:
             raise ValueError("阶层与审美发信 缺少合法 sub_task。")
