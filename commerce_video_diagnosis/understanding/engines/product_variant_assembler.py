@@ -39,6 +39,9 @@ BANNED_PRESENTATION_KEYS = {
     "storyboard",
 }
 
+# PRD-3 / AC12：needs_review 哨兵值（上游已建立的契约，模块 4 复用，不重新推断）。
+NEEDS_REVIEW = "needs_review"
+
 LEGACY_HEC_KEYS = {"hook", "effect", "cta"}
 HOOK_SOFT_CONSTRAINT_ALLOWED_KEYS = {
     "trigger_cta_tags",
@@ -77,8 +80,17 @@ class ProductVariantAssembler:
     def assemble_product_ec_skeletons(self, candidate_set: CandidateSet | dict[str, Any]) -> list[dict[str, Any]]:
         candidate_payload = self._coerce_candidate_set(candidate_set)
         self._assert_candidate_set_boundary(candidate_payload)
-        effect_list = self._normalize_effect_candidates(candidate_payload.get("effect_list"))
-        cta_list = self._normalize_cta_candidates(candidate_payload.get("cta_list"))
+        # PRD-3（第 227-231 行）source_role 消费：模块 4 默认只用 source_role==primary 候选生成主链
+        # EC 骨架；source_role==secondary 不进入 primary 主链骨架枚举（含降级目标），不污染主链。
+        # 若后续需要 secondary 解释性变体，应作为非主链候选单独标记，不参与主 HEC Match 的 good 判定。
+        effect_list = self._select_primary_candidates(
+            self._normalize_effect_candidates(candidate_payload.get("effect_list")),
+            list_name="effect_list",
+        )
+        cta_list = self._select_primary_candidates(
+            self._normalize_cta_candidates(candidate_payload.get("cta_list")),
+            list_name="cta_list",
+        )
         available_cta_tags = {item["cta_tag"] for item in cta_list}
         cta_input_rank = self._build_cta_input_rank(cta_list)
 
@@ -132,6 +144,10 @@ class ProductVariantAssembler:
 
         if not product_ec_skeletons:
             raise ValueError("模块 4.1 组装后无合法 Product_EC_Skeletons。")
+        # PRD-3（第 237-241 行）/ AC7 来源回查后置断言（Crash Early）：EC 主链产物的每个
+        # (effect_tag, cta_tag) 必须能在 CandidateSet 回查到 source_role + source_requirement_ref，
+        # 且主链仅允许 source_role==primary；回查失败 raise（来源角色不得由模块 4 重新推断）。
+        self._assert_source_role_traceability(candidate_payload, product_ec_skeletons, require_primary=True)
         return product_ec_skeletons
 
     def assemble_product_hecs(
@@ -193,11 +209,44 @@ class ProductVariantAssembler:
             raise ValueError("模块 4.2 装配后无合法 Product_HECs。")
         return product_hecs
 
-    def assemble(self, jtbd: str, candidate_set: CandidateSet | dict[str, Any], *, product_id: str = "") -> list[dict[str, Any]]:
+    def assemble(self, jtbd: str, candidate_set: CandidateSet | dict[str, Any], *, product_id: str = "") -> dict[str, Any] | list[dict[str, Any]]:
         candidate_payload = self._coerce_candidate_set(candidate_set)
+        # PRD-3（第 233-236 行）/ AC12 needs_review early return：模块 4 入口（EC Skeleton 生成前）
+        # 校验，当 jtbd_level1 == "needs_review" 时跳过 HEC 生成，不产出 Product_EC_Skeletons /
+        # Product_HECs，返回 {status: "skipped", reason: "jtbd_insufficient"}。
+        if self._is_needs_review(jtbd, candidate_payload):
+            return {"status": "skipped", "reason": "jtbd_insufficient"}
         product_ec_skeletons = self.assemble_product_ec_skeletons(candidate_payload)
         core_h_list = candidate_payload["h_list"]
-        return self.assemble_product_hecs(jtbd, product_ec_skeletons, core_h_list, product_id=product_id)
+        product_hecs = self.assemble_product_hecs(jtbd, product_ec_skeletons, core_h_list, product_id=product_id)
+        # PRD-3（第 237-241 行）/ AC7 来源回查后置断言（Crash Early）：HEC 产物的每个
+        # (effect_tag, cta_tag) 必须能在 CandidateSet 回查到 source_role + source_requirement_ref。
+        self._assert_source_role_traceability(candidate_payload, product_hecs, require_primary=True)
+        return product_hecs
+
+    def _is_needs_review(self, jtbd: str, candidate_payload: dict[str, Any]) -> bool:
+        # 兼容读取 jtbd_level1 / jtbd 两个键（上游契约），以及入参 jtbd；任一命中哨兵即中止。
+        candidates = (
+            jtbd,
+            candidate_payload.get("jtbd_level1"),
+            candidate_payload.get("jtbd"),
+        )
+        return any(str(value or "").strip() == NEEDS_REVIEW for value in candidates)
+
+    def _select_primary_candidates(self, normalized: list[dict[str, Any]], *, list_name: str) -> list[dict[str, Any]]:
+        # PRD-3（第 227-231 行）：仅保留 source_role==primary 候选进入主链；source_role 不得由模块 4
+        # 重新推断，故缺失/为空直接 Crash Early。secondary 候选不进入 primary 主链枚举。
+        primary: list[dict[str, Any]] = []
+        for index, item in enumerate(normalized):
+            source_role = item.get("source_role")
+            if source_role in (None, ""):
+                raise ValueError(
+                    f"模块 4 来源回查失败 source_role_lost：CandidateSet.{list_name}[{index}] 缺少 source_role"
+                    "（来源角色不得由模块 4 重新推断）。"
+                )
+            if source_role == "primary":
+                primary.append(item)
+        return primary
 
     def _coerce_candidate_set(self, candidate_set: CandidateSet | dict[str, Any]) -> dict[str, Any]:
         if isinstance(candidate_set, CandidateSet):
@@ -243,6 +292,9 @@ class ProductVariantAssembler:
                     "label": label,
                     "completion_capabilities": [str(cap).strip() for cap in capabilities if str(cap).strip()],
                     "completion_reason_codes": [str(reason).strip() for reason in reason_codes if str(reason).strip()],
+                    # 来源角色透传（不重新推断），供主链 primary 过滤与 AC7 回查使用。
+                    "source_role": item.get("source_role"),
+                    "source_requirement_ref": item.get("source_requirement_ref"),
                 }
             )
         return normalized
@@ -274,6 +326,9 @@ class ProductVariantAssembler:
                     "close_strength": close_strength,
                     "required_effect_capabilities_any": [str(cap).strip() for cap in required_any if str(cap).strip()],
                     "fallback_priority": [str(tag).strip().upper() for tag in fallback_priority if str(tag).strip()],
+                    # 来源角色透传（不重新推断），供主链 primary 过滤与 AC7 回查使用。
+                    "source_role": item.get("source_role"),
+                    "source_requirement_ref": item.get("source_requirement_ref"),
                 }
             )
         return normalized
@@ -349,6 +404,75 @@ class ProductVariantAssembler:
                 f"effect_tag={effect_tag}, resolved_cta_tag={resolved_cta_tag} 应保留更早出现的 requested_cta_tag；"
                 f"当前 {current_requested_cta_tag} 的输入顺序早于已保留的 {existing_meta['requested_cta_tag']}。"
             )
+
+    def _assert_source_role_traceability(
+        self,
+        candidate_payload: dict[str, Any],
+        products: list[dict[str, Any]],
+        *,
+        require_primary: bool,
+    ) -> None:
+        """PRD-3（第 237-241 行）/ AC7 来源回查后置断言（Crash Early）。
+
+        模块 4 产物装配后，对输出的每个 ``(effect_tag, cta_tag)`` 必须能通过
+        ``CandidateSet + (effect_tag, cta_tag)`` 回查到对应 ``source_role`` + ``source_requirement_ref``。
+        来源角色**不得**由模块 4 重新推断；回查失败标记 ``source_role_lookup_failed`` / ``source_role_lost``
+        并 ``raise ValueError``（异常信息含标记与对应 tag）。
+        """
+        effect_list = candidate_payload.get("effect_list") or []
+        cta_list = candidate_payload.get("cta_list") or []
+        for product_item in products:
+            effect_tag = str(product_item.get("effect_tag") or "").strip().upper()
+            cta_tag = str(product_item.get("cta_tag") or "").strip().upper()
+            effect_role, _ = self._lookup_candidate_source(
+                effect_list, tag_key="effect_tag", tag_value=effect_tag, list_name="effect_list",
+            )
+            cta_role, _ = self._lookup_candidate_source(
+                cta_list, tag_key="cta_tag", tag_value=cta_tag, list_name="cta_list",
+            )
+            if require_primary and (effect_role != "primary" or cta_role != "primary"):
+                raise ValueError(
+                    "模块 4 来源回查失败 source_role_lost：主链产物 "
+                    f"(effect_tag={effect_tag}, cta_tag={cta_tag}) 仅允许 source_role=primary，"
+                    f"实际 effect_role={effect_role} / cta_role={cta_role}。"
+                )
+
+    def _lookup_candidate_source(
+        self,
+        candidates: Any,
+        *,
+        tag_key: str,
+        tag_value: str,
+        list_name: str,
+    ) -> tuple[str, str]:
+        """在 CandidateSet 列表中按 tag 回查 source_role + source_requirement_ref。
+
+        回查不到对应 tag → ``source_role_lookup_failed``；回查到但缺少 source_role /
+        source_requirement_ref → ``source_role_lost``。两者均 ``raise ValueError``。
+        """
+        if not isinstance(candidates, list):
+            raise ValueError(
+                f"模块 4 来源回查失败 source_role_lookup_failed：CandidateSet.{list_name} 非列表，"
+                f"无法回查 {tag_key}={tag_value} 的 source_role+source_requirement_ref。"
+            )
+        for item in candidates:
+            if not isinstance(item, dict):
+                continue
+            if str(item.get(tag_key) or "").strip().upper() == tag_value:
+                source_role = item.get("source_role")
+                source_requirement_ref = item.get("source_requirement_ref")
+                if not source_role or not source_requirement_ref:
+                    raise ValueError(
+                        "模块 4 来源回查失败 source_role_lost："
+                        f"CandidateSet.{list_name} 命中 {tag_key}={tag_value} 但缺少 "
+                        "source_role/source_requirement_ref（来源角色不得由模块 4 重新推断）。"
+                    )
+                return str(source_role), str(source_requirement_ref)
+        raise ValueError(
+            "模块 4 来源回查失败 source_role_lookup_failed："
+            f"CandidateSet.{list_name} 无法回查 {tag_key}={tag_value} 的 "
+            "source_role+source_requirement_ref（来源角色不得由模块 4 重新推断）。"
+        )
 
     def _resolve_fallback_cta(self, fallback_priority: list[str], available_cta_tags: set[str], requested_cta_tag: str) -> str:
         for candidate in fallback_priority:

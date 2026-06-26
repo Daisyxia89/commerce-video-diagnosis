@@ -488,6 +488,7 @@ class CandidateSet:
     r_rule: str = ""
     p_rule: str = ""
     task_domain: str = "functional"
+    rule_version: str = ""
 
     def to_dict(self) -> JSONDict:
         return asdict(self)

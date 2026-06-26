@@ -73,6 +73,31 @@
     "价格属性严格读取 engine_node 输出，当前水位为 高水位，因此财务风险为 高。"
   ],
   "warnings": [],
+  "product_target_audience": {
+    "primary_audiences": [
+      {
+        "audience_group": "年长中高消费力女性",
+        "fit_level": "primary",
+        "reason": "任务「物理安全与风险规避」对应购买角色「风险责任人」；命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性；大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+      }
+    ],
+    "secondary_audiences": [
+      {
+        "audience_group": "年长低消费力女性",
+        "fit_level": "secondary",
+        "reason": "购买角色「风险责任人」下，大牌官方套装/分量价值也可覆盖低消费力人群，作为次级目标。"
+      }
+    ],
+    "weak_fit_audiences": [],
+    "reasoning_chain": {
+      "task_to_role": "唯一任务「物理安全与风险规避」对应购买角色「风险责任人」。",
+      "role_category_to_age_gender": "购买角色「风险责任人」叠加品类信号：命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性。",
+      "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+    },
+    "caveats": [
+      "大牌官方且高水位：若强调套装/分量价值，也可覆盖低消费力人群（追加低消费力 secondary）。"
+    ]
+  },
   "category": "宝宝防蚊水",
   "jtbd": "物理安全与风险规避",
   "resistance_profile": {
@@ -104,7 +129,9 @@
         ],
         "completion_reason_codes": [
           "capability_from_e1:functional_proof_complete"
-        ]
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "E6",
@@ -117,7 +144,9 @@
         "completion_reason_codes": [
           "capability_from_e6:functional_proof_complete",
           "capability_from_e6:identity_binding_complete"
-        ]
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       }
     ],
     "core_c": [
@@ -134,7 +163,9 @@
           "C3",
           "C1",
           "C2"
-        ]
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       }
     ],
     "candidate_h": [
@@ -142,7 +173,9 @@
         "code": "H1",
         "label": "H1 痛点/焦虑直击",
         "hook_tag": "H1",
-        "soft_constraint_contract": null
+        "soft_constraint_contract": null,
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "H5",
@@ -157,7 +190,9 @@
             "answer_revealed"
           ],
           "unmet_risk_flag": "rhythm_discount"
-        }
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "H6",
@@ -172,7 +207,9 @@
             "identity_binding_complete"
           ],
           "unmet_risk_flag": "resonance_risk"
-        }
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "H7",
@@ -187,7 +224,9 @@
             "identity_binding_complete"
           ],
           "unmet_risk_flag": "resonance_risk"
-        }
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       }
     ],
     "primary_effect": "E1",
@@ -199,7 +238,9 @@
         "code": "H1",
         "label": "H1 痛点/焦虑直击",
         "hook_tag": "H1",
-        "soft_constraint_contract": null
+        "soft_constraint_contract": null,
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "H5",
@@ -214,7 +255,9 @@
             "answer_revealed"
           ],
           "unmet_risk_flag": "rhythm_discount"
-        }
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "H6",
@@ -229,7 +272,9 @@
             "identity_binding_complete"
           ],
           "unmet_risk_flag": "resonance_risk"
-        }
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "H7",
@@ -244,7 +289,9 @@
             "identity_binding_complete"
           ],
           "unmet_risk_flag": "resonance_risk"
-        }
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       }
     ],
     "effect_list": [
@@ -257,7 +304,9 @@
         ],
         "completion_reason_codes": [
           "capability_from_e1:functional_proof_complete"
-        ]
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       },
       {
         "code": "E6",
@@ -270,7 +319,9 @@
         "completion_reason_codes": [
           "capability_from_e6:functional_proof_complete",
           "capability_from_e6:identity_binding_complete"
-        ]
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       }
     ],
     "cta_list": [
@@ -287,7 +338,9 @@
           "C3",
           "C1",
           "C2"
-        ]
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
       }
     ],
     "schema_version": "v0.5",
@@ -295,7 +348,8 @@
     "persuasion_route": "先把客观风险说清，再证明当前商品如何通过更稳妥的路径降低真实受伤或事故风险。",
     "r_rule": "R02_存量同类替换",
     "p_rule": "P02_价值证明",
-    "task_domain": "functional"
+    "task_domain": "functional",
+    "rule_version": "JTBD_dict_v1_2026-06-24"
   },
   "product_ec_skeletons": [
     {
@@ -546,7 +600,7 @@
         "comparison_object_evidence_type": "jtbd_inferred",
         "difference_domain": "functional",
         "difference_type": "风险降低",
-        "conclusion": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款含驱蚊酯，日常居家使用温和不刺激，经第三方检测0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯",
+        "conclusion": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时，其7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且有广告审查号和第三方检测报告，安全可溯",
         "evidence_chain": [
           {
             "evidence_source": "JTBD推断",
@@ -565,7 +619,7 @@
             "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
           }
         ],
-        "summary": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款含驱蚊酯，日常居家使用温和不刺激，经第三方检测0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+        "summary": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时，其7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且有广告审查号和第三方检测报告，安全可溯"
       },
       "second_level_category": "驱蚊用品",
       "third_level_category": "宝宝防蚊水"
@@ -613,7 +667,7 @@
         },
         {
           "evidence_source": "差异结论",
-          "evidence_text": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款含驱蚊酯，日常居家使用温和不刺激，经第三方检测0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+          "evidence_text": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时，其7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且有广告审查号和第三方检测报告，安全可溯"
         },
         {
           "evidence_source": "JTBD推断",
@@ -642,7 +696,9 @@
         }
       ],
       "subcategory_context": "stage_a_hard_gate",
-      "veto_trace": []
+      "veto_trace": [],
+      "secondary_benefits": [],
+      "non_selected_task_reasons": []
     },
     "gated_proposal": {
       "domain": "功能域",
@@ -687,7 +743,7 @@
         },
         {
           "evidence_source": "差异结论",
-          "evidence_text": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款含驱蚊酯，日常居家使用温和不刺激，经第三方检测0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+          "evidence_text": "该驱蚊水含派卡瑞丁15%/20%，有A级驱蚊力，能防蚊8小时、耐汗保护7小时，其7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且有广告审查号和第三方检测报告，安全可溯"
         },
         {
           "evidence_source": "JTBD推断",
@@ -716,7 +772,9 @@
         }
       ],
       "subcategory_context": "stage_a_hard_gate",
-      "veto_trace": []
+      "veto_trace": [],
+      "secondary_benefits": [],
+      "non_selected_task_reasons": []
     },
     "hard_gate_notes": [
       "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。",
@@ -779,7 +837,9 @@
             "code": "H1",
             "label": "H1 痛点/焦虑直击",
             "hook_tag": "H1",
-            "soft_constraint_contract": null
+            "soft_constraint_contract": null,
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           },
           {
             "code": "H5",
@@ -794,7 +854,9 @@
                 "answer_revealed"
               ],
               "unmet_risk_flag": "rhythm_discount"
-            }
+            },
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           },
           {
             "code": "H6",
@@ -809,7 +871,9 @@
                 "identity_binding_complete"
               ],
               "unmet_risk_flag": "resonance_risk"
-            }
+            },
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           },
           {
             "code": "H7",
@@ -824,7 +888,9 @@
                 "identity_binding_complete"
               ],
               "unmet_risk_flag": "resonance_risk"
-            }
+            },
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           }
         ],
         "effect_list": [
@@ -837,7 +903,9 @@
             ],
             "completion_reason_codes": [
               "capability_from_e1:functional_proof_complete"
-            ]
+            ],
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           },
           {
             "code": "E6",
@@ -850,7 +918,9 @@
             "completion_reason_codes": [
               "capability_from_e6:functional_proof_complete",
               "capability_from_e6:identity_binding_complete"
-            ]
+            ],
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           }
         ],
         "cta_list": [
@@ -867,7 +937,9 @@
               "C3",
               "C1",
               "C2"
-            ]
+            ],
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
           }
         ],
         "schema_version": "v0.5",
@@ -875,7 +947,8 @@
         "persuasion_route": "先把客观风险说清，再证明当前商品如何通过更稳妥的路径降低真实受伤或事故风险。",
         "r_rule": "R02_存量同类替换",
         "p_rule": "P02_价值证明",
-        "task_domain": "functional"
+        "task_domain": "functional",
+        "rule_version": "JTBD_dict_v1_2026-06-24"
       }
     },
     "product_ec_skeletons": [
@@ -1088,6 +1161,8 @@
     "keyword_rule_trace_count": 0
   },
   "schema_version": "v2.2",
+  "secondary_benefits": [],
+  "non_selected_task_reasons": [],
   "persuasion_requirement_profile_summary": {
     "main_persuasion_route": {
       "primary_jtbd": {

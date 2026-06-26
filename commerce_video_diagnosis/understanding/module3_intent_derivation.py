@@ -597,6 +597,9 @@ def _cross_map_weapon_pool(
     return core_e, core_c, candidate_h, modifier_notes, intercept_logs, sorting_note
 
 
+RULE_VERSION = "JTBD_dict_v1_2026-06-24"
+
+
 def _task_domain_bucket(jtbd: str) -> str:
     return "functional" if jtbd in FUNCTIONAL_JTBDS else "emotion_social"
 
@@ -605,7 +608,12 @@ def _effect_completion_capabilities(effect_code: str) -> list[str]:
     return list(EFFECT_COMPLETION_CAPABILITY_MAP.get(effect_code, ()))
 
 
-def _build_effect_candidate(effect_code: str) -> dict[str, Any]:
+def _build_effect_candidate(
+    effect_code: str,
+    *,
+    source_role: str = "primary",
+    source_requirement_ref: str = "primary_requirement",
+) -> dict[str, Any]:
     payload = _normalize_label(effect_code)
     capabilities = _effect_completion_capabilities(effect_code)
     payload.update(
@@ -613,12 +621,20 @@ def _build_effect_candidate(effect_code: str) -> dict[str, Any]:
             "effect_tag": effect_code,
             "completion_capabilities": capabilities,
             "completion_reason_codes": [f"capability_from_{effect_code.lower()}:{item}" for item in capabilities],
+            "source_role": source_role,
+            "source_requirement_ref": source_requirement_ref,
         }
     )
     return payload
 
 
-def _build_cta_candidate(cta_code: str, *, task_domain: str) -> dict[str, Any]:
+def _build_cta_candidate(
+    cta_code: str,
+    *,
+    task_domain: str,
+    source_role: str = "primary",
+    source_requirement_ref: str = "primary_requirement",
+) -> dict[str, Any]:
     payload = _normalize_label(cta_code)
     required_effect_capabilities_any: list[str] = []
     fallback_priority: list[str] = []
@@ -636,15 +652,24 @@ def _build_cta_candidate(cta_code: str, *, task_domain: str) -> dict[str, Any]:
             "close_strength": close_strength,
             "required_effect_capabilities_any": required_effect_capabilities_any,
             "fallback_priority": fallback_priority,
+            "source_role": source_role,
+            "source_requirement_ref": source_requirement_ref,
         }
     )
     return payload
 
 
-def _build_hook_candidate(hook_code: str) -> dict[str, Any]:
+def _build_hook_candidate(
+    hook_code: str,
+    *,
+    source_role: str = "primary",
+    source_requirement_ref: str = "primary_requirement",
+) -> dict[str, Any]:
     payload = _normalize_label(hook_code)
     payload["hook_tag"] = hook_code
     payload["soft_constraint_contract"] = HOOK_SOFT_CONSTRAINTS.get(hook_code)
+    payload["source_role"] = source_role
+    payload["source_requirement_ref"] = source_requirement_ref
     return payload
 
 
@@ -687,18 +712,58 @@ def derive_candidate_set(input_data: Module3IntentInput) -> CandidateSet:
         jtbd_pool_id=pool_config["pool_id"],
     )
     task_domain = _task_domain_bucket(input_data.jtbd)
+    primary_source_role = "primary"
+    primary_requirement_ref = "primary_requirement"
 
-    return CandidateSet(
+    candidate_set = CandidateSet(
         schema_version="v0.5",
         jtbd=input_data.jtbd,
         persuasion_route=pool_config["primary_path"],
         r_rule=category_intent,
         p_rule=product_intent,
         task_domain=task_domain,
-        h_list=[_build_hook_candidate(item["code"]) for item in candidate_h],
-        effect_list=[_build_effect_candidate(item["code"]) for item in core_e],
-        cta_list=[_build_cta_candidate(item["code"], task_domain=task_domain) for item in core_c],
+        h_list=[
+            _build_hook_candidate(
+                item["code"],
+                source_role=primary_source_role,
+                source_requirement_ref=primary_requirement_ref,
+            )
+            for item in candidate_h
+        ],
+        effect_list=[
+            _build_effect_candidate(
+                item["code"],
+                source_role=primary_source_role,
+                source_requirement_ref=primary_requirement_ref,
+            )
+            for item in core_e
+        ],
+        cta_list=[
+            _build_cta_candidate(
+                item["code"],
+                task_domain=task_domain,
+                source_role=primary_source_role,
+                source_requirement_ref=primary_requirement_ref,
+            )
+            for item in core_c
+        ],
+        rule_version=RULE_VERSION,
     )
+
+    if not candidate_set.rule_version:
+        raise ValueError("CandidateSet.rule_version 不能为空")
+
+    valid_source_roles = {"primary", "secondary"}
+    for list_name in ("h_list", "effect_list", "cta_list"):
+        for candidate in getattr(candidate_set, list_name):
+            source_role = candidate.get("source_role")
+            source_requirement_ref = candidate.get("source_requirement_ref")
+            if source_role not in valid_source_roles:
+                raise ValueError(f"{list_name} candidate source_role 非法: {candidate}")
+            if not source_requirement_ref:
+                raise ValueError(f"{list_name} candidate source_requirement_ref 不能为空: {candidate}")
+
+    return candidate_set
 
 
 __all__ = [

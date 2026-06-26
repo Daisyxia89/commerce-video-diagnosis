@@ -226,6 +226,12 @@ product_diagnoser:
       - 内裤
       - 一次性内裤
       - 普通个护
+      - 卸妆
+      - 卸妆膏
+      - 卸妆油
+      - 洁面
+      - 洁面乳
+      - 洗面奶
     emotional_premium_tokens:
       - 香氛
       - 香水
@@ -253,6 +259,20 @@ product_diagnoser:
       - 繁琐
       - 旧动作
       - 旧流程
+    natural_mild_preference_tokens:
+      - 天然
+      - 草本
+      - 植物
+      - 植萃
+      - 少化学
+      - 无添加
+      - 0添加
+      - 无硅油
+      - 温和
+      - 无刺激
+      - 不刺激
+      - 成分干净
+      - 敏感肌可用
     endorsement_tokens:
       - 明星同款
       - 权威认证
@@ -346,6 +366,16 @@ product_diagnoser:
       - 顽固污渍
       - 结块
       - 断裂
+      - 头油
+      - 油腻
+      - 头皮问题
+      - 发根油
+      - 发根油腻
+      - 头皮出油
+      - 头皮屑
+      - 头皮敏感
+      - 脱发
+      - 掉发
     defect_remediation_tokens:
       - 去黄
       - 祛痘
@@ -364,6 +394,54 @@ product_diagnoser:
       - 祛黑头
       - 除垢
       - 抗痘
+      - 控油
+      - 去油
+      - 调理头皮
+      - 改善头油
+      - 修护头皮
+    haircare_defect_signal_tokens:
+      - 头油
+      - 头油困扰
+      - 油腻
+      - 头皮问题
+      - 发根油
+      - 发根油腻
+      - 头皮出油
+      - 头皮屑
+      - 改善头油
+      - 修护头皮
+      - 控油
+    fragrance_category_tokens:
+      - 香水
+      - 香氛
+      - 淡香水
+      - 淡香
+      - 香精
+      - 浓香水
+      - 古龙
+      - 香膏
+    fragrance_sensory_value_tokens:
+      - 持久留香
+      - 留香持久
+      - 前中后调
+      - 前调
+      - 中调
+      - 后调
+      - 香调
+      - 高级香气
+      - 高级撩人香气
+      - 撩人香气
+      - 香氛体验
+    gift_relationship_scene_tokens:
+      - 礼盒
+      - 送礼
+      - 礼物
+      - 送女友
+      - 送男友
+      - 表白
+      - 纪念日
+      - 情人节
+      - 关系表达
     physical_safety_tokens:
       - 烫伤
       - 触电
@@ -680,3 +758,35 @@ video_understanding:
       - 礼物
       - 氛围
       - 收尾
+
+# === PRD-2.2 新增子包登记（本轮仅占位，不引入任何路由分支逻辑）===
+# carried_from_last_round.new_packs_pending_prd
+# kitchen_tools / storage_tools 因 58 池零覆盖不登记，须先补采样本。
+pending_subpackages:
+  makeup_application_tools:
+    status: pending_prd
+    intent: 降本增效
+    sample_terms:
+      - 眼线笔
+      - 眉笔
+      - 粉底工具
+      - 一体盘
+  shaving_grooming_tools:
+    status: pending_prd
+    intent: 降本增效
+    sample_terms:
+      - 剃须刀
+      - 刀头
+  hair_styling_tools:
+    status: pending_prd
+    intent: 缺陷消除
+    sample_terms:
+      - 梳子
+      - 卷发器
+      - 发夹
+  kids_snack_gift:
+    status: pending_prd
+    intent: 社会域→照护/礼赠分层
+    sample_terms:
+      - 儿童零食
+      - 节日礼包

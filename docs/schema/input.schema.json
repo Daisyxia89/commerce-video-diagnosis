@@ -235,7 +235,10 @@
             "type": "string",
             "minLength": 1
           },
-          "description": "Core selling point list recognized by caller."
+          "description": "Core selling point list recognized by caller. This field can only come from caller_product_info or product_detail. It must never come from video ASR/OCR/VLM/video_factpack. If field_provenance.core_selling_points is video_extracted_candidate, the system must Crash Early."
+        },
+        "field_provenance": {
+          "$ref": "#/definitions/fieldProvenance"
         }
       },
       "description": "Basic Product Info: minimum identity layer describing what product this is."
@@ -269,6 +272,35 @@
         }
       },
       "description": "Full Product Info: business expression layer describing who the product is mainly for and what differentiates it."
+    },
+    "fieldProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "core_selling_points": {
+          "$ref": "#/definitions/fieldProvenanceValue"
+        },
+        "leaf_category": {
+          "$ref": "#/definitions/fieldProvenanceValue"
+        },
+        "product_name": {
+          "$ref": "#/definitions/fieldProvenanceValue"
+        },
+        "brand_name": {
+          "$ref": "#/definitions/fieldProvenanceValue"
+        },
+        "product_detail_summary": {
+          "$ref": "#/definitions/fieldProvenanceValue"
+        },
+        "category_path": {
+          "$ref": "#/definitions/fieldProvenanceValue"
+        }
+      },
+      "description": "Optional field-level provenance for caller-supplied product facts. core_selling_points can only be caller_product_info or product_detail. If it is video_extracted_candidate, the system must Crash Early."
+    },
+    "fieldProvenanceValue": {
+      "type": "string",
+      "enum": ["caller_product_info", "product_detail", "video_extracted_candidate"]
     },
     "productFactVector": {
       "type": "object",

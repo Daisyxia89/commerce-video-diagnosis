@@ -2051,11 +2051,101 @@ def _assert_e1_e2_boundary_rules(data: dict[str, Any]) -> None:
         )
 
 
+def _assert_assembly_blocked_status(status: dict[str, Any]) -> None:
+    expected = {
+        "status": "assembly_blocked",
+        "reason_code": "no_expressible_cta_after_admission",
+        "jtbd_level1": "自我犒赏",
+        "route_context": "R02xP03",
+        "blocked_stage": "module4_cta_admission",
+    }
+    for key, value in expected.items():
+        if status.get(key) != value:
+            raise SchemaAssertionError(f"assembly_blocked.{key} 必须为 {value}。")
+    evidence = status.get("evidence")
+    if not isinstance(evidence, list) or not evidence:
+        raise SchemaAssertionError("assembly_blocked.evidence 必须是非空列表。")
+    if not status.get("user_facing_message"):
+        raise SchemaAssertionError("assembly_blocked.user_facing_message 不能为空。")
+
+
+def _assert_out_of_scope_for_mvp_status(status: dict[str, Any]) -> None:
+    if status.get("status") != "out_of_scope_for_mvp":
+        raise SchemaAssertionError("out_of_scope_for_mvp.status 必须为 out_of_scope_for_mvp。")
+
+    required_nonempty = [
+        "reason_code",
+        "supported_stage",
+        "unsupported_stage",
+        "user_facing_message",
+        # trace（裁决 1）
+        "scope_gate_status",
+        "jtbd_hint",
+    ]
+    for key in required_nonempty:
+        if not str(status.get(key, "")).strip():
+            raise SchemaAssertionError(f"out_of_scope_for_mvp.{key} 不能为空。")
+
+    # trace（裁决 1）：命中 token + 字段来源约束。
+    matched_tokens = status.get("matched_tokens")
+    matched_fields = status.get("matched_fields")
+    if not isinstance(matched_tokens, list) or not matched_tokens:
+        raise SchemaAssertionError("out_of_scope_for_mvp.matched_tokens 必须是非空列表。")
+    if not isinstance(matched_fields, list) or not matched_fields:
+        raise SchemaAssertionError("out_of_scope_for_mvp.matched_fields 必须是非空列表。")
+
+    allowed_product_fields = {
+        "leaf_category",
+        "category_path",
+        "product_name",
+        "core_selling_points",
+        "brand_name",
+        "product_detail_summary",
+    }
+    extra_fields = sorted({str(x) for x in matched_fields} - allowed_product_fields)
+    if extra_fields:
+        raise SchemaAssertionError(
+            f"scope gate 字段来源违规：matched_fields 出现非商品侧字段 {extra_fields}。"
+        )
+
+    # 防视频污染断言：若 scope gate 触发，matched_fields 不得出现任何视频侧字段。
+    banned_video_fields = {
+        "asr_text",
+        "ocr_text",
+        "vlm_description",
+        "video_factpack",
+        "audio_text",
+        "auditory_text",
+    }
+    banned_hit = sorted({str(x) for x in matched_fields}.intersection(banned_video_fields))
+    if banned_hit:
+        raise SchemaAssertionError(
+            f"scope gate 命中 trace 被视频污染：matched_fields 包含视频侧字段 {banned_hit}。"
+        )
+
+
 def assert_product_diagnosis(payload: ProductDiagnosis | dict[str, Any]) -> None:
     data = _as_dict(payload)
     legacy_fields = {"strategy_payload", "ec_skeletons", "hec_variants"}.intersection(data.keys())
     if legacy_fields:
         raise SchemaAssertionError(f"检测到旧协议字段残留：{', '.join(sorted(legacy_fields))}")
+
+    # PRD-1.2：needs_review 为中止态，不触发武器库/HEC/完整诊断，协议层短路放行。
+    if str(data.get("jtbd", "")).strip() == "needs_review":
+        return
+
+    assembly_status = data.get("assembly_status")
+    if isinstance(assembly_status, dict) and assembly_status.get("status") == "out_of_scope_for_mvp":
+        _assert_out_of_scope_for_mvp_status(assembly_status)
+        if data.get("product_ec_skeletons") or data.get("product_hecs"):
+            raise SchemaAssertionError("out_of_scope_for_mvp 状态下不得输出 Product_EC_Skeletons / Product_HECs。")
+        return
+
+    if isinstance(assembly_status, dict) and assembly_status.get("status") == "assembly_blocked":
+        _assert_assembly_blocked_status(assembly_status)
+        if data.get("product_ec_skeletons") or data.get("product_hecs"):
+            raise SchemaAssertionError("assembly_blocked 状态下不得输出 Product_EC_Skeletons / Product_HECs。")
+        return
 
     for field_name in (
         "product_id",
