@@ -187,6 +187,18 @@ def test_runben_video_end_to_end():
     pmd = result["profile_match_diagnosis"]
     assert "overall_status" not in pmd, "profile 不得保留旧字段名 overall_status"
     assert pmd["match_status"] in ("completed", "partial", "weak", "missing", "not_applicable")
+    assert pmd["status"] in ("completed", "needs_review", "insufficient_evidence")
+    assert pmd["match_result"] in ("high_match", "partial", "mismatch")
+    assert pmd["gap"]["level"] in ("high", "medium", "low")
+    assert "available_for_frontend_mapping" not in pmd
+    if pmd["status"] in ("completed", "needs_review"):
+        assert pmd["product_audience"]["primary"]
+        assert pmd["product_audience"]["core_need"]
+        assert pmd["video_audience"]["primary"]
+        assert pmd["video_audience"]["core_need"]
+        assert pmd["gap"]["description"]
+    if pmd["status"] == "completed":
+        assert {e["source"] for e in pmd["evidence"]} >= {"product_factpack", "video_factpack"}
     assert pmd["requirement_results"]
     for r in pmd["requirement_results"]:
         assert r["completion_status"] in ("completed", "partial", "weak", "missing", "not_applicable")

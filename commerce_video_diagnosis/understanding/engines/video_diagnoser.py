@@ -306,7 +306,11 @@ class VideoDiagnosisEngine:
                     "video_target_audience": video_target_audience,
                     "audience_match_diagnosis": audience_match,
                     "profile_match_diagnosis": self._step3_profile_match(
-                        product_diagnosis.get("persuasion_requirement_profile") or {},
+                        {
+                            **(product_diagnosis.get("persuasion_requirement_profile") or {}),
+                            "_product_audience_fact": product_diagnosis.get("product_target_audience") or {},
+                            "_video_audience_fact": video_target_audience,
+                        },
                         corpus,
                         jtbd_level1=jtbd_level1,
                     ),
@@ -333,13 +337,23 @@ class VideoDiagnosisEngine:
             return result
 
         # Step3：说服要求匹配（PRD-4.1 收窄：Primary/Secondary/Blocked 三层）
-        profile_match = self._step3_profile_match(
-            product_diagnosis.get("persuasion_requirement_profile") or {},
-            corpus,
-            jtbd_level1=jtbd_level1,
-            secondary_benefits=secondary_benefits,
-            non_selected_task_reasons=non_selected_task_reasons,
-        )
+        profile_input = {
+            **(product_diagnosis.get("persuasion_requirement_profile") or {}),
+            "_product_audience_fact": product_diagnosis.get("product_target_audience") or {},
+            "_video_audience_fact": video_target_audience,
+        }
+        try:
+            profile_match = self._step3_profile_match(
+                profile_input,
+                corpus,
+                jtbd_level1=jtbd_level1,
+                secondary_benefits=secondary_benefits,
+                non_selected_task_reasons=non_selected_task_reasons,
+            )
+        except TypeError as exc:
+            if "unexpected keyword argument" not in str(exc):
+                raise
+            profile_match = self._step3_profile_match(profile_input, corpus)
 
         # Step4：HEC 匹配（PRD-4.2 回查：EC Skeletons + CandidateSet 显式回查 source_role）
         hec_match = self._step4_hec_match(
@@ -907,12 +921,139 @@ class VideoDiagnosisEngine:
                 }
             )
 
+    @staticmethod
+    def _first_text(*values: Any) -> str:
+        for value in values:
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+            if isinstance(value, list):
+                for item in value:
+                    if isinstance(item, str) and item.strip():
+                        return item.strip()
+                    if isinstance(item, Mapping):
+                        text = VideoDiagnosisEngine._first_text(
+                            item.get("label"), item.get("name"), item.get("value"), item.get("audience")
+                        )
+                        if text:
+                            return text
+        return ""
+
+    @classmethod
+    def _build_frontend_profile_match(
+        cls,
+        *,
+        legacy_status: str,
+        profile: Mapping[str, Any],
+        product_audience_fact: Optional[Mapping[str, Any]],
+        video_audience_fact: Optional[Mapping[str, Any]],
+        requirement_results: list[dict[str, Any]],
+        corpus: Mapping[str, Any],
+        info_miss: str,
+    ) -> dict[str, Any]:
+        product_audience_fact = product_audience_fact or {}
+        video_audience_fact = video_audience_fact or {}
+        requirements = profile.get("persuasion_requirements") or []
+        status = {
+            "completed": "completed",
+            "partial": "needs_review",
+            "weak": "needs_review",
+            "missing": "needs_review",
+        }.get(legacy_status, "insufficient_evidence")
+        match_result = {
+            "completed": "high_match",
+            "partial": "partial",
+            "weak": "partial",
+            "missing": "mismatch",
+        }.get(legacy_status, "mismatch")
+        gap_level = {
+            "completed": "low",
+            "partial": "medium",
+            "weak": "medium",
+            "missing": "high",
+        }.get(legacy_status, "high")
+
+        product_primary = cls._first_text(product_audience_fact.get("primary_audiences"), product_audience_fact.get("primary"))
+        product_scene = cls._first_text(product_audience_fact.get("scenes"), product_audience_fact.get("scene"))
+        product_need = cls._first_text(
+            product_audience_fact.get("core_needs"),
+            product_audience_fact.get("core_need"),
+            [r.get("success_criteria") for r in requirements if isinstance(r, Mapping)],
+        )
+        video_primary = cls._first_text(video_audience_fact.get("primary_audiences"), video_audience_fact.get("primary"))
+        video_scene = cls._first_text(video_audience_fact.get("scenes"), video_audience_fact.get("scene"))
+        video_need = cls._first_text(video_audience_fact.get("core_needs"), video_audience_fact.get("core_need"), corpus.get("full_text"))
+        gap_desc = info_miss or "缺少可稳定判断 profile_match 的覆盖信息。"
+
+        product_evidence = cls._first_text([r.get("success_criteria") for r in requirements if isinstance(r, Mapping)])
+        video_evidence = cls._first_text(corpus.get("full_text"))
+        evidence = []
+        if product_evidence:
+            evidence.append({"source": "product_factpack", "field": "persuasion_requirements.success_criteria", "value": product_evidence})
+        if video_evidence:
+            evidence.append({"source": "video_factpack", "field": "video_corpus.full_text", "value": video_evidence})
+
+        missing_fields = [
+            path
+            for path, value in (
+                ("product_audience.primary", product_primary),
+                ("product_audience.core_need", product_need),
+                ("video_audience.primary", video_primary),
+                ("video_audience.core_need", video_need),
+                ("gap.description", gap_desc),
+            )
+            if not value
+        ]
+        if missing_fields:
+            status = "insufficient_evidence"
+        summary = f"profile_match={match_result}，gap={gap_level}。{gap_desc}"
+        if status == "insufficient_evidence":
+            summary = f"证据不足，缺失字段：{missing_fields}。{gap_desc}"
+
+        frontend = {
+            "status": status,
+            "product_audience": {"primary": product_primary, "scene": product_scene, "core_need": product_need},
+            "video_audience": {"primary": video_primary, "scene": video_scene, "core_need": video_need},
+            "gap": {"level": gap_level, "description": gap_desc},
+            "match_result": match_result,
+            "evidence": evidence,
+            "summary": summary,
+        }
+        cls._assert_frontend_profile_match(frontend)
+        return frontend
+
+    @classmethod
+    def _assert_frontend_profile_match(cls, profile_match: Mapping[str, Any]) -> None:
+        if "available_for_frontend_mapping" in profile_match:
+            raise VideoDiagnosisInputError("available_for_frontend_mapping 已废弃，禁止输出。")
+        status = profile_match.get("status")
+        if status not in {"completed", "needs_review", "insufficient_evidence"}:
+            raise VideoDiagnosisInputError(f"profile_match.status 非法：{status}")
+        required_values = (
+            ("product_audience.primary", (profile_match.get("product_audience") or {}).get("primary")),
+            ("product_audience.core_need", (profile_match.get("product_audience") or {}).get("core_need")),
+            ("video_audience.primary", (profile_match.get("video_audience") or {}).get("primary")),
+            ("video_audience.core_need", (profile_match.get("video_audience") or {}).get("core_need")),
+            ("gap.description", (profile_match.get("gap") or {}).get("description")),
+        )
+        if status in {"completed", "needs_review"}:
+            empty = [path for path, value in required_values if not isinstance(value, str) or not value.strip()]
+            if empty:
+                raise VideoDiagnosisInputError(f"profile_match 必填字段为空：{empty}")
+        if status == "insufficient_evidence" and "缺" not in str(profile_match.get("summary") or ""):
+            raise VideoDiagnosisInputError("profile_match insufficient_evidence 必须在 summary 说明缺失原因。")
+        if status == "completed":
+            sources = {e.get("source") for e in profile_match.get("evidence", []) if isinstance(e, Mapping)}
+            if not {"product_factpack", "video_factpack"}.issubset(sources):
+                raise VideoDiagnosisInputError("profile_match completed evidence 必须同时覆盖 product_factpack 和 video_factpack。")
+
     # ------------------------------------------------------------------ Step3
     def _step3_profile_match(
         self,
         profile: Mapping[str, Any],
         corpus: Mapping[str, Any],
         *,
+        product_audience_fact: Optional[Mapping[str, Any]] = None,
+        video_audience_fact: Optional[Mapping[str, Any]] = None,
         jtbd_level1: Optional[str] = None,
         secondary_benefits: Optional[list] = None,
         non_selected_task_reasons: Optional[list] = None,
@@ -923,6 +1064,13 @@ class VideoDiagnosisEngine:
         if jtbd_level1 == NEEDS_REVIEW:
             result = {
                 "match_status": "not_applicable",
+                "status": "insufficient_evidence",
+                "product_audience": {"primary": "", "scene": "", "core_need": ""},
+                "video_audience": {"primary": "", "scene": "", "core_need": ""},
+                "gap": {"level": "high", "description": "商品任务未确定 / 事实不足，需复核。"},
+                "match_result": "mismatch",
+                "evidence": [],
+                "summary": "证据不足，缺失原因：商品任务未确定 / 事实不足，需复核（jtbd_level1=needs_review）。",
                 "task_status": NEEDS_REVIEW,
                 "requirement_results": [],
                 "missing_required_requirements": [],
@@ -938,6 +1086,7 @@ class VideoDiagnosisEngine:
                 raise VideoDiagnosisInputError(
                     "Profile Match needs_review early return 断言失败：不应产出 Primary/Secondary/Blocked 三层结论。"
                 )
+            self._assert_frontend_profile_match(result)
             return result
 
         full_text = corpus["full_text"]
@@ -1140,7 +1289,17 @@ class VideoDiagnosisEngine:
                 "Profile Match 断言失败：blocked_direction_hit 与 profile_match_error 不一致。"
             )
 
+        frontend_profile_match = self._build_frontend_profile_match(
+            legacy_status=overall_status,
+            profile=profile,
+            product_audience_fact=product_audience_fact or profile.get("_product_audience_fact"),
+            video_audience_fact=video_audience_fact or profile.get("_video_audience_fact"),
+            requirement_results=requirement_results,
+            corpus=corpus,
+            info_miss=info_miss,
+        )
         return {
+            **frontend_profile_match,
             "match_status": overall_status,
             "requirement_results": requirement_results,
             "missing_required_requirements": missing_required,

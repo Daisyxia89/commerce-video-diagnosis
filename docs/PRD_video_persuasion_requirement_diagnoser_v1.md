@@ -157,7 +157,36 @@
 
 ---
 
-### 2.6 `VideoPersuasionRequirementDiagnosisResult`
+### 2.6 `profile_match` 前端输出 schema
+
+`profile_match` 用于表达商品目标画像与视频目标画像之间的匹配关系。该对象直接面向前端消费，不再依赖 `available_for_frontend_mapping`。
+
+| 字段 | 类型 | 必填 | 说明 / 约束 |
+|---|---|---|---|
+| `status` | `str` (Enum) | 是 | `completed / needs_review / insufficient_evidence` |
+| `product_audience.primary` | `str` | 是 | 来自 Product FactPack / 商品侧诊断，不得读取视频侧字段；`completed / needs_review` 下不得为空 |
+| `product_audience.scene` | `str` | 建议必填 | 来自 Product FactPack / 商品侧诊断 |
+| `product_audience.core_need` | `str` | 是 | 来自 Product FactPack / 商品侧诊断；`completed / needs_review` 下不得为空 |
+| `video_audience.primary` | `str` | 是 | 来自 Video FactPack / 视频侧诊断，不得读取商品侧字段；`completed / needs_review` 下不得为空 |
+| `video_audience.scene` | `str` | 建议必填 | 来自 Video FactPack / 视频侧诊断 |
+| `video_audience.core_need` | `str` | 是 | 来自 Video FactPack / 视频侧诊断；`completed / needs_review` 下不得为空 |
+| `gap.level` | `str` (Enum) | 是 | `high / medium / low` |
+| `gap.description` | `str` | 是 | `completed / needs_review` 下不得为空 |
+| `match_result` | `str` (Enum) | 是 | `high_match / partial / mismatch` |
+| `evidence[]` | `list[object]` | 是 | 每条包含 `source / field / value`；`source` 仅允许 `product_factpack / video_factpack` |
+| `summary` | `str` | 建议必填 | `insufficient_evidence` 下必须说明缺失原因 |
+
+**后置断言**：
+
+1. `available_for_frontend_mapping` 已废弃，任意输出命中该字段必须 Crash Early。
+2. `product_audience` 只能来自 Product FactPack，`video_audience` 只能来自 Video FactPack，两侧不得混用。
+3. `insufficient_evidence` 状态下必填 string 字段允许为空，但 `summary` 必须说明缺失原因。
+4. `completed / needs_review` 状态下必填 string 字段不得为空。
+5. `completed` 状态下 `evidence` 必须同时覆盖 `product_factpack` 和 `video_factpack`。
+
+---
+
+### 2.7 `VideoPersuasionRequirementDiagnosisResult`
 
 | 字段 | 类型 | 必填 | 说明 / 约束 |
 |---|---|---|---|
