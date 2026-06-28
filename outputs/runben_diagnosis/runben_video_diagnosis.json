@@ -312,6 +312,35 @@
       ]
     },
     "profile_match_diagnosis": {
+      "status": "insufficient_evidence",
+      "product_audience": {
+        "primary": "",
+        "scene": "",
+        "core_need": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。"
+      },
+      "video_audience": {
+        "primary": "",
+        "scene": "",
+        "core_need": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+      },
+      "gap": {
+        "level": "medium",
+        "description": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+      },
+      "match_result": "partial",
+      "evidence": [
+        {
+          "source": "product_factpack",
+          "field": "persuasion_requirements.success_criteria",
+          "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。"
+        },
+        {
+          "source": "video_factpack",
+          "field": "video_corpus.full_text",
+          "value": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+        }
+      ],
+      "summary": "证据不足，缺失字段：['product_audience.primary', 'video_audience.primary']。必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。",
       "match_status": "partial",
       "requirement_results": [
         {
@@ -448,26 +477,77 @@
         "provide_authority_endorsement",
         "prove_current_purchase_reason"
       ],
-      "information_miss_summary": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+      "information_miss_summary": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+      "profile_match_error": {},
+      "blocked_direction_hit": false,
+      "coverage_layers": {
+        "primary_coverage": {
+          "primary_requirement_ref": "primary_requirement",
+          "required_requirement_ids": [
+            "expose_current_pain",
+            "prove_user_fit",
+            "prove_scenario_fit",
+            "prove_core_benefit",
+            "provide_visible_result",
+            "establish_basic_trust",
+            "reduce_trial_risk",
+            "prove_source_credibility",
+            "provide_authority_endorsement",
+            "resolve_safety_risk",
+            "prove_current_purchase_reason"
+          ],
+          "covered_requirement_ids": [
+            "expose_current_pain",
+            "prove_user_fit",
+            "prove_scenario_fit",
+            "prove_core_benefit",
+            "provide_visible_result",
+            "establish_basic_trust",
+            "reduce_trial_risk",
+            "prove_source_credibility",
+            "provide_authority_endorsement",
+            "resolve_safety_risk",
+            "prove_current_purchase_reason"
+          ],
+          "missing_required_requirements": [],
+          "covered": true,
+          "judgment": "主说服要求覆盖：['expose_current_pain', 'prove_user_fit', 'prove_scenario_fit', 'prove_core_benefit', 'provide_visible_result', 'establish_basic_trust', 'reduce_trial_risk', 'prove_source_credibility', 'provide_authority_endorsement', 'resolve_safety_risk', 'prove_current_purchase_reason']。"
+        },
+        "secondary_coverage": {
+          "secondary_benefits": [],
+          "secondary_benefits_hit": [],
+          "overclaimed": false,
+          "secondary_without_primary": false,
+          "judgment": "次级收益命中 无，未越位。"
+        },
+        "blocked_direction_check": {
+          "blocked_directions": [],
+          "blocked_directions_hit": [],
+          "blocked_direction_hit": false,
+          "judgment": "未把任何已阻断方向（GR-02/03/04）当主诉。"
+        }
+      }
     },
     "hec_match_diagnosis": {
       "match_status": "acceptable_deviation",
-      "expected_product_hec": {
-        "hook_tag": "H1",
-        "effect_tag": "E1",
-        "cta_tag": "C4"
-      },
+      "candidates": [
+        {
+          "H": "H1",
+          "E": "E1",
+          "C": "C4"
+        }
+      ],
       "actual_video_hec": {
         "hook_tag": "H5",
         "effect_tag": "E1",
         "cta_tag": "C4"
       },
-      "hook_match": false,
-      "effect_match": true,
-      "cta_match": true,
-      "logic_chain_judgment": "expected={'hook_tag': 'H1', 'effect_tag': 'E1', 'cta_tag': 'C4'} vs actual={'hook_tag': 'H5', 'effect_tag': 'E1', 'cta_tag': 'C4'}；hook=False, effect=True, cta=True → acceptable_deviation。",
-      "acceptable_deviation_reason": "effect_tag（说服核心）一致，hook/cta 偏移属可接受偏差。",
-      "hec_gap_summary": "hook H1→H5"
+      "hook_hit": false,
+      "effect_hit": true,
+      "cta_hit": true,
+      "full_combination_hit": false,
+      "logic_chain_judgment": "actual={'H': 'H5', 'E': 'E1', 'C': 'C4'}；H_hit=False, E_hit=True, C_hit=True, full_combination_hit=False → acceptable_deviation。",
+      "hec_gap_summary": "hook H5 不在候选 H 集 ['H1']"
     },
     "slider_match_diagnosis": {
       "match_status": "mixed_deviation",
@@ -551,7 +631,7 @@
         {
           "priority": "P2",
           "issue_type": "hec",
-          "issue_summary": "HEC acceptable_deviation：hook H1→H5。",
+          "issue_summary": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
           "repair_direction": "对齐 hook/cta 标签，减少 HEC 偏移。",
           "related_evidence_spans": []
         },

@@ -2382,3 +2382,439 @@ def assert_script_package(payload: ScriptPackage | dict[str, Any]) -> None:
         if not isinstance(segment, dict):
             raise SchemaAssertionError(f"storyboard[{index}] 必须是对象。")
         _assert_mode_b_script_has_no_placeholder(segment.get("rewritten_spoken_lines"), f"storyboard[{index}].rewritten_spoken_lines")
+
+
+# =============================================================================
+# 前端消费层输出契约（《电商短视频诊断：前端消费层输出契约》SSOT）后置断言
+# -----------------------------------------------------------------------------
+# 为 12 类契约对象提供 Crash Early 后置断言，由 response_assembler 在装配后调用。
+# 命名约定：assert_contract_<object>。不通过一律 raise SchemaAssertionError。
+# =============================================================================
+
+# ---- 契约枚举集合 ----
+CONTRACT_TOP_STATUS = {
+    "diagnosis_completed", "needs_review", "out_of_scope_for_mvp",
+    "assembly_blocked", "schema_error", "provider_not_configured",
+}
+CONTRACT_PRICE_BAND = {"high", "medium", "low", "unknown"}
+CONTRACT_TRUST_BARRIER = {"high", "medium", "low", "unknown"}
+CONTRACT_CHANNEL_RISK = {"risk", "no_risk", "unknown"}
+CONTRACT_ENDORSEMENT = {"has_endorsement", "no_endorsement", "unknown"}
+CONTRACT_BRAND_TIER = {"brand", "white_label", "unknown"}
+CONTRACT_SUPPORT_REQ_PRIORITY = {"required", "optional"}
+CONTRACT_EVIDENCE_SOURCE = {
+    "product_factpack", "video_factpack", "product_understanding",
+    "video_understanding", "raw_output",
+}
+CONTRACT_EVIDENCE_ROLE = {"hook", "proof", "safety", "cta", "transition", "other"}
+CONTRACT_OVERVIEW_OVERALL = {"pass", "needs_minor_repair", "needs_repair", "mismatch", "blocked", "needs_review"}
+CONTRACT_OVERVIEW_AUDIENCE = {"high_match", "partial_match", "low_match", "too_broad", "data_missing"}
+CONTRACT_OVERVIEW_PROFILE = {"completed", "partial", "incomplete", "insufficient_evidence", "data_missing"}
+CONTRACT_OVERVIEW_HEC = {"matched", "acceptable_deviation", "weak_match", "mismatch", "data_missing"}
+CONTRACT_OVERVIEW_SLIDER = {"matched", "mixed_deviation", "slightly_strong", "slightly_weak", "mismatch", "data_missing"}
+CONTRACT_OVERVIEW_REQ_COVERAGE = {"completed", "partial", "failed", "data_missing"}
+CONTRACT_PROFILE_STATUS = {"completed", "needs_review", "insufficient_evidence", "data_missing"}
+CONTRACT_PROFILE_MATCH_RESULT = {"high_match", "partial", "mismatch"}
+CONTRACT_GAP_LEVEL = {"high", "medium", "low"}
+CONTRACT_REQ_COVERAGE_STATUS = {"completed", "partial", "failed", "data_missing"}
+CONTRACT_COMPLETION_STATUS = {"completed", "weak", "missing", "not_applicable"}
+CONTRACT_HEC_STATUS = {"matched", "acceptable_deviation", "weak_match", "mismatch", "data_missing"}
+CONTRACT_HEC_DIMENSION = {"hook", "effect", "cta", "chain"}
+CONTRACT_HEC_DIM_STATUS = {"matched", "acceptable_deviation", "weak_match", "mismatch"}
+CONTRACT_SLIDER_STATUS = {"matched", "mixed_deviation", "slightly_strong", "slightly_weak", "mismatch", "insufficient_evidence", "data_missing"}
+CONTRACT_SLIDER_AXIS = {"visual", "audio", "proof", "cta"}
+CONTRACT_SLIDER_FIT_STATUS = {"fit", "too_strong", "too_weak", "wrong_direction"}
+CONTRACT_ISSUE_SEVERITY = {"low", "medium", "high"}
+CONTRACT_MODULE = {"audience_match", "profile_match", "requirement_coverage", "hec_match", "slider_match"}
+CONTRACT_SUGGESTION_PRIORITY = {"P0", "P1", "P2"}
+CONTRACT_QA_STATUS = {"PASS", "FAIL", "NOT_RUN"}
+CONTRACT_E2E_STATUS = {"passed", "failed", "not_run"}
+
+
+def _contract_require_dict(value: Any, field_name: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise SchemaAssertionError(f"契约字段 {field_name} 必须是对象（dict），实际为 {type(value)!r}。")
+    return value
+
+
+def _contract_require_list(value: Any, field_name: str) -> list:
+    if not isinstance(value, list):
+        raise SchemaAssertionError(f"契约字段 {field_name} 必须是数组（list），实际为 {type(value)!r}。")
+    return value
+
+
+def _contract_require_enum(value: Any, allowed: set[str], field_name: str) -> None:
+    if value not in allowed:
+        raise SchemaAssertionError(f"契约字段 {field_name} 枚举非法：{value!r}，合法集合={sorted(allowed)}。")
+
+
+def _contract_require_str(value: Any, field_name: str) -> None:
+    if not isinstance(value, str) or not value.strip():
+        raise SchemaAssertionError(f"契约字段 {field_name} 必须为非空字符串。")
+
+
+def _contract_require_key_present(payload: dict[str, Any], key: str, field_name: str) -> None:
+    """允许 null，但 key 必须存在。"""
+    if key not in payload:
+        raise SchemaAssertionError(f"契约字段 {field_name} 必须存在（允许 null，但 key 不可缺失）。")
+
+
+def assert_contract_evidence_list(value: Any, field_name: str) -> None:
+    """统一 evidence schema（契约第 14 节）：每条含 source/field/value/segment_id/confidence。"""
+    items = _contract_require_list(value, field_name)
+    for idx, ev in enumerate(items):
+        ev_dict = _contract_require_dict(ev, f"{field_name}[{idx}]")
+        for key in ("source", "field", "value", "segment_id", "confidence"):
+            _contract_require_key_present(ev_dict, key, f"{field_name}[{idx}].{key}")
+        _contract_require_enum(ev_dict.get("source"), CONTRACT_EVIDENCE_SOURCE, f"{field_name}[{idx}].source")
+
+
+# ---- 1. diagnosis_meta ----
+def assert_contract_diagnosis_meta(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "diagnosis_meta")
+    for key in (
+        "diagnosis_id", "request_id", "created_at", "workflow_version", "model_version",
+        "model_provider", "source_product_id", "video_id", "qa_status", "e2e_status",
+    ):
+        _contract_require_key_present(data, key, f"diagnosis_meta.{key}")
+    # 必填（裁决 2）：request_id / video_id / source_product_id / diagnosis_id / created_at
+    for key in ("diagnosis_id", "request_id", "created_at", "source_product_id", "video_id"):
+        _contract_require_str(data.get(key), f"diagnosis_meta.{key}")
+    _contract_require_enum(data.get("qa_status"), CONTRACT_QA_STATUS, "diagnosis_meta.qa_status")
+    _contract_require_enum(data.get("e2e_status"), CONTRACT_E2E_STATUS, "diagnosis_meta.e2e_status")
+
+
+# ---- 2. product_understanding ----
+def assert_contract_product_understanding(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "product_understanding")
+    require_keys(
+        data, "product_understanding",
+        ("basic_info", "target_people", "core_selling_points", "jtbd",
+         "supporting_requirements", "expected_hec", "candidate_set", "conversion_resistance", "evidence"),
+    )
+    basic = _contract_require_dict(data["basic_info"], "product_understanding.basic_info")
+    _contract_require_str(basic.get("product_name"), "product_understanding.basic_info.product_name")
+    _contract_require_str(basic.get("leaf_category"), "product_understanding.basic_info.leaf_category")
+    for key in ("brand_name", "shop_name", "price"):
+        _contract_require_key_present(basic, key, f"product_understanding.basic_info.{key}")
+    _contract_require_enum(basic.get("price_band"), CONTRACT_PRICE_BAND, "product_understanding.basic_info.price_band")
+
+    require_non_empty(data.get("target_people"), "product_understanding.target_people")
+    require_non_empty(data.get("core_selling_points"), "product_understanding.core_selling_points")
+
+    jtbd = _contract_require_dict(data["jtbd"], "product_understanding.jtbd")
+    _contract_require_str(jtbd.get("domain"), "product_understanding.jtbd.domain")
+    _contract_require_str(jtbd.get("primary_task"), "product_understanding.jtbd.primary_task")
+    _contract_require_str(jtbd.get("reasoning"), "product_understanding.jtbd.reasoning")
+    _contract_require_key_present(jtbd, "sub_task", "product_understanding.jtbd.sub_task")
+    _contract_require_list(jtbd.get("evidence_chain"), "product_understanding.jtbd.evidence_chain")
+
+    reqs = _contract_require_list(data["supporting_requirements"], "product_understanding.supporting_requirements")
+    require_non_empty(reqs, "product_understanding.supporting_requirements")
+    for idx, r in enumerate(reqs):
+        rd = _contract_require_dict(r, f"supporting_requirements[{idx}]")
+        _contract_require_str(rd.get("requirement_id"), f"supporting_requirements[{idx}].requirement_id")
+        _contract_require_str(rd.get("requirement_name"), f"supporting_requirements[{idx}].requirement_name")
+        _contract_require_enum(rd.get("priority"), CONTRACT_SUPPORT_REQ_PRIORITY, f"supporting_requirements[{idx}].priority")
+        _contract_require_key_present(rd, "description", f"supporting_requirements[{idx}].description")
+
+    hec = _contract_require_dict(data["expected_hec"], "product_understanding.expected_hec")
+    for key in ("hook_tag", "effect_tag", "cta_tag"):
+        _contract_require_str(hec.get(key), f"product_understanding.expected_hec.{key}")
+
+    cs = _contract_require_dict(data["candidate_set"], "product_understanding.candidate_set")
+    for key in ("candidate_h", "core_e", "core_c", "primary_effect", "primary_cta"):
+        _contract_require_key_present(cs, key, f"product_understanding.candidate_set.{key}")
+
+    cr = _contract_require_dict(data["conversion_resistance"], "product_understanding.conversion_resistance")
+    _contract_require_enum(cr.get("trust_barrier"), CONTRACT_TRUST_BARRIER, "conversion_resistance.trust_barrier")
+    _contract_require_enum(cr.get("price_barrier"), CONTRACT_TRUST_BARRIER, "conversion_resistance.price_barrier")
+    _contract_require_enum(cr.get("channel_risk"), CONTRACT_CHANNEL_RISK, "conversion_resistance.channel_risk")
+    _contract_require_enum(cr.get("endorsement"), CONTRACT_ENDORSEMENT, "conversion_resistance.endorsement")
+    _contract_require_enum(cr.get("brand_tier"), CONTRACT_BRAND_TIER, "conversion_resistance.brand_tier")
+
+    assert_contract_evidence_list(data.get("evidence"), "product_understanding.evidence")
+
+
+# ---- 3. video_understanding（含 visual_segments P0 字段非空）----
+def assert_contract_video_understanding(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "video_understanding")
+    require_keys(
+        data, "video_understanding",
+        ("video_meta", "text_stream", "visual_stream", "video_base_fact",
+         "video_jtbd", "actual_hec", "slider_signature", "evidence_spans"),
+    )
+    vm = _contract_require_dict(data["video_meta"], "video_understanding.video_meta")
+    _contract_require_str(vm.get("video_id"), "video_understanding.video_meta.video_id")
+    for key in ("source_platform", "source_url", "duration_sec"):
+        _contract_require_key_present(vm, key, f"video_understanding.video_meta.{key}")
+
+    ts = _contract_require_dict(data["text_stream"], "video_understanding.text_stream")
+    for key in ("asr_summary", "asr_segments", "ocr_text", "ocr_texts"):
+        _contract_require_key_present(ts, key, f"video_understanding.text_stream.{key}")
+    _contract_require_list(ts.get("asr_segments"), "video_understanding.text_stream.asr_segments")
+    _contract_require_list(ts.get("ocr_texts"), "video_understanding.text_stream.ocr_texts")
+
+    vs = _contract_require_dict(data["visual_stream"], "video_understanding.visual_stream")
+    segments = _contract_require_list(vs.get("visual_segments"), "video_understanding.visual_stream.visual_segments")
+    if not segments:
+        raise SchemaAssertionError("video_understanding.visual_stream.visual_segments 不得为空（契约 6.3）。")
+    for idx, seg in enumerate(segments):
+        sd = _contract_require_dict(seg, f"visual_segments[{idx}]")
+        # P0 必填非空：segment_id / core_scene_desc / core_action
+        _contract_require_str(sd.get("segment_id"), f"visual_segments[{idx}].segment_id")
+        _contract_require_str(sd.get("core_scene_desc"), f"visual_segments[{idx}].core_scene_desc")
+        _contract_require_str(sd.get("core_action"), f"visual_segments[{idx}].core_action")
+        # 允许 null 但 key 必须存在
+        for key in ("start_sec", "end_sec", "related_asr_segment_id", "rhythm_change_reason"):
+            _contract_require_key_present(sd, key, f"visual_segments[{idx}].{key}")
+        _contract_require_list(sd.get("related_ocr_texts"), f"visual_segments[{idx}].related_ocr_texts")
+        if not isinstance(sd.get("is_rhythm_change_point"), bool):
+            raise SchemaAssertionError(f"visual_segments[{idx}].is_rhythm_change_point 必须为布尔。")
+        _contract_require_enum(sd.get("evidence_role"), CONTRACT_EVIDENCE_ROLE, f"visual_segments[{idx}].evidence_role")
+
+    vbf = _contract_require_dict(data["video_base_fact"], "video_understanding.video_base_fact")
+    if not isinstance(vbf.get("total_segment_count"), int):
+        raise SchemaAssertionError("video_base_fact.total_segment_count 必须为整数。")
+    _contract_require_list(vbf.get("rhythm_change_points"), "video_base_fact.rhythm_change_points")
+    _contract_require_list(vbf.get("key_evidence_actions"), "video_base_fact.key_evidence_actions")
+    _contract_require_str(vbf.get("original_fact_record"), "video_base_fact.original_fact_record")
+
+    vj = _contract_require_dict(data["video_jtbd"], "video_understanding.video_jtbd")
+    _contract_require_str(vj.get("primary_task"), "video_understanding.video_jtbd.primary_task")
+    _contract_require_key_present(vj, "reasoning", "video_understanding.video_jtbd.reasoning")
+    _contract_require_list(vj.get("evidence"), "video_understanding.video_jtbd.evidence")
+
+    ah = _contract_require_dict(data["actual_hec"], "video_understanding.actual_hec")
+    for key in ("hook_tag", "effect_tag", "cta_tag"):
+        _contract_require_str(ah.get(key), f"video_understanding.actual_hec.{key}")
+    _contract_require_key_present(ah, "reason", "video_understanding.actual_hec.reason")
+
+    ss = _contract_require_dict(data["slider_signature"], "video_understanding.slider_signature")
+    for key in ("visual", "audio", "proof", "cta", "summary"):
+        _contract_require_key_present(ss, key, f"video_understanding.slider_signature.{key}")
+
+    assert_contract_evidence_list(data.get("evidence_spans"), "video_understanding.evidence_spans")
+
+
+# ---- 4. diagnosis.overview ----
+def assert_contract_overview(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "diagnosis.overview")
+    _contract_require_enum(data.get("overall_status"), CONTRACT_OVERVIEW_OVERALL, "overview.overall_status")
+    _contract_require_enum(data.get("audience_match_status"), CONTRACT_OVERVIEW_AUDIENCE, "overview.audience_match_status")
+    _contract_require_enum(data.get("profile_match_status"), CONTRACT_OVERVIEW_PROFILE, "overview.profile_match_status")
+    _contract_require_enum(data.get("hec_match_status"), CONTRACT_OVERVIEW_HEC, "overview.hec_match_status")
+    _contract_require_enum(data.get("slider_match_status"), CONTRACT_OVERVIEW_SLIDER, "overview.slider_match_status")
+    _contract_require_enum(data.get("requirement_coverage_status"), CONTRACT_OVERVIEW_REQ_COVERAGE, "overview.requirement_coverage_status")
+    _contract_require_str(data.get("requirement_coverage_text"), "overview.requirement_coverage_text")
+    _contract_require_str(data.get("summary"), "overview.summary")
+
+
+# ---- 5. diagnosis.profile_match ----
+def assert_contract_profile_match(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "diagnosis.profile_match")
+    if "available_for_frontend_mapping" in data:
+        raise SchemaAssertionError("profile_match 禁止输出 available_for_frontend_mapping（契约 17）。")
+    status = data.get("status")
+    _contract_require_enum(status, CONTRACT_PROFILE_STATUS, "profile_match.status")
+    _contract_require_enum(data.get("match_result"), CONTRACT_PROFILE_MATCH_RESULT, "profile_match.match_result")
+    gap = _contract_require_dict(data.get("gap"), "profile_match.gap")
+    _contract_require_enum(gap.get("level"), CONTRACT_GAP_LEVEL, "profile_match.gap.level")
+    _contract_require_str(gap.get("description"), "profile_match.gap.description")
+    for side in ("product_audience", "video_audience"):
+        sd = _contract_require_dict(data.get(side), f"profile_match.{side}")
+        for key in ("primary", "scene", "core_need"):
+            _contract_require_key_present(sd, key, f"profile_match.{side}.{key}")
+    assert_contract_evidence_list(data.get("evidence"), "profile_match.evidence")
+    # completed / needs_review 下必填 string 不得为空
+    if status in {"completed", "needs_review"}:
+        for side in ("product_audience", "video_audience"):
+            for key in ("primary", "core_need"):
+                _contract_require_str((data.get(side) or {}).get(key), f"profile_match.{side}.{key}")
+    # insufficient_evidence 下 summary 必须说明缺失原因
+    if status == "insufficient_evidence":
+        if "缺" not in str(data.get("summary") or ""):
+            raise SchemaAssertionError("profile_match insufficient_evidence 必须在 summary 说明缺失原因。")
+    # completed 下 evidence 必须双侧覆盖
+    if status == "completed":
+        sources = {e.get("source") for e in (data.get("evidence") or []) if isinstance(e, dict)}
+        if not ({"product_factpack", "product_understanding"} & sources) or not ({"video_factpack", "video_understanding"} & sources):
+            raise SchemaAssertionError("profile_match completed evidence 必须同时覆盖商品侧与视频侧。")
+
+
+# ---- 6. diagnosis.requirement_coverage ----
+def assert_contract_requirement_coverage(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "diagnosis.requirement_coverage")
+    _contract_require_enum(data.get("status"), CONTRACT_REQ_COVERAGE_STATUS, "requirement_coverage.status")
+    completed = data.get("completed_count")
+    total = data.get("total_count")
+    if not isinstance(completed, int) or not isinstance(total, int):
+        raise SchemaAssertionError("requirement_coverage.completed_count / total_count 必须为整数。")
+    if completed > total:
+        raise SchemaAssertionError(f"requirement_coverage.completed_count({completed}) 不得大于 total_count({total})。")
+    items = _contract_require_list(data.get("items"), "requirement_coverage.items")
+    actual_completed = 0
+    for idx, it in enumerate(items):
+        itd = _contract_require_dict(it, f"requirement_coverage.items[{idx}]")
+        _contract_require_str(itd.get("requirement_id"), f"requirement_coverage.items[{idx}].requirement_id")
+        _contract_require_str(itd.get("requirement_name"), f"requirement_coverage.items[{idx}].requirement_name")
+        if not isinstance(itd.get("required"), bool):
+            raise SchemaAssertionError(f"requirement_coverage.items[{idx}].required 必须为布尔。")
+        cstatus = itd.get("completion_status")
+        _contract_require_enum(cstatus, CONTRACT_COMPLETION_STATUS, f"requirement_coverage.items[{idx}].completion_status")
+        for key in ("expected", "actual", "missing_reason", "repair_direction"):
+            _contract_require_key_present(itd, key, f"requirement_coverage.items[{idx}].{key}")
+        assert_contract_evidence_list(itd.get("matched_evidence_spans"), f"requirement_coverage.items[{idx}].matched_evidence_spans")
+        if cstatus == "completed":
+            actual_completed += 1
+            # completed 项 evidence 必须双侧覆盖（product + video）
+            sources = {e.get("source") for e in (itd.get("matched_evidence_spans") or []) if isinstance(e, dict)}
+            has_product = bool({"product_factpack", "product_understanding"} & sources)
+            has_video = bool({"video_factpack", "video_understanding"} & sources)
+            if not (has_product and has_video):
+                raise SchemaAssertionError(
+                    f"requirement_coverage.items[{idx}] completed 项 evidence 必须双侧覆盖（product+video），实际 sources={sorted(sources)}。"
+                )
+        elif cstatus in {"weak", "missing"}:
+            _contract_require_str(itd.get("missing_reason"), f"requirement_coverage.items[{idx}].missing_reason")
+    if actual_completed != completed:
+        raise SchemaAssertionError(
+            f"requirement_coverage.completed_count({completed}) 与 items 中 completed 实际计数({actual_completed}) 不一致。"
+        )
+    _contract_require_list(data.get("missing_required_requirements"), "requirement_coverage.missing_required_requirements")
+    _contract_require_list(data.get("weak_requirements"), "requirement_coverage.weak_requirements")
+    _contract_require_str(data.get("summary"), "requirement_coverage.summary")
+
+
+# ---- 7. diagnosis.hec_match ----
+def assert_contract_hec_match(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "diagnosis.hec_match")
+    status = data.get("status")
+    _contract_require_enum(status, CONTRACT_HEC_STATUS, "hec_match.status")
+    for side in ("product_expected", "video_actual"):
+        sd = _contract_require_dict(data.get(side), f"hec_match.{side}")
+        for key in ("hook_tag", "effect_tag", "cta_tag"):
+            _contract_require_key_present(sd, key, f"hec_match.{side}.{key}")
+    dims = _contract_require_list(data.get("dimension_results"), "hec_match.dimension_results")
+    if status != "data_missing" and not dims:
+        raise SchemaAssertionError("hec_match.dimension_results 不得为空（非 data_missing 时必须给出商品应然 vs 视频实然对照）。")
+    seen_dims = set()
+    for idx, dim in enumerate(dims):
+        dd = _contract_require_dict(dim, f"hec_match.dimension_results[{idx}]")
+        _contract_require_enum(dd.get("dimension"), CONTRACT_HEC_DIMENSION, f"hec_match.dimension_results[{idx}].dimension")
+        _contract_require_enum(dd.get("status"), CONTRACT_HEC_DIM_STATUS, f"hec_match.dimension_results[{idx}].status")
+        for key in ("expected", "actual", "impact", "suggestion"):
+            _contract_require_key_present(dd, key, f"hec_match.dimension_results[{idx}].{key}")
+        seen_dims.add(dd.get("dimension"))
+    _contract_require_key_present(data, "acceptable_deviation_reason", "hec_match.acceptable_deviation_reason")
+    _contract_require_key_present(data, "hec_gap_summary", "hec_match.hec_gap_summary")
+    # acceptable_deviation 必须说明业务影响
+    if status == "acceptable_deviation":
+        _contract_require_str(data.get("acceptable_deviation_reason"), "hec_match.acceptable_deviation_reason")
+
+
+# ---- 8. diagnosis.slider_match ----
+def assert_contract_slider_match(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "diagnosis.slider_match")
+    _contract_require_enum(data.get("status"), CONTRACT_SLIDER_STATUS, "slider_match.status")
+    _contract_require_list(data.get("target_audience_reference"), "slider_match.target_audience_reference")
+    for key in ("expected_slider_preference", "actual_slider_signature"):
+        sd = _contract_require_dict(data.get(key), f"slider_match.{key}")
+        for axis in ("visual", "audio", "proof", "cta"):
+            _contract_require_key_present(sd, axis, f"slider_match.{key}.{axis}")
+    axes = _contract_require_list(data.get("axis_results"), "slider_match.axis_results")
+    for idx, ar in enumerate(axes):
+        ad = _contract_require_dict(ar, f"slider_match.axis_results[{idx}]")
+        _contract_require_enum(ad.get("axis"), CONTRACT_SLIDER_AXIS, f"slider_match.axis_results[{idx}].axis")
+        _contract_require_enum(ad.get("fit_status"), CONTRACT_SLIDER_FIT_STATUS, f"slider_match.axis_results[{idx}].fit_status")
+        for key in ("expected", "actual", "judgment", "repair_direction"):
+            _contract_require_key_present(ad, key, f"slider_match.axis_results[{idx}].{key}")
+        assert_contract_evidence_list(ad.get("evidence"), f"slider_match.axis_results[{idx}].evidence")
+    _contract_require_key_present(data, "audience_acceptance_judgment", "slider_match.audience_acceptance_judgment")
+    _contract_require_key_present(data, "slider_gap_summary", "slider_match.slider_gap_summary")
+
+
+# ---- 9. diagnosis.top_issues ----
+def assert_contract_top_issues(payload: Any) -> None:
+    items = _contract_require_list(payload, "diagnosis.top_issues")
+    for idx, it in enumerate(items):
+        itd = _contract_require_dict(it, f"top_issues[{idx}]")
+        _contract_require_str(itd.get("issue_id"), f"top_issues[{idx}].issue_id")
+        _contract_require_enum(itd.get("severity"), CONTRACT_ISSUE_SEVERITY, f"top_issues[{idx}].severity")
+        _contract_require_enum(itd.get("module"), CONTRACT_MODULE, f"top_issues[{idx}].module")
+        _contract_require_str(itd.get("title"), f"top_issues[{idx}].title")
+        _contract_require_str(itd.get("description"), f"top_issues[{idx}].description")
+        _contract_require_key_present(itd, "related_requirement_id", f"top_issues[{idx}].related_requirement_id")
+        assert_contract_evidence_list(itd.get("evidence"), f"top_issues[{idx}].evidence")
+
+
+# ---- 10. diagnosis.suggestions ----
+def assert_contract_suggestions(payload: Any, valid_issue_ids: set[str]) -> None:
+    items = _contract_require_list(payload, "diagnosis.suggestions")
+    for idx, it in enumerate(items):
+        itd = _contract_require_dict(it, f"suggestions[{idx}]")
+        _contract_require_str(itd.get("suggestion_id"), f"suggestions[{idx}].suggestion_id")
+        _contract_require_enum(itd.get("priority"), CONTRACT_SUGGESTION_PRIORITY, f"suggestions[{idx}].priority")
+        _contract_require_enum(itd.get("module"), CONTRACT_MODULE, f"suggestions[{idx}].module")
+        _contract_require_str(itd.get("action"), f"suggestions[{idx}].action")
+        _contract_require_str(itd.get("reason"), f"suggestions[{idx}].reason")
+        _contract_require_str(itd.get("expected_effect"), f"suggestions[{idx}].expected_effect")
+        _contract_require_key_present(itd, "related_issue_id", f"suggestions[{idx}].related_issue_id")
+        # 必须可回指 issue（契约 12.2）
+        related = itd.get("related_issue_id")
+        if related is not None and related not in valid_issue_ids:
+            raise SchemaAssertionError(f"suggestions[{idx}].related_issue_id={related!r} 无法回指到任何 top_issue。")
+
+
+# ---- 11. artifacts ----
+def assert_contract_artifacts(payload: dict[str, Any]) -> None:
+    data = _contract_require_dict(payload, "artifacts")
+    for key in ("request_payload", "raw_response", "normalized_response"):
+        _contract_require_dict(data.get(key), f"artifacts.{key}")
+    _contract_require_list(data.get("source_files"), "artifacts.source_files")
+    # raw_response 是 Smoke 验收依据：必须保留原始 video_persuasion_diagnosis_result
+    raw = data.get("raw_response") or {}
+    if "video_persuasion_diagnosis_result" not in raw:
+        raise SchemaAssertionError("artifacts.raw_response 必须保留原始 video_persuasion_diagnosis_result。")
+
+
+# ---- 12. 顶层响应（status + 组装与编排）----
+def assert_frontend_contract_response(payload: dict[str, Any]) -> None:
+    """前端消费层契约顶层后置断言：校验顶层结构 + 逐一调用 12 类契约对象断言。"""
+    data = _contract_require_dict(payload, "frontend_contract_response")
+    require_keys(
+        data, "frontend_contract_response",
+        ("status", "diagnosis_meta", "product_understanding", "video_understanding", "diagnosis", "artifacts"),
+    )
+    _contract_require_enum(data.get("status"), CONTRACT_TOP_STATUS, "status")
+
+    assert_contract_diagnosis_meta(data["diagnosis_meta"])
+    assert_contract_product_understanding(data["product_understanding"])
+    assert_contract_video_understanding(data["video_understanding"])
+
+    diagnosis = _contract_require_dict(data["diagnosis"], "diagnosis")
+    require_keys(
+        diagnosis, "diagnosis",
+        ("overview", "profile_match", "hec_match", "slider_match",
+         "requirement_coverage", "top_issues", "suggestions"),
+    )
+    assert_contract_overview(diagnosis["overview"])
+    assert_contract_profile_match(diagnosis["profile_match"])
+    assert_contract_hec_match(diagnosis["hec_match"])
+    assert_contract_slider_match(diagnosis["slider_match"])
+    assert_contract_requirement_coverage(diagnosis["requirement_coverage"])
+    assert_contract_top_issues(diagnosis["top_issues"])
+    issue_ids = {
+        it.get("issue_id") for it in (diagnosis["top_issues"] or []) if isinstance(it, dict)
+    }
+    assert_contract_suggestions(diagnosis["suggestions"], issue_ids)
+
+    assert_contract_artifacts(data["artifacts"])
+
+    # overview 滚动汇总一致性：requirement_coverage_status 必须与 requirement_coverage.status 对齐
+    rc_status = (diagnosis["requirement_coverage"] or {}).get("status")
+    ov_rc_status = (diagnosis["overview"] or {}).get("requirement_coverage_status")
+    if rc_status != ov_rc_status:
+        raise SchemaAssertionError(
+            f"overview.requirement_coverage_status({ov_rc_status}) 与 requirement_coverage.status({rc_status}) 不一致。"
+        )
