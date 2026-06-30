@@ -1335,6 +1335,8 @@ class ProductDiagnosisOutput(BaseModel):
     warnings: list[str] = Field(default_factory=list)
     persuasion_requirement_profile: Optional[PersuasionRequirementProfile] = None
     product_target_audience: Optional[ProductTargetAudience] = None
+    gate_reasons: list[str] = Field(default_factory=list)
+    evidence_chain: list[dict[str, str]] = Field(default_factory=list)
 
     category: str
     jtbd: str
@@ -5417,6 +5419,8 @@ class ProductDiagnosisEngine:
             evidence=evidence,
             metadata=metadata,
             product_target_audience=product_target_audience,
+            gate_reasons=list(proposal.gate_reasons),
+            evidence_chain=[dict(item) for item in proposal.evidence_chain],
             # F5：persuasion_requirement_profile 由引擎内部产出并随主输出一并装配（不再由外部 pipeline 后挂）。
             # pydantic v1 会自动把 dict 强校验构造为 Optional[PersuasionRequirementProfile]。
             persuasion_requirement_profile=persuasion_requirement_profile,
