@@ -73,6 +73,288 @@
     "价格属性严格读取 engine_node 输出，当前水位为 高水位，因此财务风险为 高。"
   ],
   "warnings": [],
+  "persuasion_requirement_profile": {
+    "profile_version": "v3.1",
+    "content_goal": "purchase",
+    "category_group": "美妆个护",
+    "jtbd_template_status": "matched",
+    "requirement_dictionary_version": "v3.1_active_mvp_23",
+    "category_purchase_criteria_version": "v3.1_phase1_4groups",
+    "main_persuasion_route": {
+      "primary_jtbd": {
+        "level1": "功能域",
+        "level2": "物理安全与风险规避"
+      },
+      "category_resistance": {
+        "rule": "红海-核心 × 快消",
+        "summary": "在红海-核心、快消的品类竞争态势下组织购买判断主路径。"
+      },
+      "product_conversion_barrier": {
+        "rule": "极低 × 高水位"
+      }
+    },
+    "activated_category_requirements": {
+      "category_group": "美妆个护",
+      "routing_confidence": "medium",
+      "activated_decision_criteria": [
+        "ingredient_credibility",
+        "irritation_risk",
+        "routine_fit",
+        "skin_fit",
+        "usage_effect"
+      ],
+      "activated_evidence_requirements": [
+        "before_after_demonstration",
+        "ingredient_proof",
+        "irritation_test",
+        "routine_guidance",
+        "skin_type_guidance"
+      ],
+      "activated_risk_points": [
+        "ingredient_doubt_risk",
+        "irritation_risk",
+        "no_effect_risk",
+        "routine_conflict_risk",
+        "skin_mismatch_risk"
+      ]
+    },
+    "persuasion_requirements": [
+      {
+        "requirement_id": "expose_current_pain",
+        "requirement_name": "暴露当前痛点",
+        "decision_gap": "need_gap",
+        "source": [
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 10,
+        "success_criteria": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      },
+      {
+        "requirement_id": "prove_user_fit",
+        "requirement_name": "证明人群适配",
+        "decision_gap": "fit_gap",
+        "source": [
+          "category_purchase_criteria_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 14,
+        "success_criteria": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [
+          "skin_fit"
+        ],
+        "required_evidence_requirements": [
+          "skin_type_guidance"
+        ],
+        "risk_points": [
+          "skin_mismatch_risk"
+        ]
+      },
+      {
+        "requirement_id": "prove_scenario_fit",
+        "requirement_name": "证明场景适配",
+        "decision_gap": "fit_gap",
+        "source": [
+          "category_purchase_criteria_dictionary"
+        ],
+        "priority": "medium",
+        "required": true,
+        "sequence_rank": 16,
+        "success_criteria": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [
+          "routine_fit"
+        ],
+        "required_evidence_requirements": [
+          "routine_guidance"
+        ],
+        "risk_points": [
+          "routine_conflict_risk"
+        ]
+      },
+      {
+        "requirement_id": "prove_core_benefit",
+        "requirement_name": "证明核心收益",
+        "decision_gap": "value_gap",
+        "source": [
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 20,
+        "success_criteria": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      },
+      {
+        "requirement_id": "provide_visible_result",
+        "requirement_name": "提供可见效果",
+        "decision_gap": "proof_gap",
+        "source": [
+          "category_purchase_criteria_dictionary",
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 30,
+        "success_criteria": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [
+          "usage_effect"
+        ],
+        "required_evidence_requirements": [
+          "before_after_demonstration"
+        ],
+        "risk_points": [
+          "no_effect_risk"
+        ]
+      },
+      {
+        "requirement_id": "establish_basic_trust",
+        "requirement_name": "建立基础信任",
+        "decision_gap": "trust_gap",
+        "source": [
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 40,
+        "success_criteria": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      },
+      {
+        "requirement_id": "reduce_trial_risk",
+        "requirement_name": "降低试错风险",
+        "decision_gap": "risk_gap",
+        "source": [
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 40,
+        "success_criteria": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      },
+      {
+        "requirement_id": "prove_source_credibility",
+        "requirement_name": "证明来源可信",
+        "decision_gap": "trust_gap",
+        "source": [
+          "category_purchase_criteria_dictionary",
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 41,
+        "success_criteria": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [
+          "ingredient_credibility"
+        ],
+        "required_evidence_requirements": [
+          "ingredient_proof"
+        ],
+        "risk_points": [
+          "ingredient_doubt_risk"
+        ]
+      },
+      {
+        "requirement_id": "provide_authority_endorsement",
+        "requirement_name": "权威背书",
+        "decision_gap": "trust_gap",
+        "source": [
+          "JTBD_requirement_template_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 43,
+        "success_criteria": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      },
+      {
+        "requirement_id": "resolve_safety_risk",
+        "requirement_name": "证明安全风险降低",
+        "decision_gap": "risk_gap",
+        "source": [
+          "JTBD_requirement_template_dictionary",
+          "category_purchase_criteria_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 46,
+        "success_criteria": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [
+          "irritation_risk"
+        ],
+        "required_evidence_requirements": [
+          "irritation_test"
+        ],
+        "risk_points": [
+          "irritation_risk"
+        ]
+      },
+      {
+        "requirement_id": "prove_current_purchase_reason",
+        "requirement_name": "证明当下购买理由",
+        "decision_gap": "action_gap",
+        "source": [
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "high",
+        "required": true,
+        "sequence_rank": 50,
+        "success_criteria": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      },
+      {
+        "requirement_id": "clarify_purchase_threshold",
+        "requirement_name": "明确购买门槛",
+        "decision_gap": "action_gap",
+        "source": [
+          "persuasion_requirement_dictionary"
+        ],
+        "priority": "medium",
+        "required": false,
+        "sequence_rank": 52,
+        "success_criteria": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+        "related_decision_criteria": [],
+        "required_evidence_requirements": [],
+        "risk_points": []
+      }
+    ],
+    "not_applicable_requirements": [],
+    "diagnosis_contract": {
+      "requirement_completion_schema": {
+        "status_enum": [
+          "completed",
+          "partial",
+          "missing",
+          "not_applicable"
+        ],
+        "minimum_required_requirements": [
+          "prove_core_benefit",
+          "provide_visible_result"
+        ],
+        "diagnosis_dimensions": [
+          "whether_requirement_appears",
+          "whether_evidence_is_sufficient",
+          "whether_sequence_is_reasonable",
+          "whether_risk_is_resolved"
+        ]
+      }
+    }
+  },
   "product_target_audience": {
     "primary_audiences": [
       {
@@ -92,7 +374,8 @@
     "reasoning_chain": {
       "task_to_role": "唯一任务「物理安全与风险规避」对应购买角色「风险责任人」。",
       "role_category_to_age_gender": "购买角色「风险责任人」叠加品类信号：命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性。",
-      "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+      "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。",
+      "persuasion_profile_to_audience": "需满足说服要求「暴露当前痛点(expose_current_pain)」、「证明人群适配(prove_user_fit)」、「证明场景适配(prove_scenario_fit)」（profile 共 12 条说服要求，其中 required/high 优先项 11 条）→ 因此核心说服对象指向「年长中高消费力女性」。"
     },
     "caveats": [
       "大牌官方且高水位：若强调套装/分量价值，也可覆盖低消费力人群（追加低消费力 secondary）。"
@@ -603,7 +886,7 @@
         "comparison_object_evidence_type": "jtbd_inferred",
         "difference_domain": "functional",
         "difference_type": "风险降低",
-        "conclusion": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯",
+        "conclusion": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯",
         "evidence_chain": [
           {
             "evidence_source": "JTBD推断",
@@ -622,7 +905,7 @@
             "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
           }
         ],
-        "summary": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+        "summary": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
       },
       "second_level_category": "驱蚊用品",
       "third_level_category": "宝宝防蚊水"
@@ -670,7 +953,7 @@
         },
         {
           "evidence_source": "差异结论",
-          "evidence_text": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+          "evidence_text": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
         },
         {
           "evidence_source": "JTBD推断",
@@ -746,7 +1029,7 @@
         },
         {
           "evidence_source": "差异结论",
-          "evidence_text": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+          "evidence_text": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
         },
         {
           "evidence_source": "JTBD推断",
@@ -1162,291 +1445,10 @@
     "architecture": "product_diagnosis_v3_jtbd_four_stage",
     "classifier_mode": "llm_default",
     "max_retries": 3,
-    "keyword_rule_trace_count": 0
+    "keyword_rule_trace_count": 0,
+    "content_goal": "purchase"
   },
   "schema_version": "v2.2",
   "secondary_benefits": [],
-  "non_selected_task_reasons": [],
-  "persuasion_requirement_profile": {
-    "profile_version": "v3.1",
-    "content_goal": "purchase",
-    "category_group": "美妆个护",
-    "jtbd_template_status": "matched",
-    "requirement_dictionary_version": "v3.1_active_mvp_23",
-    "category_purchase_criteria_version": "v3.1_phase1_4groups",
-    "main_persuasion_route": {
-      "primary_jtbd": {
-        "level1": "功能域",
-        "level2": "物理安全与风险规避"
-      },
-      "category_resistance": {
-        "rule": "红海-核心 × 快消",
-        "summary": "在红海-核心、快消的品类竞争态势下组织购买判断主路径。"
-      },
-      "product_conversion_barrier": {
-        "rule": "极低 × 高水位"
-      }
-    },
-    "activated_category_requirements": {
-      "category_group": "美妆个护",
-      "routing_confidence": "medium",
-      "activated_decision_criteria": [
-        "ingredient_credibility",
-        "irritation_risk",
-        "routine_fit",
-        "skin_fit",
-        "usage_effect"
-      ],
-      "activated_evidence_requirements": [
-        "before_after_demonstration",
-        "ingredient_proof",
-        "irritation_test",
-        "routine_guidance",
-        "skin_type_guidance"
-      ],
-      "activated_risk_points": [
-        "ingredient_doubt_risk",
-        "irritation_risk",
-        "no_effect_risk",
-        "routine_conflict_risk",
-        "skin_mismatch_risk"
-      ]
-    },
-    "persuasion_requirements": [
-      {
-        "requirement_id": "expose_current_pain",
-        "requirement_name": "暴露当前痛点",
-        "decision_gap": "need_gap",
-        "source": [
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 10,
-        "success_criteria": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      },
-      {
-        "requirement_id": "prove_user_fit",
-        "requirement_name": "证明人群适配",
-        "decision_gap": "fit_gap",
-        "source": [
-          "category_purchase_criteria_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 14,
-        "success_criteria": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [
-          "skin_fit"
-        ],
-        "required_evidence_requirements": [
-          "skin_type_guidance"
-        ],
-        "risk_points": [
-          "skin_mismatch_risk"
-        ]
-      },
-      {
-        "requirement_id": "prove_scenario_fit",
-        "requirement_name": "证明场景适配",
-        "decision_gap": "fit_gap",
-        "source": [
-          "category_purchase_criteria_dictionary"
-        ],
-        "priority": "medium",
-        "required": true,
-        "sequence_rank": 16,
-        "success_criteria": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [
-          "routine_fit"
-        ],
-        "required_evidence_requirements": [
-          "routine_guidance"
-        ],
-        "risk_points": [
-          "routine_conflict_risk"
-        ]
-      },
-      {
-        "requirement_id": "prove_core_benefit",
-        "requirement_name": "证明核心收益",
-        "decision_gap": "value_gap",
-        "source": [
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 20,
-        "success_criteria": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      },
-      {
-        "requirement_id": "provide_visible_result",
-        "requirement_name": "提供可见效果",
-        "decision_gap": "proof_gap",
-        "source": [
-          "category_purchase_criteria_dictionary",
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 30,
-        "success_criteria": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [
-          "usage_effect"
-        ],
-        "required_evidence_requirements": [
-          "before_after_demonstration"
-        ],
-        "risk_points": [
-          "no_effect_risk"
-        ]
-      },
-      {
-        "requirement_id": "establish_basic_trust",
-        "requirement_name": "建立基础信任",
-        "decision_gap": "trust_gap",
-        "source": [
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 40,
-        "success_criteria": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      },
-      {
-        "requirement_id": "reduce_trial_risk",
-        "requirement_name": "降低试错风险",
-        "decision_gap": "risk_gap",
-        "source": [
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 40,
-        "success_criteria": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      },
-      {
-        "requirement_id": "prove_source_credibility",
-        "requirement_name": "证明来源可信",
-        "decision_gap": "trust_gap",
-        "source": [
-          "category_purchase_criteria_dictionary",
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 41,
-        "success_criteria": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [
-          "ingredient_credibility"
-        ],
-        "required_evidence_requirements": [
-          "ingredient_proof"
-        ],
-        "risk_points": [
-          "ingredient_doubt_risk"
-        ]
-      },
-      {
-        "requirement_id": "provide_authority_endorsement",
-        "requirement_name": "权威背书",
-        "decision_gap": "trust_gap",
-        "source": [
-          "JTBD_requirement_template_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 43,
-        "success_criteria": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      },
-      {
-        "requirement_id": "resolve_safety_risk",
-        "requirement_name": "证明安全风险降低",
-        "decision_gap": "risk_gap",
-        "source": [
-          "JTBD_requirement_template_dictionary",
-          "category_purchase_criteria_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 46,
-        "success_criteria": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [
-          "irritation_risk"
-        ],
-        "required_evidence_requirements": [
-          "irritation_test"
-        ],
-        "risk_points": [
-          "irritation_risk"
-        ]
-      },
-      {
-        "requirement_id": "prove_current_purchase_reason",
-        "requirement_name": "证明当下购买理由",
-        "decision_gap": "action_gap",
-        "source": [
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "high",
-        "required": true,
-        "sequence_rank": 50,
-        "success_criteria": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      },
-      {
-        "requirement_id": "clarify_purchase_threshold",
-        "requirement_name": "明确购买门槛",
-        "decision_gap": "action_gap",
-        "source": [
-          "persuasion_requirement_dictionary"
-        ],
-        "priority": "medium",
-        "required": false,
-        "sequence_rank": 52,
-        "success_criteria": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时、驱蚊酯7%款日常居家温和不刺激，让用户对该判断点形成确定结论。",
-        "related_decision_criteria": [],
-        "required_evidence_requirements": [],
-        "risk_points": []
-      }
-    ],
-    "not_applicable_requirements": [],
-    "diagnosis_contract": {
-      "requirement_completion_schema": {
-        "status_enum": [
-          "completed",
-          "partial",
-          "missing",
-          "not_applicable"
-        ],
-        "minimum_required_requirements": [
-          "prove_core_benefit",
-          "provide_visible_result"
-        ],
-        "diagnosis_dimensions": [
-          "whether_requirement_appears",
-          "whether_evidence_is_sufficient",
-          "whether_sequence_is_reasonable",
-          "whether_risk_is_resolved"
-        ]
-      }
-    }
-  }
+  "non_selected_task_reasons": []
 }

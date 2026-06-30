@@ -73,13 +73,22 @@ EVIDENCE_SOURCE_ENUM = {
     "raw_output",
 }
 
-# [契约依据] §5 BLOCK 23
-PRICE_BAND_ENUM = {"high", "medium", "low", "unknown"}
+# [契约依据] §5 BLOCK 23 + module3 PRD §5.2（第二批 contract 治理：6 段 + 商品事实向量六维闭集）
 PRIORITY_ENUM = {"required", "optional"}
-HML_UNKNOWN = {"high", "medium", "low", "unknown"}
-CHANNEL_RISK_ENUM = {"risk", "no_risk", "unknown"}
-ENDORSEMENT_ENUM = {"has_endorsement", "no_endorsement", "unknown"}
-BRAND_TIER_ENUM = {"brand", "white_label", "unknown"}
+# 商品理解 6 段固定键集合 + 顺序（F1）
+PU_KEYS_ORDERED = ["basic_info", "product_fact_vector", "module3", "candidate_set", "product_hec", "evidence"]
+# product_fact_vector 六维枚举闭集（endorsement / channel_risk 允许 null）
+FACT_COGNITION_ENUM = {"蓝海", "红海-核心", "红海-破圈"}
+FACT_FREQUENCY_ENUM = {"快消", "耐消"}
+FACT_TRUST_ENUM = {"大牌", "白牌"}
+FACT_PRICE_ENUM = {"高", "低"}
+FACT_ENDORSEMENT_ENUM = {"有背书", None}
+FACT_CHANNEL_RISK_ENUM = {"有风险", None}
+# 禁出字段（F4）：product_understanding 子树全链路不得出现
+PU_BANNED_KEYS = {
+    "trust_barrier", "brand_tier", "price_barrier", "financial_risk", "relative_price_level",
+    "expected_hec", "supporting_requirements", "conversion_resistance", "target_people", "price_band",
+}
 
 # [契约依据] §6 BLOCK 33 evidence_role
 EVIDENCE_ROLE_ENUM = {"hook", "proof", "safety", "cta", "transition", "other"}
@@ -250,82 +259,141 @@ def test_meta_qa_e2e_status_enums(resp):
 
 
 # ===========================================================================
-# 3. product_understanding  [契约依据] §5 BLOCK 23
+# 3. product_understanding  [契约依据] §5 BLOCK 23 + module3 PRD（第二批 6 段治理）
 # ===========================================================================
-def test_pu_basic_info_required_fields(resp):
-    """basic_info 必填子字段齐全 + price_band 枚举 [契约依据] §5.2 BLOCK 23"""
-    bi = resp["product_understanding"]["basic_info"]
-    for k in ["product_name", "leaf_category", "brand_name", "shop_name", "price", "price_band"]:
-        assert k in bi, f"basic_info 缺少子字段 {k}"
-    assert _nonempty_str(bi["product_name"]), "basic_info.product_name 不得为空"
-    assert _nonempty_str(bi["leaf_category"]), "basic_info.leaf_category 不得为空"
-    assert bi["price_band"] in PRICE_BAND_ENUM, (
-        f"price_band={bi['price_band']!r} 不在枚举 {PRICE_BAND_ENUM}"
+def _iter_keys(node):
+    """递归产出所有 dict 键，用于禁出字段扫描。"""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            yield k
+            yield from _iter_keys(v)
+    elif isinstance(node, list):
+        for x in node:
+            yield from _iter_keys(x)
+
+
+def test_pu_six_segments_keys_and_order(resp):
+    """product_understanding 固定 6 段且键顺序固定 [F1]"""
+    pu = resp["product_understanding"]
+    assert list(pu.keys()) == PU_KEYS_ORDERED, (
+        f"product_understanding 6 段键集合/顺序错误: 期望={PU_KEYS_ORDERED}, 实际={list(pu.keys())}"
     )
 
 
-def test_pu_target_people_nonempty_array(resp):
-    """target_people 为非空字符串数组 [契约依据] §5.2 BLOCK 23"""
-    tp = resp["product_understanding"]["target_people"]
-    assert isinstance(tp, list) and len(tp) > 0, f"target_people 必须非空数组, 实际={tp!r}"
-    assert all(_nonempty_str(x) for x in tp), "target_people 各项必须为非空字符串"
+def test_pu_no_banned_legacy_keys(resp):
+    """product_understanding 子树不得出现任何禁出旧字段 [F4]"""
+    found = sorted({k for k in _iter_keys(resp["product_understanding"]) if k in PU_BANNED_KEYS})
+    assert not found, f"product_understanding 检测到禁出字段残留: {found}"
+
+
+def test_pu_basic_info_required_fields(resp):
+    """basic_info 必填子字段齐全 + audience_hint / core_selling_points 非空数组 [F1]"""
+    bi = resp["product_understanding"]["basic_info"]
+    for k in ["product_name", "leaf_category", "brand_name", "shop_name", "price", "audience_hint", "core_selling_points"]:
+        assert k in bi, f"basic_info 缺少子字段 {k}"
+    assert _nonempty_str(bi["product_name"]), "basic_info.product_name 不得为空"
+    assert _nonempty_str(bi["leaf_category"]), "basic_info.leaf_category 不得为空"
+    assert "price_band" not in bi, "basic_info 不得再输出旧字段 price_band"
+
+
+def test_pu_audience_hint_nonempty_array(resp):
+    """basic_info.audience_hint 为非空字符串数组（原 target_people 迁入）[F1]"""
+    tp = resp["product_understanding"]["basic_info"]["audience_hint"]
+    assert isinstance(tp, list) and len(tp) > 0, f"audience_hint 必须非空数组, 实际={tp!r}"
+    assert all(_nonempty_str(x) for x in tp), "audience_hint 各项必须为非空字符串"
+    # 顶层不得再出现 target_people
+    assert "target_people" not in resp["product_understanding"], "product_understanding 顶层不得再出现 target_people"
 
 
 def test_pu_core_selling_points_nonempty_array(resp):
-    """core_selling_points 为非空字符串数组 [契约依据] §5.2 BLOCK 23"""
-    sp = resp["product_understanding"]["core_selling_points"]
+    """basic_info.core_selling_points 为非空字符串数组 [F1]"""
+    sp = resp["product_understanding"]["basic_info"]["core_selling_points"]
     assert isinstance(sp, list) and len(sp) > 0, f"core_selling_points 必须非空数组, 实际={sp!r}"
     assert all(_nonempty_str(x) for x in sp), "core_selling_points 各项必须为非空字符串"
 
 
-def test_pu_jtbd_required_fields(resp):
-    """jtbd 必填字段 domain/primary_task/sub_task/reasoning/evidence_chain [契约依据] §5.2 BLOCK 23"""
-    jtbd = resp["product_understanding"]["jtbd"]
-    for k in ["domain", "primary_task", "sub_task", "reasoning", "evidence_chain"]:
-        assert k in jtbd, f"jtbd 缺少字段 {k}"
-    assert _nonempty_str(jtbd["domain"]), "jtbd.domain 不得为空"
-    assert _nonempty_str(jtbd["primary_task"]), "jtbd.primary_task 不得为空"
-    assert _nonempty_str(jtbd["reasoning"]), "jtbd.reasoning 不得为空"
-    assert isinstance(jtbd["evidence_chain"], list), "jtbd.evidence_chain 必须是数组"
+def test_pu_product_fact_vector_six_dims_enums(resp):
+    """product_fact_vector 六维枚举严格闭集（endorsement / channel_risk 可 null）[F2]"""
+    fv = resp["product_understanding"]["product_fact_vector"]
+    assert fv["cognition_attribute"] in FACT_COGNITION_ENUM, f"cognition_attribute={fv.get('cognition_attribute')!r} 非法"
+    assert fv["frequency_attribute"] in FACT_FREQUENCY_ENUM, f"frequency_attribute={fv.get('frequency_attribute')!r} 非法"
+    assert fv["trust_attribute"] in FACT_TRUST_ENUM, f"trust_attribute={fv.get('trust_attribute')!r} 非法"
+    assert fv["price_attribute"] in FACT_PRICE_ENUM, f"price_attribute={fv.get('price_attribute')!r} 非法"
+    assert fv["endorsement_attribute"] in FACT_ENDORSEMENT_ENUM, f"endorsement_attribute={fv.get('endorsement_attribute')!r} 非法"
+    assert fv["channel_risk_attribute"] in FACT_CHANNEL_RISK_ENUM, f"channel_risk_attribute={fv.get('channel_risk_attribute')!r} 非法"
 
 
-def test_pu_supporting_requirements_item_fields(resp):
-    """supporting_requirements 各项字段 + priority 枚举 [契约依据] §5.2 BLOCK 23"""
-    sr = resp["product_understanding"]["supporting_requirements"]
-    assert isinstance(sr, list) and len(sr) > 0, "supporting_requirements 必须非空数组"
-    for i, item in enumerate(sr):
-        for k in ["requirement_id", "requirement_name", "priority", "description"]:
-            assert k in item, f"supporting_requirements[{i}] 缺少 {k}"
-        assert item["priority"] in PRIORITY_ENUM, (
-            f"supporting_requirements[{i}].priority={item['priority']!r} 不在枚举 {PRIORITY_ENUM}"
-        )
+def test_pu_product_fact_vector_conversion_barriers_readable(resp):
+    """conversion_barriers 仅为 list[str] 可读解释层，不替代结构化枚举 [F3]"""
+    fv = resp["product_understanding"]["product_fact_vector"]
+    cb = fv["conversion_barriers"]
+    assert isinstance(cb, list), "conversion_barriers 必须是数组"
+    assert all(isinstance(x, str) for x in cb), "conversion_barriers 各项必须是字符串"
 
 
-def test_pu_expected_hec_three_tags(resp):
-    """expected_hec 三标签齐全且非空 [契约依据] §5.2 BLOCK 23"""
-    eh = resp["product_understanding"]["expected_hec"]
-    for k in ["hook_tag", "effect_tag", "cta_tag"]:
-        assert k in eh, f"expected_hec 缺少 {k}"
-        assert _nonempty_str(eh[k]), f"expected_hec.{k} 不得为空"
+def test_pu_module3_two_objects_nonempty(resp):
+    """module3 透传 profile + pta 两对象，且非空（profile 含 persuasion_requirements）[F1/F5]"""
+    m3 = resp["product_understanding"]["module3"]
+    assert set(m3.keys()) == {"persuasion_requirement_profile", "product_target_audience"}, (
+        f"module3 必须恰含两对象, 实际={list(m3.keys())}"
+    )
+    prof = m3["persuasion_requirement_profile"]
+    assert isinstance(prof, dict) and prof, "module3.persuasion_requirement_profile 不得为空"
+    assert prof.get("persuasion_requirements"), "module3.persuasion_requirement_profile.persuasion_requirements 不得为空"
+    pta = m3["product_target_audience"]
+    assert isinstance(pta, dict) and pta, "module3.product_target_audience 不得为空"
 
 
 def test_pu_candidate_set_fields(resp):
-    """candidate_set 字段齐全 [契约依据] §5.2 BLOCK 23"""
+    """candidate_set 字段齐全 + F6 derived_from 可追溯 [契约依据] §5.2 BLOCK 23"""
     cs = resp["product_understanding"]["candidate_set"]
-    for k in ["candidate_h", "core_e", "core_c", "primary_effect", "primary_cta"]:
+    for k in ["candidate_h", "core_e", "core_c", "primary_effect", "primary_cta", "derived_from"]:
         assert k in cs, f"candidate_set 缺少 {k}"
     for k in ["candidate_h", "core_e", "core_c"]:
         assert isinstance(cs[k], list), f"candidate_set.{k} 必须是数组"
+    # F6：derived_from.requirement_ids ⊆ profile requirement_id；audience_groups ⊆ primary_audiences
+    derived = cs["derived_from"]
+    assert isinstance(derived, dict), "candidate_set.derived_from 必须是对象"
+    req_ids = derived.get("requirement_ids")
+    aud_groups = derived.get("audience_groups")
+    assert isinstance(req_ids, list) and len(req_ids) > 0, "derived_from.requirement_ids 不得为空"
+    assert isinstance(aud_groups, list) and len(aud_groups) > 0, "derived_from.audience_groups 不得为空"
+    profile = resp["product_understanding"]["module3"]["persuasion_requirement_profile"]
+    profile_ids = {
+        r.get("requirement_id")
+        for r in (profile.get("persuasion_requirements") or [])
+        if isinstance(r, dict)
+    }
+    assert set(req_ids) <= profile_ids, (
+        f"derived_from.requirement_ids 必须 ⊆ profile requirement_id, 越界={set(req_ids) - profile_ids}"
+    )
+    pta = resp["product_understanding"]["module3"]["product_target_audience"]
+    primary_groups = {
+        a.get("audience_group")
+        for a in (pta.get("primary_audiences") or [])
+        if isinstance(a, dict)
+    }
+    assert set(aud_groups) <= primary_groups, (
+        f"derived_from.audience_groups 必须 ⊆ primary_audiences, 越界={set(aud_groups) - primary_groups}"
+    )
 
 
-def test_pu_conversion_resistance_fields(resp):
-    """conversion_resistance 子字段齐全 + 枚举合法 [契约依据] §5.2 BLOCK 23"""
-    cr = resp["product_understanding"]["conversion_resistance"]
-    assert cr["trust_barrier"] in HML_UNKNOWN, f"trust_barrier={cr.get('trust_barrier')!r} 非法"
-    assert cr["price_barrier"] in HML_UNKNOWN, f"price_barrier={cr.get('price_barrier')!r} 非法"
-    assert cr["channel_risk"] in CHANNEL_RISK_ENUM, f"channel_risk={cr.get('channel_risk')!r} 非法"
-    assert cr["endorsement"] in ENDORSEMENT_ENUM, f"endorsement={cr.get('endorsement')!r} 非法"
-    assert cr["brand_tier"] in BRAND_TIER_ENUM, f"brand_tier={cr.get('brand_tier')!r} 非法"
+def test_pu_product_hec_codes(resp):
+    """product_hec（替代 expected_hec）非空, 每项 hook/effect/cta 为 code/name/definition 三元组 [F7]"""
+    ph = resp["product_understanding"]["product_hec"]
+    assert isinstance(ph, list) and len(ph) > 0, f"product_hec 必须非空数组, 实际={ph!r}"
+    for i, h in enumerate(ph):
+        assert "variant_id" in h, f"product_hec[{i}] 缺少 variant_id"
+        for dim in ["hook", "effect", "cta"]:
+            assert dim in h, f"product_hec[{i}] 缺少 {dim}"
+            triple = h[dim]
+            assert isinstance(triple, dict), f"product_hec[{i}].{dim} 必须是对象"
+            for k in ["code", "name", "definition"]:
+                assert _nonempty_str(triple.get(k)), f"product_hec[{i}].{dim}.{k} 不得为空"
+        # 不得复活裸 tag 字段（前端纯消费三元组）
+        for legacy in ["hook_tag", "effect_tag", "cta_tag"]:
+            assert legacy not in h, f"product_hec[{i}] 不得再出现裸字段 {legacy}（应为三元组）"
+    assert "expected_hec" not in resp["product_understanding"], "product_understanding 不得再出现 expected_hec"
 
 
 def test_pu_evidence_schema(resp):

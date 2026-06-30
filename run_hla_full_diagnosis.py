@@ -17,9 +17,6 @@ from commerce_video_diagnosis.understanding.engines.product_diagnoser import (  
     DiagnosticInput,
     ProductDiagnosisEngine,
 )
-from commerce_video_diagnosis.understanding.engines.persuasion_requirement_engine import (  # noqa: E402
-    build_persuasion_requirement_profile,
-)
 
 
 PRODUCT_NAME_RAW = "【父亲节送礼】HLA海澜之家山不在高短袖polo26新凉感抗菌送爸爸"
@@ -70,58 +67,15 @@ payload = DiagnosticInput(
 engine = ProductDiagnosisEngine()
 diagnosis = engine.diagnose(payload)
 
-_cat_matrix = diagnosis.category_intent_matrix
-_cognition_attribute = f"{_cat_matrix.ocean}-{_cat_matrix.competition_focus}" if _cat_matrix.competition_focus else _cat_matrix.ocean
-product_fact = {
-    "leaf_category": LEAF_CATEGORY,
-    "category": f"男装 > {LEAF_CATEGORY}",
-    "title": PRODUCT_NAME,
-    "shop_name": SHOP_NAME,
-    "price": float(PRICE),
-    "price_attribute": diagnosis.product_intent_matrix.relative_price_level,
-    "trust_attribute": diagnosis.product_intent_matrix.trust_barrier,
-    "cognition_attribute": _cognition_attribute,
-    "frequency_attribute": diagnosis.category_intent_matrix.frequency,
-    "endorsement_attribute": "HLA TECH 凉感认证 + GB/T 35263-2017、GB/T 21655.2-2019、GB/T 8829-2017 检测合格",
-    "channel_risk_attribute": "低",
-    "jtbd_level1": diagnosis.domain,
-    "jtbd_level2": diagnosis.primary_task,
-    "selling_points": [
-        "凉感系数 ≥0.15 J/(cm²·s)，HLA TECH 认证",
-        "吸湿排汗渗透面吸水速率 ≥3级",
-        "抗菌功能",
-        "合体版型 + 胸前山川 logo 父爱如山",
-        "XXS-6XL 全尺码覆盖",
-        "父亲节礼盒装，父子同款",
-    ],
-    "certifications": [
-        "GB/T 35263-2017 凉感检测合格",
-        "GB/T 21655.2-2019、GB/T 8829-2017 吸湿排汗检测合格",
-        "HLA TECH 认证",
-    ],
-    "authority_endorsements": [
-        "HLA 海澜之家品牌官方背书（白名单 S6 大牌官方）",
-        "国标 GB/T 35263-2017、GB/T 21655.2-2019 第三方检测",
-    ],
-    "evidence": [
-        "凉感系数 ≥0.15 J/(cm²·s)",
-        "吸湿排汗 ≥3级",
-        "尺码 XXS-6XL",
-    ],
-    "source_evidence": (
-        "商品图：HLA TECH 凉感认证 ≥0.15 / GB T 35263-2017 / GB T 21655.2-2019 / "
-        "山不在高系列 / 胸前山川 logo / 父亲节送礼场景"
-    ),
-    "risk_points": [
-        "父亲节后场景紧迫感衰减",
-        "中老年爸爸尺码与版型偏好不确定",
-    ],
-}
-
-profile = build_persuasion_requirement_profile(product_fact, content_goal="purchase")
-
+# F5/F3：persuasion_requirement_profile 现由 ProductDiagnosisEngine 内部产出并随主输出装配，
+# runner 不再后挂 profile。直接从引擎输出读取并断言非空（为空 Crash Early，不兜底生成）。
 out = diagnosis.dict(exclude_none=True)
-out["persuasion_requirement_profile"] = profile
+profile = out.get("persuasion_requirement_profile")
+if not profile or not profile.get("persuasion_requirements"):
+    raise ValueError(
+        "引擎输出的 persuasion_requirement_profile 为空或 persuasion_requirements 为空，"
+        "停止输出（Crash Early，不做后挂兜底）。"
+    )
 
 # 标注白名单路由结果
 out["brand_whitelist_routing"] = {

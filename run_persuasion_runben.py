@@ -1,3 +1,12 @@
+"""[引擎单测 / 演示脚本] persuasion_requirement_profile 引擎独立验证。
+
+⚠️ 用途说明（第一批 F5+F3 裁定）：
+- 本脚本仅用于直接喂 product_fact、单独验证 PersuasionRequirementEngine 的产出，
+  属于 profile 引擎的单测 / 演示，**不代表商品诊断全链路 contract**。
+- 商品诊断正式链路一律以 `ProductDiagnosisEngine.diagnose()` 的输出为准，
+  profile 由引擎内部产出，禁止用本脚本的旁路 product_fact 当作线上口径。
+- 本脚本保留、不纳入第一批主链路改造。
+"""
 import json, sys
 sys.path.insert(0, '.')
 sys.path.append('..')

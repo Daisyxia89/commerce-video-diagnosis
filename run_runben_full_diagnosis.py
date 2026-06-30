@@ -18,9 +18,6 @@ from commerce_video_diagnosis.understanding.engines.product_diagnoser import (  
     DiagnosticInput,
     ProductDiagnosisEngine,
 )
-from commerce_video_diagnosis.understanding.engines.persuasion_requirement_engine import (  # noqa: E402
-    build_persuasion_requirement_profile,
-)
 
 
 PRODUCT_NAME = "【A级驱蚊力】润本驱蚊液防蚊喷雾派卡瑞丁驱蚊水防蚊叮蚊怕花露水"
@@ -61,61 +58,15 @@ payload = DiagnosticInput(
 engine = ProductDiagnosisEngine()
 diagnosis = engine.diagnose(payload)
 
-# 从 engine 输出回填 product_fact 给 persuasion 引擎（jtbd_level2 必须来自 PRD 枚举）
-_cat_matrix = diagnosis.category_intent_matrix
-_cognition_attribute = f"{_cat_matrix.ocean}-{_cat_matrix.competition_focus}"
-product_fact = {
-    "leaf_category": LEAF_CATEGORY,
-    "category": f"驱蚊用品 > {LEAF_CATEGORY}",
-    "title": PRODUCT_NAME,
-    "shop_name": SHOP_NAME,
-    "price": 24.9,
-    "price_attribute": diagnosis.product_intent_matrix.relative_price_level,
-    "trust_attribute": diagnosis.product_intent_matrix.trust_barrier,
-    # PRD 8.5.1：使用 cognition_attribute（品类竞争态势），原 cognitive_attribute 保留为兜底兼容
-    "cognition_attribute": _cognition_attribute,
-    "frequency_attribute": diagnosis.category_intent_matrix.frequency,
-    "endorsement_attribute": "多项第三方检测报告与广告审查号",
-    "channel_risk_attribute": "低",
-    "jtbd_level1": diagnosis.domain,
-    "jtbd_level2": diagnosis.primary_task,  # ← Stage A 裁决结果（PRD 枚举）
-    "selling_points": [
-        "派卡瑞丁15%/20% A级驱蚊力，驱蚊8小时",
-        "驱蚊酯7%款日常居家温和不刺激",
-        "不含香精/酒精，第三方检测0刺激",
-        "可倒喷设计，30ml便携",
-        "猫狗环境友好",
-    ],
-    "certifications": [
-        "广告审查号：粤农药广审（视）01260018号",
-        "第三方检测报告编号：2200938-1、SHG211647、ET2025-230",
-        "0刺激/驱蚊时效/耐汗评价均有第三方检测报告支撑",
-    ],
-    "authority_endorsements": [
-        "多项第三方检测报告",
-        "广告审查号备案",
-    ],
-    "evidence": [
-        "7%款驱蚊6.5h",
-        "15%款驱蚊8h、耐汗保护7h",
-        "20%款驱蚊8h、驱蠓6.5h",
-    ],
-    "source_evidence": (
-        "商品图：A级驱蚊力 派卡瑞丁15%/20% 第三方检测报告编号 2200938-1 SHG211647 ET2025-230 "
-        "广告审查号粤农药广审（视）01260018号"
-    ),
-    "risk_points": [
-        "婴幼儿/敏感肌肤是否安全",
-        "驱蚊成分浓度选择",
-        "实际驱蚊时长是否达标",
-    ],
-}
-
-profile = build_persuasion_requirement_profile(product_fact, content_goal="purchase")
-
-# 把 profile 挂回 ProductDiagnosisOutput，输出完整协议
+# F5/F3：persuasion_requirement_profile 现由 ProductDiagnosisEngine 内部产出并随主输出装配，
+# runner 不再后挂 profile。直接从引擎输出读取并断言非空（为空 Crash Early，不兜底生成）。
 out = diagnosis.dict(exclude_none=True)
-out["persuasion_requirement_profile"] = profile
+profile = out.get("persuasion_requirement_profile")
+if not profile or not profile.get("persuasion_requirements"):
+    raise ValueError(
+        "引擎输出的 persuasion_requirement_profile 为空或 persuasion_requirements 为空，"
+        "停止输出（Crash Early，不做后挂兜底）。"
+    )
 
 OUTPUT_DIR = ROOT / "outputs" / "runben_diagnosis"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

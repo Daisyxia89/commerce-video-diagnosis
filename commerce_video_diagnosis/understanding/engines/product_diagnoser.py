@@ -14,6 +14,7 @@ from commerce_video_diagnosis.understanding.llm_provider import build_chat_heade
 from pydantic import BaseModel, Field, root_validator, validator
 
 from commerce_video_diagnosis.understanding.engines.product_variant_assembler import ProductVariantAssembler
+from commerce_video_diagnosis.understanding.engines.persuasion_requirement_engine import PersuasionRequirementEngine
 from commerce_video_diagnosis.understanding.engines.audience_taxonomy import (
     AudienceTaxonomyError,
     CONSUMPTION_LABELS,
@@ -140,6 +141,9 @@ GIFT_RELATIONSHIP_SCENE_TOKENS = set(get_string_list("product_diagnoser.jtbd.gif
 HAIRCARE_DEFECT_SIGNAL_TOKENS = set(get_string_list("product_diagnoser.jtbd.haircare_defect_signal_tokens"))
 # PRD-1.2：Stage B 空候选中止态。needs_review 为协议合法值，但不是 12 标签业务任务。
 NEEDS_REVIEW = "needs_review"
+# 商品理解应然侧的 content_goal 默认口径（P0 假设：转化目标）。集中此处，禁止散落写死；
+# 后续如需支持非转化目标，由调用侧显式透传 content_goal，不在 diagnose() 内写死分支。
+DEFAULT_PRODUCT_UNDERSTANDING_CONTENT_GOAL = "purchase"
 FUNCTIONAL_CORE_TOKENS = {"升级", "更薄", "更厚", "更稳", "更持久", "更服帖", "更贴合", "更耐用", "更温和", "参数", "成分"}
 EMOTIONAL_BREAKOUT_TOKENS = {"替代", "场景", "惊喜", "盲盒", "解闷", "尝鲜", "陪伴", "玩法", "跨界"}
 EMOTIONAL_CORE_TOKENS = {"香氛", "助眠", "疗愈", "悦己", "犒赏", "松弛", "仪式感", "氛围感"}
@@ -1292,6 +1296,9 @@ class AudienceReasoningChain(BaseModel):
     task_to_role: str
     role_category_to_age_gender: str
     brand_price_to_consumption_power: str
+    # F3：第四段必填——必须引用 profile 中真实 required/high requirement（requirement_id/name），
+    # 不允许自由文本泛化或写死占位。
+    persuasion_profile_to_audience: str
 
 
 class ProductTargetAudience(BaseModel):
@@ -1768,6 +1775,10 @@ class ProductDiagnosisEngine:
         self.differentiator_semantic_judge_llm = differentiator_semantic_judge_llm or DifferentiatorSemanticJudgeLLM()
         self.max_retries = max(1, max_retries)
         self.variant_assembler = ProductVariantAssembler()
+        # F5：说服要求引擎在 __init__ 实例化一次，避免每次 diagnose 重复加载字典。
+        # PersuasionRequirementEngine 构造时已对 4 份字典做启动期体检（Crash Early），
+        # 字典缺失/越界会在此处直接抛错，禁止 try/except 吞掉。
+        self.persuasion_engine = PersuasionRequirementEngine()
         self._keyword_rule_traces: list[dict[str, str]] = []
 
     def _reset_keyword_rule_traces(self) -> None:
@@ -1806,8 +1817,30 @@ class ProductDiagnosisEngine:
 
         category_matrix = self._derive_category_intent_matrix(module1_output, gated_proposal)
         product_matrix = self._derive_product_intent_matrix(payload, module1_output)
+
+        # F5：先生成 persuasion_requirement_profile，再生成 product_target_audience（audience 强依赖 profile）。
+        # content_goal 取集中常量 DEFAULT_PRODUCT_UNDERSTANDING_CONTENT_GOAL（P0 默认 "purchase"=转化目标），
+        # 不在此处散落写死字符串；后续如需支持非转化目标，由调用侧显式透传 content_goal。
+        product_fact = self._build_persuasion_product_fact(
+            payload, module1_output, gated_proposal, category_matrix, product_matrix
+        )
+        persuasion_requirement_profile = self.persuasion_engine.generate_profile(
+            product_fact, content_goal=DEFAULT_PRODUCT_UNDERSTANDING_CONTENT_GOAL
+        )
+        # Crash Early：引擎输出的 profile 必须非空且 persuasion_requirements 非空，禁止兜底生成。
+        if not persuasion_requirement_profile or not persuasion_requirement_profile.get(
+            "persuasion_requirements"
+        ):
+            raise ValueError(
+                "persuasion_requirement_profile 为空或 persuasion_requirements 为空 —— "
+                "商品诊断必须由引擎产出非空说服要求档案，禁止兜底生成（Crash Early）。"
+            )
+
         product_target_audience = self._derive_product_target_audience(
-            module1_output, gated_proposal, product_matrix
+            module1_output,
+            gated_proposal,
+            product_matrix,
+            persuasion_requirement_profile=persuasion_requirement_profile,
         )
         reasoning_path = self._compose_reasoning_path(llm_proposal, gated_proposal, gate_notes, category_matrix, product_matrix)
         assertions = self._build_assertions()
@@ -1823,6 +1856,7 @@ class ProductDiagnosisEngine:
             assertions=assertions,
             gate_notes=gate_notes,
             product_target_audience=product_target_audience,
+            persuasion_requirement_profile=persuasion_requirement_profile,
         )
         assert_product_diagnosis(diagnosis.to_protocol_dict())
         return diagnosis
@@ -4684,17 +4718,77 @@ class ProductDiagnosisEngine:
             return ""
         return str(nodes[0].get("label") or "").strip()
 
+    def _build_persuasion_product_fact(
+        self,
+        payload: DiagnosticInput,
+        module1_output: Module1Output,
+        proposal: JTBDProposal,
+        category_matrix: CategoryIntentMatrix,
+        product_matrix: ProductIntentMatrix,
+    ) -> dict[str, Any]:
+        """F5：从 diagnose 内部已产出的 module1_output / proposal / matrices 组装 persuasion 引擎
+        所需的 product_fact（不再由外部 runner 拼装）。
+
+        仅映射 generate_profile 真实消费的键（见 persuasion_requirement_engine.generate_profile
+        第 180-235 行、_build_main_route、_check_activation_condition）：
+          - ``leaf_category`` = module1_output.leaf_category（类目路由）；
+          - ``jtbd_level1`` = proposal.domain，``jtbd_level2`` = proposal.primary_task（JTBD 模板召回）；
+          - ``cognition/frequency/trust/price_attribute`` = 品类/商品矩阵（主说服路线四属性，缺失会 Crash Early）；
+          - ``selling_points`` / ``source_evidence`` / ``title`` / ``category`` = activation_condition 证据校验输入；
+          - ``risk_points`` = 风险/证据类要求优先级强化（结构化输入暂无，按引擎语义传 []）。
+        所有取值均来自已有真实输入，缺失字段不伪造（留空或传 []）。
+        """
+        competition_focus = getattr(category_matrix, "competition_focus", None)
+        # cognition_attribute 与 runner 既有口径一致：蓝海/红海 × 核心/破圈；competition_focus 缺失时回落到 ocean 单值。
+        cognition_attribute = (
+            f"{category_matrix.ocean}-{competition_focus}" if competition_focus else category_matrix.ocean
+        )
+        selling_points = [s for s in [(module1_output.core_selling_point or "").strip()] if s]
+        source_evidence = [
+            str(item).strip() for item in (payload.bridge_source_evidence or []) if str(item).strip()
+        ]
+        product_fact: dict[str, Any] = {
+            "leaf_category": module1_output.leaf_category or "",
+            "category": module1_output.leaf_category or "",
+            "title": module1_output.product_name or "",
+            "jtbd_level1": proposal.domain,
+            "jtbd_level2": proposal.primary_task,
+            "cognition_attribute": cognition_attribute,
+            "frequency_attribute": category_matrix.frequency,
+            "trust_attribute": product_matrix.trust_barrier,
+            "price_attribute": product_matrix.relative_price_level,
+            "selling_points": selling_points,
+            "source_evidence": source_evidence,
+            # 结构化 risk_points 当前不在商品输入协议内，没有就传 []（禁止伪造）。
+            "risk_points": [],
+        }
+        return product_fact
+
     def _derive_product_target_audience(
         self,
         module1_output: Module1Output,
         proposal: JTBDProposal,
         product_matrix: ProductIntentMatrix,
+        *,
+        persuasion_requirement_profile: dict[str, Any] | None = None,
     ) -> ProductTargetAudience:
         """确定性派生商品目标人群（八大人群坐标）。
 
         四属性链路：唯一任务→购买角色→年龄/性别→消费力。任一属性所需输入
         缺失即 Crash Early（代码断言，不依赖 LLM 自觉）。
+
+        F3：audience 强依赖 persuasion_requirement_profile —— profile 为空或其
+        persuasion_requirements 为空即 Crash Early；reasoning_chain 第四段
+        persuasion_profile_to_audience 必须引用 profile 中真实 required/high requirement。
         """
+        # ---- F3 Crash Early：profile 非空校验（函数开头，先于八大人群推导）----
+        if not persuasion_requirement_profile or not persuasion_requirement_profile.get(
+            "persuasion_requirements"
+        ):
+            raise ValueError(
+                "product_target_audience: persuasion_requirement_profile 为空或 "
+                "persuasion_requirements 为空，audience 强依赖 profile，禁止兜底生成（Crash Early）。"
+            )
         # ---- Crash Early：四属性输入完整性校验 ----
         primary_task = (proposal.primary_task or "").strip()
         if not primary_task:
@@ -4830,10 +4924,36 @@ class ProductDiagnosisEngine:
         if gender_axis == "mixed" or age_axis == "mixed":
             caveats.append("年龄或性别判为 mixed：人群边界不清，已展开多坐标覆盖。")
 
+        # ---- F3：第四段 persuasion_profile_to_audience —— 引用 profile 中真实 required/high requirement ----
+        requirements = list(persuasion_requirement_profile.get("persuasion_requirements") or [])
+
+        def _req_attr(req: Any, key: str) -> Any:
+            if isinstance(req, Mapping):
+                return req.get(key)
+            return getattr(req, key, None)
+
+        # 优先取 required 为真或 priority 为 high 的条目；都没有则回退取第一条（仍引用真实字段，不留空）。
+        high_priority_reqs = [
+            r
+            for r in requirements
+            if bool(_req_attr(r, "required")) or str(_req_attr(r, "priority") or "") == "high"
+        ]
+        referenced_reqs = high_priority_reqs if high_priority_reqs else requirements[:1]
+        ref_labels = [
+            f"「{_req_attr(r, 'requirement_name')}({_req_attr(r, 'requirement_id')})」"
+            for r in referenced_reqs[:3]
+        ]
+        persuasion_profile_to_audience = (
+            f"需满足说服要求{'、'.join(ref_labels)}（profile 共 {len(requirements)} 条说服要求，"
+            f"其中 required/high 优先项 {len(high_priority_reqs)} 条）"
+            f"→ 因此核心说服对象指向「{primary_group}」。"
+        )
+
         reasoning_chain = AudienceReasoningChain(
             task_to_role=f"唯一任务「{primary_task}」对应购买角色「{role}」。",
             role_category_to_age_gender=f"购买角色「{role}」叠加品类信号：{age_reason}；{gender_reason}。",
             brand_price_to_consumption_power=f"{consumption_reason}。",
+            persuasion_profile_to_audience=persuasion_profile_to_audience,
         )
 
         return ProductTargetAudience(
@@ -4931,6 +5051,7 @@ class ProductDiagnosisEngine:
         assertions: list[str],
         gate_notes: list[str],
         product_target_audience: Optional[ProductTargetAudience] = None,
+        persuasion_requirement_profile: dict | None = None,
     ) -> ProductDiagnosisOutput:
         module3_modifiers = self._derive_module3_modifiers(payload, product_matrix)
         module3_category_attr = self._to_module3_category_attr(category_matrix)
@@ -5061,6 +5182,11 @@ class ProductDiagnosisEngine:
             "classifier_mode": "mock_or_injected" if self.classifier is not None else "llm_default",
             "max_retries": self.max_retries,
             "keyword_rule_trace_count": len(self._keyword_rule_traces),
+            # F5：透出 profile 的 content_goal 口径（P0 默认 purchase）。优先取引擎产出 profile 内的真实值，
+            # 缺失时回落集中常量；便于下游/前端判别本次说服档案的目标口径。
+            "content_goal": (persuasion_requirement_profile or {}).get(
+                "content_goal", DEFAULT_PRODUCT_UNDERSTANDING_CONTENT_GOAL
+            ),
         }
         if proposal.primary_task == NEEDS_REVIEW:
             # PRD-1.2 / AC12：标记模块3/4 因 needs_review 跳过装配。
@@ -5097,6 +5223,9 @@ class ProductDiagnosisEngine:
             evidence=evidence,
             metadata=metadata,
             product_target_audience=product_target_audience,
+            # F5：persuasion_requirement_profile 由引擎内部产出并随主输出一并装配（不再由外部 pipeline 后挂）。
+            # pydantic v1 会自动把 dict 强校验构造为 Optional[PersuasionRequirementProfile]。
+            persuasion_requirement_profile=persuasion_requirement_profile,
             # PRD-1.1：辅助字段随主任务一并装配到商品事实向量输出。
             secondary_benefits=list(proposal.secondary_benefits),
             non_selected_task_reasons=[dict(item) for item in proposal.non_selected_task_reasons],

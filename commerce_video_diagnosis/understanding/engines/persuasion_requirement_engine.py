@@ -17,11 +17,33 @@
 from __future__ import annotations
 
 import json
+import sys
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping
 
-from core_skill.schemas.protocols import (
+
+def _bootstrap_core_skill_on_path() -> None:
+    """确保 ``core_skill`` 顶层包可被 import。
+
+    ``core_skill`` 位于项目根目录（与仓库目录同级，runner 中通过
+    ``sys.path.append(ROOT.parent)`` 引入）。F5 改造后 ``product_diagnoser`` 在模块顶部
+    import 本引擎，使 ``core_skill`` 成为 ``product_diagnoser`` 的 import 期硬依赖；
+    部分入口（如 scripts/*.py 子进程）仅把仓库目录加入 sys.path，未引入项目根，
+    会在此处 import 失败。这里向上查找包含 ``core_skill/schemas`` 的目录并补齐 sys.path，
+    使本引擎在任意入口下都能定位 core_skill（与下方 _locate_project_root 同一根）。
+    """
+    here = Path(__file__).resolve()
+    for candidate in [here, *here.parents]:
+        if (candidate / "core_skill" / "schemas").is_dir():
+            if str(candidate) not in sys.path:
+                sys.path.insert(0, str(candidate))
+            return
+
+
+_bootstrap_core_skill_on_path()
+
+from core_skill.schemas.protocols import (  # noqa: E402
     ACTION_GOALS,
     ACTIVE_REQUIREMENT_WHITELIST,
     CONTENT_GOAL_VALUES,

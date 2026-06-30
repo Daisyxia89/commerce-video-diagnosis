@@ -20,6 +20,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Mapping, Optional, Sequence
 
+from commerce_video_diagnosis.understanding.assembly.hec_dictionary import lookup_hec
 from commerce_video_diagnosis.understanding.validators.schema_assertions import (
     assert_frontend_contract_response,
 )
@@ -32,10 +33,17 @@ class ContractAssemblyError(ValueError):
 # ---------------------------------------------------------------------------
 # 枚举映射表（以契约文档为准；引擎内部枚举 → 契约枚举）
 # ---------------------------------------------------------------------------
-# 商品侧文本 → 契约阻力枚举
-_PRICE_BAND_MAP = {"高水位": "high", "中水位": "medium", "低水位": "low"}
-_TRUST_BARRIER_MAP = {"极高": "high", "高": "high", "中": "medium", "低": "low", "极低": "low"}
-_FINANCIAL_RISK_MAP = {"极高": "high", "高": "high", "中": "medium", "低": "low", "极低": "low"}
+# 第二批 contract 治理：商品应然侧（product_understanding）不再输出旧版「转化阻力」裸字段，
+# 故 _PRICE_BAND_MAP / _TRUST_BARRIER_MAP / _FINANCIAL_RISK_MAP / _map_channel_risk / _map_brand_tier
+# 全部从 contract 输出路径移除（见 build_product_fact_vector）。
+
+# 商品事实向量枚举闭集（严格按 module3 PRD §5.2「商品事实向量枚举约束」；
+# 口径复用 product_diagnoser._to_module3_category_attr / _to_module3_trust_attr / _to_module3_price_attr）。
+_FACT_COGNITION_ENUM = {"蓝海", "红海-核心", "红海-破圈"}
+_FACT_FREQUENCY_ENUM = {"快消", "耐消"}
+_FACT_TRUST_ENUM = {"大牌", "白牌"}
+_FACT_PRICE_ENUM = {"高", "低"}
+# endorsement / channel_risk 允许合法空值 null（不伪造）。
 
 # 引擎诊断枚举 → 契约 overview / 模块枚举
 _OVERALL_STATUS_MAP = {
@@ -154,80 +162,215 @@ def build_diagnosis_meta(meta_input: Mapping[str, Any]) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# product_fact_vector（商品事实向量，F2：6 维结构化枚举 + 可读 conversion_barriers）
+# ---------------------------------------------------------------------------
+def build_product_fact_vector(product_diagnosis: Mapping[str, Any]) -> dict[str, Any]:
+    """F2：独立装配商品事实向量（6 维，枚举严格按 module3 PRD §5.2）。
+
+    来源 ``resistance_profile``，归一到 PRD 中文枚举；口径复用 product_diagnoser 的
+    ``_to_module3_category_attr / _to_module3_trust_attr / _to_module3_price_attr``，不新造枚举。
+    - 必填维度（认知/频次/信任/价格）缺源数据一律 Crash Early。
+    - 合法空值维度（背书/渠道风险）映射不到时输出 null，不伪造。
+
+    6 维（字段名沿用 PRD 推荐结构）：
+        cognition_attribute / frequency_attribute / trust_attribute /
+        price_attribute / endorsement_attribute / channel_risk_attribute
+    另附 ``conversion_barriers``（list[str] 可读解释层，F3，不替代结构化枚举）。
+    """
+    resistance = product_diagnosis.get("resistance_profile") or {}
+    if not isinstance(resistance, Mapping) or not resistance:
+        raise ContractAssemblyError("product_fact_vector 无可靠来源（resistance_profile 缺失）。")
+
+    # 认知 cognition：蓝海 / 红海-{核心|破圈}（复用 _to_module3_category_attr 口径）
+    ocean = str(resistance.get("ocean") or "").strip()
+    competition_focus = str(resistance.get("competition_focus") or "").strip()
+    if not ocean:
+        raise ContractAssemblyError(
+            "product_fact_vector.cognition_attribute 无可靠来源（resistance_profile.ocean 缺失）。"
+        )
+    if ocean == "蓝海":
+        cognition = "蓝海"
+    elif ocean == "红海":
+        if not competition_focus:
+            raise ContractAssemblyError(
+                "product_fact_vector.cognition_attribute 缺源：红海须含 competition_focus（核心/破圈）。"
+            )
+        cognition = f"红海-{competition_focus}"
+    else:
+        raise ContractAssemblyError(
+            f"product_fact_vector.cognition_attribute 源 ocean 非法枚举：{ocean!r}。"
+        )
+    if cognition not in _FACT_COGNITION_ENUM:
+        raise ContractAssemblyError(
+            f"product_fact_vector.cognition_attribute 归一结果越界：{cognition!r}（合法集={sorted(_FACT_COGNITION_ENUM)}）。"
+        )
+
+    # 频次 frequency：快消 / 耐消
+    frequency = str(resistance.get("frequency") or "").strip()
+    if frequency not in _FACT_FREQUENCY_ENUM:
+        raise ContractAssemblyError(
+            f"product_fact_vector.frequency_attribute 缺源或越界：{frequency!r}（合法集={sorted(_FACT_FREQUENCY_ENUM)}）。"
+        )
+
+    # 信任 trust：含「大牌」→大牌，否则白牌（复用 _to_module3_trust_attr 口径）
+    brand_tier = str(resistance.get("brand_tier") or "").strip()
+    if not brand_tier:
+        raise ContractAssemblyError(
+            "product_fact_vector.trust_attribute 无可靠来源（resistance_profile.brand_tier 缺失）。"
+        )
+    trust = "大牌" if "大牌" in brand_tier else "白牌"
+
+    # 价格 price：高水位→高，否则→低（复用 _to_module3_price_attr 口径）
+    relative_price = str(resistance.get("relative_price_level") or "").strip()
+    if not relative_price:
+        raise ContractAssemblyError(
+            "product_fact_vector.price_attribute 无可靠来源（resistance_profile.relative_price_level 缺失）。"
+        )
+    price = "高" if relative_price == "高水位" else "低"
+
+    # 背书 endorsement：有背书 / null（None / 空 → null，不伪造）
+    endorsement_raw = resistance.get("endorsement")
+    endorsement = "有背书" if (endorsement_raw and str(endorsement_raw).strip()) else None
+
+    # 渠道风险 channel_risk：仅 有风险 / null（无风险及其它 → null）
+    channel_risk_raw = str(resistance.get("channel_risk") or "").strip()
+    channel_risk = "有风险" if channel_risk_raw == "有风险" else None
+
+    fact_vector: dict[str, Any] = {
+        "cognition_attribute": cognition,
+        "frequency_attribute": frequency,
+        "trust_attribute": trust,
+        "price_attribute": price,
+        "endorsement_attribute": endorsement,
+        "channel_risk_attribute": channel_risk,
+    }
+    # F3：conversion_barriers 仅作可读解释层（list[str]），不替代结构化枚举、不复活 conversion_resistance。
+    fact_vector["conversion_barriers"] = _build_conversion_barriers(fact_vector)
+    return fact_vector
+
+
+def _build_conversion_barriers(fact_vector: Mapping[str, Any]) -> list[str]:
+    """基于商品事实向量生成可读的「转化卡点」中文解释（解释层，非结构化枚举）。"""
+    barriers: list[str] = []
+    if fact_vector["trust_attribute"] == "白牌":
+        barriers.append("白牌信任存量低，需先建立来源可信/使用证据再促成交。")
+    if fact_vector["price_attribute"] == "高":
+        barriers.append("价格水位偏高，需强化价值证明与算账说服以化解价格顾虑。")
+    if fact_vector["channel_risk_attribute"] == "有风险":
+        barriers.append("存在渠道风险，需补充货源可信与防伪/风险消除信息。")
+    if fact_vector["cognition_attribute"] == "蓝海":
+        barriers.append("蓝海新品类认知空白，需先建立任务意识与新解法正当性。")
+    elif fact_vector["cognition_attribute"] == "红海-破圈":
+        barriers.append("红海破圈替换，需剥离旧方案使用惯性并证明切换更值。")
+    if fact_vector["frequency_attribute"] == "耐消":
+        barriers.append("耐消决策链长，需通过参数/适配/避坑提供选型确定性。")
+    return barriers
+
+
+# ---------------------------------------------------------------------------
+# product_hec 三元组（F7：code/name/definition；definition 必来自后端权威字典）
+# ---------------------------------------------------------------------------
+def _hec_name_from_label(raw_label: Any, code: str) -> str:
+    """从 ``*_label``（如 "H1 痛点/焦虑直击"）剥离 code 前缀得到业务名称；缺失返回空串。"""
+    if not isinstance(raw_label, str) or not raw_label.strip():
+        return ""
+    parts = raw_label.strip().split(None, 1)
+    if parts and parts[0].strip().upper() == code and len(parts) > 1:
+        return parts[1].strip()
+    # label 不含 code 前缀（或整串即名称）时原样返回
+    return raw_label.strip()
+
+
+def _build_hec_triple(raw_tag: Any, raw_label: Any, dim: str, idx: int) -> dict[str, str]:
+    """把单维裸 tag 升级为 {code, name, definition} 三元组（F7）。
+
+    - code：取 tag 的标签代号（兼容 "H1" 纯码或 "H1 痛点/焦虑直击" 整串，统一取首 token 大写）。
+    - name：优先用 ``*_label`` 剥离 code 前缀；label 缺失再回退权威字典 name。
+    - definition：**必来自后端权威字典（taxonomy_dictionary_v2.md）**；查不到 code → Crash Early。
+    """
+    raw = _require(raw_tag, f"product_hec[{idx}].{dim}_tag")
+    code = str(raw).strip().split()[0].strip().upper()
+    if not code:
+        raise ContractAssemblyError(f"product_hec[{idx}].{dim}_tag 无法解析 code：{raw!r}。")
+    # 权威字典回查（lookup_hec 内部未命中即 Crash Early，禁止编造 definition）
+    entry = lookup_hec(code)
+    name = _hec_name_from_label(raw_label, code) or entry["name"]
+    definition = entry["definition"]
+    if not (isinstance(name, str) and name.strip()):
+        raise ContractAssemblyError(f"product_hec[{idx}].{dim}.name 无可靠来源（label/字典均缺）。")
+    if not (isinstance(definition, str) and definition.strip()):
+        # 理论上 lookup_hec 已保证非空；此处再次守卫，禁止空串占位
+        raise ContractAssemblyError(f"product_hec[{idx}].{dim}.definition 字典缺失（禁止占位）。")
+    return {"code": code, "name": name, "definition": definition}
+
+
+# ---------------------------------------------------------------------------
 # product_understanding（商品侧应然，只读商品诊断产物）
 # ---------------------------------------------------------------------------
 def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[str, Any]:
+    """F1：商品理解 6 段固定输出（键集合与顺序固定）：
+
+        basic_info → product_fact_vector → module3 → candidate_set → product_hec → evidence
+
+    第二批结构治理要点：
+    - 原 ``target_people``（模块 1 人群线索）迁入 ``basic_info.audience_hint``，不再作顶层段。
+    - 原 ``core_selling_points`` 收敛进 ``basic_info``（PRD §5.1 商品基础信息含差异化卖点）。
+    - 新增独立 ``product_fact_vector``（见 build_product_fact_vector）。
+    - ``module3`` 透传第一批引擎产出的 persuasion_requirement_profile + product_target_audience。
+    - ``expected_hec`` → 更名 ``product_hec``；第三批每维裸 tag 升级为 {code,name,definition} 三元组
+      （definition 必来自后端权威字典 taxonomy_dictionary_v2.md，前端纯消费，不复活 expected_hec）。
+    - ``candidate_set`` 第三批补 ``derived_from``（requirement_ids ⊆ profile / audience_groups ⊆ primary_audiences）。
+    - 移除顶层 ``jtbd`` / ``supporting_requirements`` / ``expected_hec`` / ``conversion_resistance`` /
+      ``target_people``；其下游均改读 raw product_diagnosis，不受影响。
+    """
     pd = product_diagnosis
     inp = ((pd.get("evidence") or {}).get("input")) or {}
-    resistance = pd.get("resistance_profile") or {}
     core_intent = pd.get("core_intent") or {}
     profile = pd.get("persuasion_requirement_profile") or {}
+    pta = pd.get("product_target_audience") or {}
     product_hecs = pd.get("product_hecs") or []
 
-    # --- basic_info ---
+    # --- 1. basic_info（含 audience_hint：原模块 1 target_people 线索；core_selling_points）---
     product_name = _require(pd.get("product_name"), "product_understanding.basic_info.product_name")
     leaf_category = _require(pd.get("leaf_category"), "product_understanding.basic_info.leaf_category")
-    relative_price = resistance.get("relative_price_level") or (
-        pd.get("product_intent_matrix") or {}
-    ).get("relative_price_level")
-    price_band = _PRICE_BAND_MAP.get(str(relative_price or "").strip(), "unknown")
+    audience_hint = _split_terms(inp.get("target_people"))
+    if not audience_hint:
+        raise ContractAssemblyError(
+            "product_understanding.basic_info.audience_hint 无可靠来源（evidence.input.target_people 缺失）。"
+        )
+    core_selling_points = _split_terms(inp.get("core_selling_point"))
+    if not core_selling_points:
+        raise ContractAssemblyError(
+            "product_understanding.basic_info.core_selling_points 无可靠来源（evidence.input.core_selling_point 缺失）。"
+        )
     basic_info = {
         "product_name": product_name,
         "leaf_category": leaf_category,
         "brand_name": inp.get("brand_name") or pd.get("brand_name"),
         "shop_name": pd.get("shop_name"),
         "price": pd.get("price"),
-        "price_band": price_band,
+        "audience_hint": audience_hint,
+        "core_selling_points": core_selling_points,
     }
 
-    # --- target_people / core_selling_points ---
-    target_people = _split_terms(inp.get("target_people"))
-    if not target_people:
-        raise ContractAssemblyError("product_understanding.target_people 无可靠来源（evidence.input.target_people 缺失）。")
-    core_selling_points = _split_terms(inp.get("core_selling_point"))
-    if not core_selling_points:
-        raise ContractAssemblyError("product_understanding.core_selling_points 无可靠来源（evidence.input.core_selling_point 缺失）。")
+    # --- 2. product_fact_vector（F2：独立 6 维事实向量）---
+    product_fact_vector = build_product_fact_vector(pd)
 
-    # --- jtbd ---
-    gated = (pd.get("evidence") or {}).get("gated_proposal") or (pd.get("evidence") or {}).get("llm_proposal") or {}
-    jtbd = {
-        "domain": _require(pd.get("domain"), "product_understanding.jtbd.domain"),
-        "primary_task": _require(pd.get("primary_task"), "product_understanding.jtbd.primary_task"),
-        "sub_task": None,  # 当前商品诊断无二级子任务输出，契约允许 null
-        "reasoning": _require(
-            gated.get("reasoning") or core_intent.get("product_intent"),
-            "product_understanding.jtbd.reasoning",
-        ),
-        "evidence_chain": gated.get("evidence_chain") or [],
-    }
-
-    # --- supporting_requirements（源 persuasion_requirements）---
-    supporting_requirements: list[dict[str, Any]] = []
-    for r in profile.get("persuasion_requirements") or []:
-        if not isinstance(r, Mapping):
-            continue
-        supporting_requirements.append(
-            {
-                "requirement_id": _require(r.get("requirement_id"), "supporting_requirements[].requirement_id"),
-                "requirement_name": _require(r.get("requirement_name"), "supporting_requirements[].requirement_name"),
-                "priority": "required" if r.get("required") else "optional",
-                "description": r.get("success_criteria") or "",
-            }
+    # --- 3. module3（透传第一批引擎产出；profile 为空/缺 persuasion_requirements 必须 Crash Early）---
+    if not isinstance(profile, Mapping) or not profile or not profile.get("persuasion_requirements"):
+        raise ContractAssemblyError(
+            "product_understanding.module3.persuasion_requirement_profile 为空或缺 persuasion_requirements（Crash Early）。"
         )
-    if not supporting_requirements:
-        raise ContractAssemblyError("product_understanding.supporting_requirements 无可靠来源（persuasion_requirements 为空）。")
-
-    # --- expected_hec（源 product_hecs[0]）---
-    if not product_hecs or not isinstance(product_hecs[0], Mapping):
-        raise ContractAssemblyError("product_understanding.expected_hec 无可靠来源（product_hecs[0] 缺失）。")
-    hec0 = product_hecs[0]
-    expected_hec = {
-        "hook_tag": _require(hec0.get("hook_tag"), "expected_hec.hook_tag"),
-        "effect_tag": _require(hec0.get("effect_tag"), "expected_hec.effect_tag"),
-        "cta_tag": _require(hec0.get("cta_tag"), "expected_hec.cta_tag"),
+    if not isinstance(pta, Mapping) or not pta:
+        raise ContractAssemblyError(
+            "product_understanding.module3.product_target_audience 为空（Crash Early）。"
+        )
+    module3 = {
+        "persuasion_requirement_profile": dict(profile),
+        "product_target_audience": dict(pta),
     }
 
-    # --- candidate_set（源 core_intent）---
+    # --- 4. candidate_set（沿用 core_intent 来源；F6 补 derived_from 可追溯）---
     candidate_set = {
         "candidate_h": core_intent.get("candidate_h") or [],
         "core_e": core_intent.get("core_e") or [],
@@ -235,56 +378,75 @@ def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[st
         "primary_effect": core_intent.get("primary_effect"),
         "primary_cta": core_intent.get("primary_cta"),
     }
-
-    # --- conversion_resistance（源 resistance_profile；financial_risk→price_barrier）---
-    endorsement_raw = resistance.get("endorsement")
-    conversion_resistance = {
-        "trust_barrier": _TRUST_BARRIER_MAP.get(str(resistance.get("trust_barrier") or "").strip(), "unknown"),
-        "price_barrier": _FINANCIAL_RISK_MAP.get(str(resistance.get("financial_risk") or "").strip(), "unknown"),
-        "channel_risk": _map_channel_risk(resistance.get("channel_risk")),
-        "endorsement": "has_endorsement" if endorsement_raw else ("unknown" if endorsement_raw is None else "no_endorsement"),
-        "brand_tier": _map_brand_tier(resistance.get("brand_tier")),
+    # F6：derived_from —— requirement_ids 来源 profile（真实 id），audience_groups 来源 primary_audiences
+    reqs = [r for r in (profile.get("persuasion_requirements") or []) if isinstance(r, Mapping)]
+    requirement_ids = [
+        r.get("requirement_id")
+        for r in reqs
+        if r.get("requirement_id") and (bool(r.get("required")) or r.get("priority") == "high")
+    ]
+    if not requirement_ids:
+        # 无 required/high 命中则回退全部真实 requirement_id（仍来源 profile，不另造）
+        requirement_ids = [r.get("requirement_id") for r in reqs if r.get("requirement_id")]
+    audience_groups = [
+        a.get("audience_group")
+        for a in (pta.get("primary_audiences") or [])
+        if isinstance(a, Mapping) and a.get("audience_group")
+    ]
+    if not requirement_ids:
+        raise ContractAssemblyError(
+            "candidate_set.derived_from.requirement_ids 为空（profile 已保证非空，Crash Early）。"
+        )
+    if not audience_groups:
+        raise ContractAssemblyError(
+            "candidate_set.derived_from.audience_groups 为空（primary_audiences 已保证非空，Crash Early）。"
+        )
+    candidate_set["derived_from"] = {
+        "requirement_ids": requirement_ids,
+        "audience_groups": audience_groups,
     }
 
-    # --- evidence（统一 schema，标注 request_payload.product_factpack 来源）---
+    # --- 5. product_hec（F7：每维裸 tag → {code,name,definition} 三元组；definition 必来自字典）---
+    if not product_hecs or not isinstance(product_hecs[0], Mapping):
+        raise ContractAssemblyError("product_understanding.product_hec 无可靠来源（product_hecs 为空）。")
+    product_hec: list[dict[str, Any]] = []
+    for idx, hec in enumerate(product_hecs):
+        if not isinstance(hec, Mapping):
+            raise ContractAssemblyError(f"product_understanding.product_hec[{idx}] 非法（非对象）。")
+        product_hec.append(
+            {
+                "variant_id": hec.get("variant_id"),
+                "hook": _build_hec_triple(hec.get("hook_tag"), hec.get("hook_label"), "hook", idx),
+                "effect": _build_hec_triple(hec.get("effect_tag"), hec.get("effect_label"), "effect", idx),
+                "cta": _build_hec_triple(hec.get("cta_tag"), hec.get("cta_label"), "cta", idx),
+            }
+        )
+
+    # --- 6. evidence（统一 schema；标注 product_fact_vector / product_hec 来源）---
+    primary_hec = product_hec[0]
     evidence = [
         _evidence("product_factpack", "basic_info.product_name", product_name),
         _evidence("product_factpack", "basic_info.leaf_category", leaf_category),
-        _evidence("product_understanding", "jtbd.primary_task", jtbd["primary_task"]),
-        _evidence("product_understanding", "expected_hec", f"{expected_hec['hook_tag']}/{expected_hec['effect_tag']}/{expected_hec['cta_tag']}"),
+        _evidence(
+            "product_understanding",
+            "product_fact_vector.cognition_attribute",
+            product_fact_vector["cognition_attribute"],
+        ),
+        _evidence(
+            "product_understanding",
+            "product_hec",
+            f"{primary_hec['hook']['code']}/{primary_hec['effect']['code']}/{primary_hec['cta']['code']}",
+        ),
     ]
 
     return {
         "basic_info": basic_info,
-        "target_people": target_people,
-        "core_selling_points": core_selling_points,
-        "jtbd": jtbd,
-        "supporting_requirements": supporting_requirements,
-        "expected_hec": expected_hec,
+        "product_fact_vector": product_fact_vector,
+        "module3": module3,
         "candidate_set": candidate_set,
-        "conversion_resistance": conversion_resistance,
+        "product_hec": product_hec,
         "evidence": evidence,
     }
-
-
-def _map_channel_risk(value: Any) -> str:
-    s = str(value or "").strip()
-    if s in {"无风险", "低", "no_risk"}:
-        return "no_risk"
-    if s in {"有风险", "高", "风险", "risk"}:
-        return "risk"
-    return "unknown"
-
-
-def _map_brand_tier(value: Any) -> str:
-    s = str(value or "").strip()
-    if not s:
-        return "unknown"
-    if "白牌" in s or s == "white_label":
-        return "white_label"
-    if "大牌" in s or "品牌" in s or "官方" in s or s == "brand":
-        return "brand"
-    return "unknown"
 
 
 # ---------------------------------------------------------------------------

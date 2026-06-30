@@ -2402,6 +2402,26 @@ CONTRACT_CHANNEL_RISK = {"risk", "no_risk", "unknown"}
 CONTRACT_ENDORSEMENT = {"has_endorsement", "no_endorsement", "unknown"}
 CONTRACT_BRAND_TIER = {"brand", "white_label", "unknown"}
 CONTRACT_SUPPORT_REQ_PRIORITY = {"required", "optional"}
+
+# ---- 第二批 contract 治理：product_understanding 6 段 + product_fact_vector 六维枚举闭集 ----
+# product_understanding 固定 6 段（键集合 + 顺序，F1）
+CONTRACT_PRODUCT_UNDERSTANDING_KEYS_ORDERED = (
+    "basic_info", "product_fact_vector", "module3", "candidate_set", "product_hec", "evidence",
+)
+# 商品事实向量六维枚举（严格按 module3 PRD §5.2；endorsement / channel_risk 允许 null）
+CONTRACT_FACT_COGNITION = {"蓝海", "红海-核心", "红海-破圈"}
+CONTRACT_FACT_FREQUENCY = {"快消", "耐消"}
+CONTRACT_FACT_TRUST = {"大牌", "白牌"}
+CONTRACT_FACT_PRICE = {"高", "低"}
+CONTRACT_FACT_ENDORSEMENT = {"有背书", None}
+CONTRACT_FACT_CHANNEL_RISK = {"有风险", None}
+# 禁出字段（F4）：商品应然侧 product_understanding 子树全链路不得出现这些键。
+# 说明：video 实然侧（如 video_understanding.actual_hec.hook_tag）与 artifacts 请求/原始回显
+#   不在本批治理范围，本断言仅扫描 product_understanding 子树。
+PRODUCT_UNDERSTANDING_BANNED_KEYS = frozenset({
+    "trust_barrier", "brand_tier", "price_barrier", "financial_risk", "relative_price_level",
+    "expected_hec", "supporting_requirements", "conversion_resistance", "target_people", "price_band",
+})
 CONTRACT_EVIDENCE_SOURCE = {
     "product_factpack", "video_factpack", "product_understanding",
     "video_understanding", "raw_output",
@@ -2443,9 +2463,10 @@ def _contract_require_list(value: Any, field_name: str) -> list:
     return value
 
 
-def _contract_require_enum(value: Any, allowed: set[str], field_name: str) -> None:
+def _contract_require_enum(value: Any, allowed: set, field_name: str) -> None:
     if value not in allowed:
-        raise SchemaAssertionError(f"契约字段 {field_name} 枚举非法：{value!r}，合法集合={sorted(allowed)}。")
+        legal = sorted(allowed, key=lambda x: (x is not None, str(x)))
+        raise SchemaAssertionError(f"契约字段 {field_name} 枚举非法：{value!r}，合法集合={legal}。")
 
 
 def _contract_require_str(value: Any, field_name: str) -> None:
@@ -2484,54 +2505,94 @@ def assert_contract_diagnosis_meta(payload: dict[str, Any]) -> None:
     _contract_require_enum(data.get("e2e_status"), CONTRACT_E2E_STATUS, "diagnosis_meta.e2e_status")
 
 
-# ---- 2. product_understanding ----
+# ---- 2. product_understanding（第二批：6 段固定结构 + product_fact_vector 六维闭集）----
+def _assert_no_banned_keys(node: Any, field_name: str) -> None:
+    """F4：递归扫描 product_understanding 子树，命中禁出键即 Crash Early。"""
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key in PRODUCT_UNDERSTANDING_BANNED_KEYS:
+                raise SchemaAssertionError(
+                    f"契约字段 {field_name}.{key} 命中禁出字段（第二批 contract 治理已废弃）：{key}。"
+                )
+            _assert_no_banned_keys(value, f"{field_name}.{key}")
+    elif isinstance(node, list):
+        for idx, item in enumerate(node):
+            _assert_no_banned_keys(item, f"{field_name}[{idx}]")
+
+
 def assert_contract_product_understanding(payload: dict[str, Any]) -> None:
     data = _contract_require_dict(payload, "product_understanding")
-    require_keys(
-        data, "product_understanding",
-        ("basic_info", "target_people", "core_selling_points", "jtbd",
-         "supporting_requirements", "expected_hec", "candidate_set", "conversion_resistance", "evidence"),
-    )
+
+    # F1：6 段键集合与顺序固定（禁止缺失 / 额外 / 乱序）
+    actual_keys = list(data.keys())
+    if actual_keys != list(CONTRACT_PRODUCT_UNDERSTANDING_KEYS_ORDERED):
+        raise SchemaAssertionError(
+            f"product_understanding 必须为固定 6 段且顺序固定："
+            f"{list(CONTRACT_PRODUCT_UNDERSTANDING_KEYS_ORDERED)}，实际={actual_keys}。"
+        )
+    # F4：禁出字段全子树扫描
+    _assert_no_banned_keys(data, "product_understanding")
+
+    # ---- basic_info（含 audience_hint / core_selling_points）----
     basic = _contract_require_dict(data["basic_info"], "product_understanding.basic_info")
     _contract_require_str(basic.get("product_name"), "product_understanding.basic_info.product_name")
     _contract_require_str(basic.get("leaf_category"), "product_understanding.basic_info.leaf_category")
     for key in ("brand_name", "shop_name", "price"):
         _contract_require_key_present(basic, key, f"product_understanding.basic_info.{key}")
-    _contract_require_enum(basic.get("price_band"), CONTRACT_PRICE_BAND, "product_understanding.basic_info.price_band")
+    require_non_empty(basic.get("audience_hint"), "product_understanding.basic_info.audience_hint")
+    require_non_empty(basic.get("core_selling_points"), "product_understanding.basic_info.core_selling_points")
 
-    require_non_empty(data.get("target_people"), "product_understanding.target_people")
-    require_non_empty(data.get("core_selling_points"), "product_understanding.core_selling_points")
+    # ---- product_fact_vector（F2：六维枚举闭集 + 可读 conversion_barriers）----
+    fv = _contract_require_dict(data["product_fact_vector"], "product_understanding.product_fact_vector")
+    _contract_require_enum(fv.get("cognition_attribute"), CONTRACT_FACT_COGNITION, "product_fact_vector.cognition_attribute")
+    _contract_require_enum(fv.get("frequency_attribute"), CONTRACT_FACT_FREQUENCY, "product_fact_vector.frequency_attribute")
+    _contract_require_enum(fv.get("trust_attribute"), CONTRACT_FACT_TRUST, "product_fact_vector.trust_attribute")
+    _contract_require_enum(fv.get("price_attribute"), CONTRACT_FACT_PRICE, "product_fact_vector.price_attribute")
+    # endorsement / channel_risk 允许 null（闭集已含 None）
+    _contract_require_key_present(fv, "endorsement_attribute", "product_fact_vector.endorsement_attribute")
+    _contract_require_key_present(fv, "channel_risk_attribute", "product_fact_vector.channel_risk_attribute")
+    _contract_require_enum(fv.get("endorsement_attribute"), CONTRACT_FACT_ENDORSEMENT, "product_fact_vector.endorsement_attribute")
+    _contract_require_enum(fv.get("channel_risk_attribute"), CONTRACT_FACT_CHANNEL_RISK, "product_fact_vector.channel_risk_attribute")
+    barriers = fv.get("conversion_barriers")
+    if not isinstance(barriers, list) or any(not isinstance(x, str) for x in barriers):
+        raise SchemaAssertionError("product_fact_vector.conversion_barriers 必须是 list[str]（可读解释层）。")
 
-    jtbd = _contract_require_dict(data["jtbd"], "product_understanding.jtbd")
-    _contract_require_str(jtbd.get("domain"), "product_understanding.jtbd.domain")
-    _contract_require_str(jtbd.get("primary_task"), "product_understanding.jtbd.primary_task")
-    _contract_require_str(jtbd.get("reasoning"), "product_understanding.jtbd.reasoning")
-    _contract_require_key_present(jtbd, "sub_task", "product_understanding.jtbd.sub_task")
-    _contract_require_list(jtbd.get("evidence_chain"), "product_understanding.jtbd.evidence_chain")
+    # ---- module3（两对象非空：profile 含 persuasion_requirements；pta 非空）----
+    m3 = _contract_require_dict(data["module3"], "product_understanding.module3")
+    require_keys(m3, "product_understanding.module3", ("persuasion_requirement_profile", "product_target_audience"))
+    prof = _contract_require_dict(m3["persuasion_requirement_profile"], "product_understanding.module3.persuasion_requirement_profile")
+    if not prof or not prof.get("persuasion_requirements"):
+        raise SchemaAssertionError("module3.persuasion_requirement_profile 为空或缺 persuasion_requirements。")
+    pta = _contract_require_dict(m3["product_target_audience"], "product_understanding.module3.product_target_audience")
+    require_non_empty(pta, "product_understanding.module3.product_target_audience")
 
-    reqs = _contract_require_list(data["supporting_requirements"], "product_understanding.supporting_requirements")
-    require_non_empty(reqs, "product_understanding.supporting_requirements")
-    for idx, r in enumerate(reqs):
-        rd = _contract_require_dict(r, f"supporting_requirements[{idx}]")
-        _contract_require_str(rd.get("requirement_id"), f"supporting_requirements[{idx}].requirement_id")
-        _contract_require_str(rd.get("requirement_name"), f"supporting_requirements[{idx}].requirement_name")
-        _contract_require_enum(rd.get("priority"), CONTRACT_SUPPORT_REQ_PRIORITY, f"supporting_requirements[{idx}].priority")
-        _contract_require_key_present(rd, "description", f"supporting_requirements[{idx}].description")
-
-    hec = _contract_require_dict(data["expected_hec"], "product_understanding.expected_hec")
-    for key in ("hook_tag", "effect_tag", "cta_tag"):
-        _contract_require_str(hec.get(key), f"product_understanding.expected_hec.{key}")
-
+    # ---- candidate_set（沿用 core_intent；F6 补 derived_from 可追溯）----
     cs = _contract_require_dict(data["candidate_set"], "product_understanding.candidate_set")
-    for key in ("candidate_h", "core_e", "core_c", "primary_effect", "primary_cta"):
+    for key in ("candidate_h", "core_e", "core_c", "primary_effect", "primary_cta", "derived_from"):
         _contract_require_key_present(cs, key, f"product_understanding.candidate_set.{key}")
+    # F6：derived_from.requirement_ids / audience_groups 必须非空（profile/audience 已保证非空）
+    derived = _contract_require_dict(cs["derived_from"], "product_understanding.candidate_set.derived_from")
+    require_non_empty(
+        derived.get("requirement_ids"), "product_understanding.candidate_set.derived_from.requirement_ids"
+    )
+    require_non_empty(
+        derived.get("audience_groups"), "product_understanding.candidate_set.derived_from.audience_groups"
+    )
 
-    cr = _contract_require_dict(data["conversion_resistance"], "product_understanding.conversion_resistance")
-    _contract_require_enum(cr.get("trust_barrier"), CONTRACT_TRUST_BARRIER, "conversion_resistance.trust_barrier")
-    _contract_require_enum(cr.get("price_barrier"), CONTRACT_TRUST_BARRIER, "conversion_resistance.price_barrier")
-    _contract_require_enum(cr.get("channel_risk"), CONTRACT_CHANNEL_RISK, "conversion_resistance.channel_risk")
-    _contract_require_enum(cr.get("endorsement"), CONTRACT_ENDORSEMENT, "conversion_resistance.endorsement")
-    _contract_require_enum(cr.get("brand_tier"), CONTRACT_BRAND_TIER, "conversion_resistance.brand_tier")
+    # ---- product_hec（F7：每项含 variant_id + hook/effect/cta 三元组 code/name/definition 非空）----
+    hec_list = _contract_require_list(data["product_hec"], "product_understanding.product_hec")
+    require_non_empty(hec_list, "product_understanding.product_hec")
+    for idx, hec in enumerate(hec_list):
+        hd = _contract_require_dict(hec, f"product_understanding.product_hec[{idx}]")
+        _contract_require_key_present(hd, "variant_id", f"product_understanding.product_hec[{idx}].variant_id")
+        for dim in ("hook", "effect", "cta"):
+            triple = _contract_require_dict(
+                hd.get(dim), f"product_understanding.product_hec[{idx}].{dim}"
+            )
+            for key in ("code", "name", "definition"):
+                _contract_require_str(
+                    triple.get(key), f"product_understanding.product_hec[{idx}].{dim}.{key}"
+                )
 
     assert_contract_evidence_list(data.get("evidence"), "product_understanding.evidence")
 

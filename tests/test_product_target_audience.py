@@ -29,6 +29,33 @@ from commerce_video_diagnosis.understanding.engines.product_diagnoser import (  
     ProductTargetAudience,
     StructuredDifferentiator,
 )
+from commerce_video_diagnosis.understanding.engines.persuasion_requirement_engine import (  # noqa: E402
+    PersuasionRequirementEngine,
+)
+
+
+# F3 改造后：_derive_product_target_audience 强依赖 persuasion_requirement_profile（非空）。
+# 这里用真实的 PersuasionRequirementEngine 产出真实 profile 传入（非 mock，走真实查表），
+# 既满足新契约，也使 reasoning_chain 第四段能引用真实 requirement。
+_PERSUASION_ENGINE = PersuasionRequirementEngine()
+
+
+def _real_profile(jtbd_level2: str = "物理安全与风险规避") -> dict:
+    product_fact = {
+        "leaf_category": "宝宝防蚊水",
+        "jtbd_level1": "功能域",
+        "jtbd_level2": jtbd_level2,
+        "cognition_attribute": "红海-核心",
+        "frequency_attribute": "快消",
+        "trust_attribute": "极低",
+        "price_attribute": "高水位",
+        "selling_points": ["派卡瑞丁A级驱蚊力，温和无刺激"],
+        "source_evidence": ["第三方检测报告编号 2200938-1", "广告审查号粤农药广审（视）01260018号"],
+        "risk_points": [],
+    }
+    profile = _PERSUASION_ENGINE.generate_profile(product_fact, content_goal="purchase")
+    assert profile.get("persuasion_requirements"), "真实 profile 不应为空"
+    return profile
 
 
 def _engine() -> ProductDiagnosisEngine:
@@ -94,7 +121,12 @@ def test_runben_anchor_matches_d6():
         target_people="婴幼儿人群",
     )
     matrix = _matrix(brand_tier="大牌官方", relative_price_level="高水位")
-    result = engine._derive_product_target_audience(module1, _proposal("物理安全与风险规避"), matrix)
+    result = engine._derive_product_target_audience(
+        module1,
+        _proposal("物理安全与风险规避"),
+        matrix,
+        persuasion_requirement_profile=_real_profile(),
+    )
 
     assert isinstance(result, ProductTargetAudience)
     # primary
@@ -107,11 +139,15 @@ def test_runben_anchor_matches_d6():
     ]
     # weak_fit 为空
     assert result.weak_fit_audiences == []
-    # reasoning_chain 三段非空
+    # reasoning_chain 四段非空
     rc = result.reasoning_chain
     assert rc.task_to_role.strip()
     assert rc.role_category_to_age_gender.strip()
     assert rc.brand_price_to_consumption_power.strip()
+    # F3：第四段必须引用真实 requirement（含 requirement_id），并落到核心人群
+    assert rc.persuasion_profile_to_audience.strip()
+    assert "说服要求" in rc.persuasion_profile_to_audience
+    assert "(" in rc.persuasion_profile_to_audience and ")" in rc.persuasion_profile_to_audience
     # reason 可解释（含任务/角色/品牌价格依据），不做精确字符串断言
     assert "风险责任人" in result.primary_audiences[0].reason
     # D6 caveat
@@ -131,7 +167,12 @@ def test_male_leaning_category_contains_male_audience():
         target_people="车主/越野人群",
     )
     matrix = _matrix(brand_tier="白牌", relative_price_level="低水位", business_category="车载工具箱")
-    result = engine._derive_product_target_audience(module1, _proposal("物理安全与风险规避"), matrix)
+    result = engine._derive_product_target_audience(
+        module1,
+        _proposal("物理安全与风险规避"),
+        matrix,
+        persuasion_requirement_profile=_real_profile(),
+    )
 
     all_groups = [a.audience_group for a in result.primary_audiences + result.secondary_audiences]
     assert any("男性" in g for g in all_groups), all_groups
@@ -146,7 +187,12 @@ def test_crash_early_missing_primary_task():
     module1 = _module1(leaf_category="宝宝防蚊水", product_name="润本驱蚊液")
     matrix = _matrix(brand_tier="大牌官方", relative_price_level="高水位")
     with pytest.raises(ValueError, match="primary_task"):
-        engine._derive_product_target_audience(module1, SimpleNamespace(primary_task=""), matrix)
+        engine._derive_product_target_audience(
+            module1,
+            SimpleNamespace(primary_task=""),
+            matrix,
+            persuasion_requirement_profile=_real_profile(),
+        )
 
 
 @pytest.mark.unit
@@ -155,7 +201,12 @@ def test_crash_early_missing_brand_tier():
     module1 = _module1(leaf_category="宝宝防蚊水", product_name="润本驱蚊液")
     bad_matrix = SimpleNamespace(brand_tier="", relative_price_level="高水位")
     with pytest.raises(ValueError, match="brand_tier"):
-        engine._derive_product_target_audience(module1, _proposal("物理安全与风险规避"), bad_matrix)
+        engine._derive_product_target_audience(
+            module1,
+            _proposal("物理安全与风险规避"),
+            bad_matrix,
+            persuasion_requirement_profile=_real_profile(),
+        )
 
 
 @pytest.mark.unit
@@ -164,7 +215,12 @@ def test_crash_early_missing_relative_price_level():
     module1 = _module1(leaf_category="宝宝防蚊水", product_name="润本驱蚊液")
     bad_matrix = SimpleNamespace(brand_tier="大牌官方", relative_price_level="")
     with pytest.raises(ValueError, match="relative_price_level"):
-        engine._derive_product_target_audience(module1, _proposal("物理安全与风险规避"), bad_matrix)
+        engine._derive_product_target_audience(
+            module1,
+            _proposal("物理安全与风险规避"),
+            bad_matrix,
+            persuasion_requirement_profile=_real_profile(),
+        )
 
 
 @pytest.mark.unit
@@ -173,7 +229,43 @@ def test_crash_early_missing_category_and_product_name():
     module1 = _module1(leaf_category="", product_name="")
     matrix = _matrix(brand_tier="大牌官方", relative_price_level="高水位")
     with pytest.raises(ValueError, match="leaf_category 与 product_name"):
-        engine._derive_product_target_audience(module1, _proposal("物理安全与风险规避"), matrix)
+        engine._derive_product_target_audience(
+            module1,
+            _proposal("物理安全与风险规避"),
+            matrix,
+            persuasion_requirement_profile=_real_profile(),
+        )
+
+
+# ---------------------------------------------------------------------------
+# F3 Crash Early：profile 为空
+# ---------------------------------------------------------------------------
+@pytest.mark.unit
+def test_crash_early_empty_profile():
+    engine = _engine()
+    module1 = _module1(
+        leaf_category="宝宝防蚊水",
+        product_name="润本驱蚊液",
+        core_selling_point="温和驱蚊",
+        target_people="婴幼儿人群",
+    )
+    matrix = _matrix(brand_tier="大牌官方", relative_price_level="高水位")
+    # profile=None
+    with pytest.raises(ValueError, match="persuasion_requirement_profile 为空"):
+        engine._derive_product_target_audience(
+            module1,
+            _proposal("物理安全与风险规避"),
+            matrix,
+            persuasion_requirement_profile=None,
+        )
+    # profile 存在但 persuasion_requirements 为空
+    with pytest.raises(ValueError, match="persuasion_requirements 为空"):
+        engine._derive_product_target_audience(
+            module1,
+            _proposal("物理安全与风险规避"),
+            matrix,
+            persuasion_requirement_profile={"persuasion_requirements": []},
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -189,7 +281,12 @@ def test_no_segments_field_naming():
         target_people="婴幼儿人群",
     )
     matrix = _matrix(brand_tier="大牌官方", relative_price_level="高水位")
-    result = engine._derive_product_target_audience(module1, _proposal("物理安全与风险规避"), matrix)
+    result = engine._derive_product_target_audience(
+        module1,
+        _proposal("物理安全与风险规避"),
+        matrix,
+        persuasion_requirement_profile=_real_profile(),
+    )
 
     def _assert_no_segments(obj):
         if isinstance(obj, dict):

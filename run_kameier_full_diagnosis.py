@@ -13,9 +13,6 @@ from commerce_video_diagnosis.understanding.engines.product_diagnoser import (  
     DiagnosticInput,
     ProductDiagnosisEngine,
 )
-from commerce_video_diagnosis.understanding.engines.persuasion_requirement_engine import (  # noqa: E402
-    build_persuasion_requirement_profile,
-)
 
 PRODUCT_NAME = "KAMEIER卡玫尔 4支峰型凸面中硬毛牙刷螺旋深层清洁护龈家用成人适用高档"
 SHOP_NAME = "秉晟精品严选店"
@@ -80,44 +77,15 @@ payload = DiagnosticInput(
 engine = ProductDiagnosisEngine()
 diagnosis = engine.diagnose(payload)
 
-_cat_matrix = diagnosis.category_intent_matrix
-_cognition_attribute = (
-    f"{_cat_matrix.ocean}-{_cat_matrix.competition_focus}"
-    if _cat_matrix.competition_focus else _cat_matrix.ocean
-)
-
-product_fact = {
-    "leaf_category": LEAF_CATEGORY,
-    "category": f"个人护理 > 口腔护理 > {LEAF_CATEGORY}",
-    "title": PRODUCT_NAME,
-    "shop_name": SHOP_NAME,
-    "price": float(PRICE),
-    "price_attribute": diagnosis.product_intent_matrix.relative_price_level,
-    # Step1 白名单结论：未命中 -> trust 走"白牌/高"
-    "trust_attribute": TRUST_ATTRIBUTE,
-    "trust_barrier": TRUST_BARRIER,
-    "cognition_attribute": _cognition_attribute,
-    "frequency_attribute": diagnosis.category_intent_matrix.frequency,
-    "endorsement_attribute": "无明确权威背书",
-    "channel_risk_attribute": "中",
-    "jtbd_level1": diagnosis.domain,
-    "jtbd_level2": diagnosis.primary_task,
-    "selling_points": CORE_SELLING_POINTS,
-    "certifications": [],
-    "authority_endorsements": [],
-    "evidence": BRIDGE_SOURCE_EVIDENCE,
-    "source_evidence": "商品图：125°峰尖裁切 / 22孔菱形超密植毛 / 物理磨尖+螺旋刷丝 / 4支家庭装",
-    "risk_points": [
-        "白牌品牌信任度低，缺少权威背书",
-        "牙刷高频低价品类，用户易在多个白牌间漂移",
-        "无明确售价（实际价位以店铺为准）",
-    ],
-}
-
-profile = build_persuasion_requirement_profile(product_fact, content_goal="purchase")
-
+# F5/F3：persuasion_requirement_profile 现由 ProductDiagnosisEngine 内部产出并随主输出装配，
+# runner 不再后挂 profile。直接从引擎输出读取并断言非空（为空 Crash Early，不兜底生成）。
 out = diagnosis.dict(exclude_none=True)
-out["persuasion_requirement_profile"] = profile
+profile = out.get("persuasion_requirement_profile")
+if not profile or not profile.get("persuasion_requirements"):
+    raise ValueError(
+        "引擎输出的 persuasion_requirement_profile 为空或 persuasion_requirements 为空，"
+        "停止输出（Crash Early，不做后挂兜底）。"
+    )
 out["brand_whitelist_routing"] = {
     "shop_name": SHOP_NAME,
     "hit": False,

@@ -92,7 +92,8 @@
     "reasoning_chain": {
       "task_to_role": "唯一任务「物理安全与风险规避」对应购买角色「风险责任人」。",
       "role_category_to_age_gender": "购买角色「风险责任人」叠加品类信号：命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性。",
-      "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+      "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。",
+      "persuasion_profile_to_audience": "需满足说服要求「暴露当前痛点(expose_current_pain)」、「证明人群适配(prove_user_fit)」、「证明场景适配(prove_scenario_fit)」（profile 共 12 条说服要求，其中 required/high 优先项 11 条）→ 因此核心说服对象指向「年长中高消费力女性」。"
     },
     "caveats": [
       "大牌官方且高水位：若强调套装/分量价值，也可覆盖低消费力人群（追加低消费力 secondary）。"
@@ -603,7 +604,7 @@
         "comparison_object_evidence_type": "jtbd_inferred",
         "difference_domain": "functional",
         "difference_type": "风险降低",
-        "conclusion": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯",
+        "conclusion": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯",
         "evidence_chain": [
           {
             "evidence_source": "JTBD推断",
@@ -622,7 +623,7 @@
             "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
           }
         ],
-        "summary": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+        "summary": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
       },
       "second_level_category": "驱蚊用品",
       "third_level_category": "宝宝防蚊水"
@@ -670,7 +671,7 @@
         },
         {
           "evidence_source": "差异结论",
-          "evidence_text": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+          "evidence_text": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
         },
         {
           "evidence_source": "JTBD推断",
@@ -746,7 +747,7 @@
         },
         {
           "evidence_source": "差异结论",
-          "evidence_text": "该驱蚊液含15%/20%派卡瑞丁，有A级驱蚊力，能防蚊8小时、耐汗保护7小时；7%款驱蚊酯日常居家使用温和不刺激，经第三方检测为0刺激，可减少刺激；能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障；有广告审查号及第三方检测报告，安全可溯"
+          "evidence_text": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
         },
         {
           "evidence_source": "JTBD推断",
@@ -1162,7 +1163,8 @@
     "architecture": "product_diagnosis_v3_jtbd_four_stage",
     "classifier_mode": "llm_default",
     "max_retries": 3,
-    "keyword_rule_trace_count": 0
+    "keyword_rule_trace_count": 0,
+    "content_goal": "purchase"
   },
   "schema_version": "v2.2",
   "secondary_benefits": [],
