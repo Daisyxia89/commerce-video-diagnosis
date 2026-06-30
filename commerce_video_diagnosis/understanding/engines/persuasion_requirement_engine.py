@@ -60,6 +60,8 @@ from core_skill.schemas.protocols import (  # noqa: E402
     assert_no_deprecated_persuasion_keys,
 )
 
+from commerce_video_diagnosis.understanding.gift_context import detect_gift_context  # noqa: E402
+
 def _locate_project_root() -> Path:
     """从当前文件向上查找包含 ``core_skill/dictionaries`` 的项目根目录。
 
@@ -101,6 +103,25 @@ BASE_GENERIC_REQUIREMENTS: tuple[str, ...] = (
 SRC_GENERIC = "persuasion_requirement_dictionary"
 SRC_JTBD = "JTBD_requirement_template_dictionary"
 SRC_CATEGORY = "category_purchase_criteria_dictionary"
+# 第五批：gift_context 送礼场景识别命中时，激活已有 active requirement 的来源标记。
+SRC_GIFT_CONTEXT = "gift_context_rule"
+
+# gift_context 映射的已有 active requirement（严禁新造 id；均在 23 条白名单内）。
+# 每条给出礼赠判断方向的 success_criteria 实例化模板（{recipient} 由识别结果填充）。
+GIFT_CONTEXT_REQUIREMENTS: tuple[tuple[str, str], ...] = (
+    (
+        "identify_target_user",
+        "锁定受礼者人群「{recipient}」，让购买者（{decider}）确认这件礼物送给「{recipient}」对号入座。",
+    ),
+    (
+        "prove_user_fit",
+        "证明商品适配受礼者「{recipient}」的身份与使用习惯，让送礼不出错、拿得出手、体面合适。",
+    ),
+    (
+        "clarify_usage_scenario",
+        "明确「{scene}」作为礼物送给「{recipient}」的送礼场景，让购买者判断与送礼诉求相关。",
+    ),
+)
 
 _PRIORITY_RANK = {"low": 0, "medium": 1, "high": 2}
 _RANK_PRIORITY = {0: "low", 1: "medium", 2: "high"}
@@ -280,6 +301,11 @@ class PersuasionRequirementEngine:
 
         # —— 6. R/P 属性补充：价格 / 信任抗性强化 ——
         self._supplement_rp_requirements(bucket, product_fact)
+
+        # —— 6.5 gift_context 激活（第五批）：识别送礼场景 → 激活已有 active requirement ——
+        # 映射礼赠判断方向（受礼者是否适合 / 送礼是否不出错 / 送礼场景是否相关），
+        # source 追加 gift_context_rule，success_criteria 实例化。严禁新造 requirement_id。
+        self._apply_gift_context_requirements(bucket, product_fact)
 
         # —— 7+8. 动态计算 priority / required / sequence_rank + success_criteria ——
         for rid, rec in bucket.items():
@@ -500,6 +526,53 @@ class PersuasionRequirementEngine:
         # 信任抗性：白牌/低信任 → 补充来源可信
         if any(k in trust_attr for k in ("白牌", "低信任", "低", "white")):
             self._merge_requirement(bucket, "prove_source_credibility", source=SRC_GENERIC)
+
+    # ------------------------------------------------- gift_context 礼赠激活
+    def _apply_gift_context_requirements(
+        self, bucket: dict[str, dict[str, Any]], product_fact: Mapping[str, Any]
+    ) -> None:
+        """第五批：识别 gift_context（送礼场景）→ 激活已有 active requirement。
+
+        信号来源：标题 / 卖点 / source_evidence / 目标人群原始线索（target_people_raw）。
+        命中送礼信号后，把 GIFT_CONTEXT_REQUIREMENTS 中的已有 active requirement
+        以 source=gift_context_rule 合并入 bucket，并用 gift_context 实例化
+        success_criteria（受礼者是否适合 / 送礼是否不出错 / 送礼场景是否相关）。
+        不新造任何 requirement_id；非送礼样本无任何影响。
+        """
+        segments = [
+            product_fact.get("title"),
+            product_fact.get("selling_points"),
+            product_fact.get("source_evidence"),
+            product_fact.get("target_people_raw"),
+            product_fact.get("category"),
+            product_fact.get("leaf_category"),
+        ]
+        gift_context = detect_gift_context(segments)
+        if not gift_context:
+            return
+        recipient = gift_context.get("gift_recipient") or "受礼者"
+        decider = gift_context.get("purchase_decider") or "送礼者"
+        scene = gift_context.get("gift_scene") or "通用送礼"
+        for rid, criteria_tpl in GIFT_CONTEXT_REQUIREMENTS:
+            # 防御：映射的 id 必须在 active 白名单内（否则字典/常量漂移，Crash Early）。
+            if rid not in self.active_ids:
+                raise ValueError(
+                    f"gift_context 映射的 requirement_id={rid} 不在 active 白名单内，"
+                    f"禁止新造或激活非 active 要求。"
+                )
+            instantiated_criteria = criteria_tpl.format(
+                recipient=recipient, decider=decider, scene=scene
+            )
+            self._merge_requirement(
+                bucket,
+                rid,
+                source=SRC_GIFT_CONTEXT,
+                instantiated_criteria=instantiated_criteria,
+                instantiation=(
+                    f"送礼场景识别：{decider} 为 {recipient} 选礼（{scene}），"
+                    f"围绕该礼赠判断方向补足说服。"
+                ),
+            )
 
     # --------------------------------------------- 动态 priority / required 计算
     def _compute_priority_required(

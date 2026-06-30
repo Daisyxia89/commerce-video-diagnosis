@@ -29,6 +29,7 @@ from commerce_video_diagnosis.understanding.module3_intent_derivation import (
 )
 from commerce_video_diagnosis.understanding.validators.schema_assertions import VALID_JTBD, assert_product_diagnosis
 from commerce_video_diagnosis.understanding.keyword_rules import assert_rule_trace, build_rule_trace, get_mapping_of_string_lists, get_string_list
+from commerce_video_diagnosis.understanding.gift_context import detect_gift_context
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -96,10 +97,14 @@ AUDIENCE_FEMALE_KEYWORDS: tuple[str, ...] = (
 AUDIENCE_MALE_KEYWORDS: tuple[str, ...] = (
     "汽车", "车载", "机油", "工具", "五金", "户外", "钓鱼", "男士", "剃须",
     "电竞", "装备", "摩托",
+    # 第五批：性别信号辅助扩展（仅作非送礼样本的八大人群派生辅助，不替代 gift_context 分支）。
+    "男性", "男装",
 )
 AUDIENCE_MATURE_KEYWORDS: tuple[str, ...] = (
     "母婴", "宝宝", "儿童", "家庭", "辅食", "老人", "养生", "保健", "厨房",
     "家清", "驱蚊", "照护",
+    # 第五批：年龄信号辅助扩展（中老年），同样仅作非送礼样本的辅助。
+    "中年", "中老年",
 )
 AUDIENCE_YOUNG_KEYWORDS: tuple[str, ...] = (
     "潮玩", "盲盒", "零食", "球鞋", "电竞", "新奇", "学生", "ins", "网红", "二次元",
@@ -1011,6 +1016,10 @@ class Module1Output:
     differentiator: StructuredDifferentiator
     second_level_category: str = ""
     third_level_category: str = ""
+    # 接入层（第五批）：保留模块 1 目标人群的**原始未截断信号**，供 gift_context
+    # 送礼场景识别使用。target_people 仍是归一化后的「XX人群」标签（不破坏既有
+    # JTBD/people_summary 逻辑）；target_people_raw 不剥离节日/送礼/对象/关系词。
+    target_people_raw: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -1841,6 +1850,7 @@ class ProductDiagnosisEngine:
             gated_proposal,
             product_matrix,
             persuasion_requirement_profile=persuasion_requirement_profile,
+            product_fact=product_fact,
         )
         reasoning_path = self._compose_reasoning_path(llm_proposal, gated_proposal, gate_notes, category_matrix, product_matrix)
         assertions = self._build_assertions()
@@ -1906,6 +1916,8 @@ class ProductDiagnosisEngine:
     def _run_module1(self, payload: DiagnosticInput) -> Module1Output:
         target_people = self._normalize_target_people(payload)
         differentiator = self._normalize_differentiator(payload)
+        # 接入层（第五批）：保留原始未截断的目标人群信号，不剥离节日/送礼/对象/关系词。
+        target_people_raw = str(payload.target_people or "").strip()
         module1_output = Module1Output(
             leaf_category=payload.leaf_category.strip(),
             shop_name=payload.shop_name.strip(),
@@ -1917,9 +1929,42 @@ class ProductDiagnosisEngine:
             core_selling_point_source=payload.core_selling_point_source.strip(),
             target_people=target_people,
             differentiator=differentiator,
+            target_people_raw=target_people_raw,
         )
         self._assert_module1_output(module1_output, payload)
+        # 接入层 raw signal trace：若原始人群线索/卖点/证据命中送礼信号，记录来源，便于追溯。
+        self._record_gift_signal_trace(payload, module1_output)
         return module1_output
+
+    def _record_gift_signal_trace(
+        self, payload: DiagnosticInput, module1_output: Module1Output
+    ) -> None:
+        """接入层 gift signal raw trace：识别送礼信号来源并登记到 keyword_rule_traces。
+
+        仅做可追溯记录，不改变任何派生结果；非送礼样本无 trace。
+        """
+        segments = [
+            module1_output.product_name,
+            module1_output.core_selling_point,
+            module1_output.target_people_raw,
+            module1_output.leaf_category,
+            *(str(x) for x in (payload.bridge_source_evidence or [])),
+        ]
+        gift_context = detect_gift_context(segments)
+        if not gift_context:
+            return
+        evidence = gift_context.get("evidence") or []
+        self._record_keyword_rule_trace(
+            field_name="gift_context",
+            output_value=(
+                f"is_gift=true;scene={gift_context.get('gift_scene')};"
+                f"recipient={gift_context.get('gift_recipient')};"
+                f"decider={gift_context.get('purchase_decider')}"
+            ),
+            rule_path="product_diagnoser.gift_context",
+            matched_keyword="、".join(evidence) if evidence else "gift_signal",
+            source_rule="gift_context_raw_signal_trace",
+        )
 
     def _normalize_target_people(self, payload: DiagnosticInput) -> str:
         raw = str(payload.target_people or "").strip()
@@ -2531,6 +2576,8 @@ class ProductDiagnosisEngine:
             "core_selling_point_source",
             "target_people",
             "differentiator",
+            # 第五批：原始未截断目标人群信号（供 gift_context 识别）。
+            "target_people_raw",
         }
         if set(module1_output.to_dict().keys()) != expected_keys:
             raise ValueError("模块 1 出参字段越界。")
@@ -4759,6 +4806,9 @@ class ProductDiagnosisEngine:
             "price_attribute": product_matrix.relative_price_level,
             "selling_points": selling_points,
             "source_evidence": source_evidence,
+            # 第五批：透传模块 1 目标人群原始未截断信号，供 profile 引擎识别 gift_context
+            # （送礼对象/时机/意图），不剥离节日/送礼/对象/关系词。
+            "target_people_raw": module1_output.target_people_raw or "",
             # 结构化 risk_points 当前不在商品输入协议内，没有就传 []（禁止伪造）。
             "risk_points": [],
         }
@@ -4771,6 +4821,7 @@ class ProductDiagnosisEngine:
         product_matrix: ProductIntentMatrix,
         *,
         persuasion_requirement_profile: dict[str, Any] | None = None,
+        product_fact: Mapping[str, Any] | None = None,
     ) -> ProductTargetAudience:
         """确定性派生商品目标人群（八大人群坐标）。
 
@@ -4811,6 +4862,41 @@ class ProductDiagnosisEngine:
         if not leaf_category and not product_name:
             raise ValueError(
                 "product_target_audience: leaf_category 与 product_name 同时为空，无法判定年龄/性别（属性缺失）。"
+            )
+
+        # ---- 第五批：gift_context 双重角色分支（优先级高于品牌价格消费力规则）----
+        # 识别送礼场景后，primary=购买决策者（送礼者），secondary=受礼者；
+        # 第四段必须解释购买者与受礼者关系并引用真实 requirement。
+        # 非送礼样本返回 None，完全保持原八大人群派生逻辑不变。
+        # 识别口径与 profile 引擎完全一致（见 persuasion_requirement_engine
+        # ._apply_gift_context_requirements）：优先消费 product_fact 的同一组信号
+        # （title/selling_points/source_evidence/target_people_raw/category），
+        # 保证 profile 激活礼赠类 requirement 时 audience 也能同步拆分双重角色，
+        # 不出现「profile 判为送礼、audience 仍走机械八大人群」的口径漂移。
+        # product_fact 缺省（仅 module1 直连场景）时回落到模块 1 字段。
+        if product_fact is not None:
+            gift_segments: list[Any] = [
+                product_fact.get("title"),
+                product_fact.get("selling_points"),
+                product_fact.get("source_evidence"),
+                product_fact.get("target_people_raw"),
+                product_fact.get("category"),
+                product_fact.get("leaf_category"),
+            ]
+        else:
+            gift_segments = [
+                module1_output.target_people_raw or "",
+                product_name,
+                module1_output.core_selling_point or "",
+                leaf_category,
+            ]
+        gift_context = detect_gift_context(gift_segments)
+        if gift_context and gift_context.get("is_gift"):
+            return self._build_gift_context_audience(
+                primary_task=primary_task,
+                role=role,
+                gift_context=gift_context,
+                persuasion_requirement_profile=persuasion_requirement_profile,
             )
 
         text = "".join(
@@ -4955,6 +5041,114 @@ class ProductDiagnosisEngine:
             brand_price_to_consumption_power=f"{consumption_reason}。",
             persuasion_profile_to_audience=persuasion_profile_to_audience,
         )
+
+        return ProductTargetAudience(
+            primary_audiences=primary_audiences,
+            secondary_audiences=secondary_audiences,
+            weak_fit_audiences=[],
+            reasoning_chain=reasoning_chain,
+            caveats=caveats,
+        )
+
+    def _build_gift_context_audience(
+        self,
+        *,
+        primary_task: str,
+        role: str,
+        gift_context: dict[str, Any],
+        persuasion_requirement_profile: dict[str, Any],
+    ) -> ProductTargetAudience:
+        """第五批：gift_context 送礼场景下的双重角色人群派生。
+
+        - primary_audiences = purchase_decider（购买决策者 / 送礼者）；
+        - secondary_audiences = gift_recipient（受礼者）；
+        - 第四段 persuasion_profile_to_audience 必须解释购买者与受礼者关系，
+          并引用 profile 中真实 requirement（优先 gift_context_rule 来源的礼赠类要求）。
+
+        通用规则：对任意送礼对象/时机/意图生效，不做单样本硬编码；显式送礼/受礼者
+        信号优先于品牌价格消费力规则（此分支直接覆盖机械八大人群派生）。
+        """
+        scene = gift_context.get("gift_scene") or "通用送礼"
+        recipient = gift_context.get("gift_recipient") or "受礼者"
+        demographic = gift_context.get("recipient_demographic") or ""
+        decider = gift_context.get("purchase_decider") or "送礼者"
+        relationship = gift_context.get("relationship") or "通用送礼"
+        evidence = gift_context.get("evidence") or []
+
+        recipient_label = f"{recipient}/{demographic}" if demographic and demographic != "不限" else recipient
+
+        # ---- 引用 profile 中真实 requirement：优先 gift_context_rule 来源，其次 required/high ----
+        requirements = list(persuasion_requirement_profile.get("persuasion_requirements") or [])
+
+        def _req_attr(req: Any, key: str) -> Any:
+            if isinstance(req, Mapping):
+                return req.get(key)
+            return getattr(req, key, None)
+
+        gift_sourced = [
+            r for r in requirements if "gift_context_rule" in (list(_req_attr(r, "source") or []))
+        ]
+        high_priority_reqs = [
+            r
+            for r in requirements
+            if bool(_req_attr(r, "required")) or str(_req_attr(r, "priority") or "") == "high"
+        ]
+        if gift_sourced:
+            referenced_reqs = gift_sourced
+        elif high_priority_reqs:
+            referenced_reqs = high_priority_reqs
+        else:
+            referenced_reqs = requirements[:1]
+        ref_labels = [
+            f"「{_req_attr(r, 'requirement_name')}({_req_attr(r, 'requirement_id')})」"
+            for r in referenced_reqs[:3]
+        ]
+
+        evidence_text = "、".join(evidence[:6]) if evidence else "送礼信号"
+        primary_reason = (
+            f"送礼场景识别（命中：{evidence_text}）：购买决策者为「{decider}」（送礼者），"
+            f"该商品作为「{scene}」礼物由其购买，故核心说服对象（primary）= 购买决策者。"
+        )
+        secondary_reason = (
+            f"受礼者为「{recipient_label}」，是商品的实际使用者但非购买决策者，"
+            f"作为次级说服对象（secondary），关系：{relationship}。"
+        )
+        primary_audiences = [
+            AudienceGroupJudgment(audience_group=decider, fit_level="primary", reason=primary_reason)
+        ]
+        secondary_audiences = [
+            AudienceGroupJudgment(
+                audience_group=recipient_label, fit_level="secondary", reason=secondary_reason
+            )
+        ]
+
+        persuasion_profile_to_audience = (
+            f"送礼关系「{relationship}」：购买者（{decider}）为受礼者（{recipient_label}）选礼，"
+            f"二者非同一人；需满足说服要求{'、'.join(ref_labels)}"
+            f"（profile 共 {len(requirements)} 条，其中 gift_context_rule 礼赠类 {len(gift_sourced)} 条）"
+            f"→ 因此核心说服对象（primary）指向购买决策者「{decider}」，受礼者「{recipient_label}」为次级（secondary）。"
+        )
+
+        reasoning_chain = AudienceReasoningChain(
+            task_to_role=(
+                f"唯一任务「{primary_task}」对应购买角色「{role}」；"
+                f"叠加 gift_context 送礼场景，实际购买决策者收敛为「{decider}」。"
+            ),
+            role_category_to_age_gender=(
+                f"送礼双重角色：购买者「{decider}」与受礼者「{recipient_label}」"
+                f"通常非同一人/年龄/性别，故不按单一八大人群坐标机械派生。"
+            ),
+            brand_price_to_consumption_power=(
+                "显式送礼/受礼者信号优先于品牌价格消费力规则：本分支按送礼关系直接派生人群，"
+                "品牌×价格消费力仅作辅助参考，不覆盖送礼信号。"
+            ),
+            persuasion_profile_to_audience=persuasion_profile_to_audience,
+        )
+
+        caveats = [
+            f"礼赠场景（{scene}）：送礼者≠受礼者，目标人群已区分购买决策者（{decider}）与受礼者（{recipient_label}）。",
+            "gift_context 由确定性查表识别（送礼对象/时机/意图三类信号），未引入 LLM 语义推断。",
+        ]
 
         return ProductTargetAudience(
             primary_audiences=primary_audiences,
