@@ -488,7 +488,6 @@ class CandidateSet:
     r_rule: str = ""
     p_rule: str = ""
     task_domain: str = "functional"
-    rule_version: str = ""
 
     def to_dict(self) -> JSONDict:
         return asdict(self)
@@ -520,7 +519,6 @@ class ProductHEC:
     cta_label: str = ""
     activation_tags: list[str] = field(default_factory=list)
     risk_flags: list[str] = field(default_factory=list)
-    risk_tag: str = ""
     soft_constraint_results: list[SoftConstraintResult | JSONDict] = field(default_factory=list)
     route_tags: list[str] = field(default_factory=list)
 
@@ -717,3 +715,297 @@ __all__ = [
     "MatchVerdict",
     "ScriptPackage",
 ]
+
+
+# =============================================================================
+# 说服要求建模模块（Persuasion Requirement Modeling）协议族 —— V3.1 一期
+#
+# 关联：PRD1 §7（输出协议）、§8（说服要求框架）、§11（视频诊断契约）、§12（工程断言）。
+# 由 core_skill/engines/product_diagnoser.py 反向 import；不在本文件迁移
+# ProductDiagnosisOutput（一期边界：保持其原位定义）。
+# 所有模型继承 StrictBaseModel（extra="forbid"），任何越界字段一律拦截。
+# =============================================================================
+
+# decision_gap 七分类（PRD1 §8.1）
+DECISION_GAP_VALUES: tuple[str, ...] = (
+    "need_gap",
+    "fit_gap",
+    "value_gap",
+    "proof_gap",
+    "trust_gap",
+    "risk_gap",
+    "action_gap",
+)
+DecisionGap = Literal[
+    "need_gap",
+    "fit_gap",
+    "value_gap",
+    "proof_gap",
+    "trust_gap",
+    "risk_gap",
+    "action_gap",
+]
+
+# content_goal 九项闭集（PRD1 §6.2）
+CONTENT_GOAL_VALUES: tuple[str, ...] = (
+    "conversion",
+    "purchase",
+    "add_to_cart",
+    "coupon_claim",
+    "shop_entry",
+    "seeding",
+    "education",
+    "brand_awareness",
+    "unknown",
+)
+ContentGoal = Literal[
+    "conversion",
+    "purchase",
+    "add_to_cart",
+    "coupon_claim",
+    "shop_entry",
+    "seeding",
+    "education",
+    "brand_awareness",
+    "unknown",
+]
+
+# action_gap 仅在以下 5 类转化目标下激活（PRD1 §6.2 / §12.3）
+ACTION_GOALS: frozenset[str] = frozenset(
+    {"conversion", "purchase", "add_to_cart", "coupon_claim", "shop_entry"}
+)
+
+# 23 条 active MVP 白名单（PRD1 §8.2 / §12.1.1）——线上唯一合法 requirement 集合
+ACTIVE_REQUIREMENT_WHITELIST: tuple[str, ...] = (
+    "expose_current_pain",
+    "clarify_usage_scenario",
+    "identify_target_user",
+    "prove_user_fit",
+    "prove_scenario_fit",
+    "prove_spec_fit",
+    "prove_core_benefit",
+    "prove_new_solution_efficiency",
+    "establish_clear_difference",
+    "prove_replacement_value",
+    "prove_price_reasonableness",
+    "provide_visible_result",
+    "prove_effect_not_degraded",
+    "prove_quality_stability",
+    "establish_basic_trust",
+    "prove_source_credibility",
+    "provide_authority_endorsement",
+    "reduce_trial_risk",
+    "resolve_quality_risk",
+    "resolve_safety_risk",
+    "resolve_value_risk",
+    "prove_current_purchase_reason",
+    "clarify_purchase_threshold",
+)
+
+Priority = Literal["high", "medium", "low"]
+JTBDTemplateStatus = Literal["matched", "fallback_generic"]
+RequirementCompletionStatus = Literal["completed", "partial", "missing", "not_applicable"]
+
+# requirement_completion_schema.status_enum 固定值（PRD1 §11.1）
+REQUIREMENT_STATUS_ENUM: tuple[str, ...] = ("completed", "partial", "missing", "not_applicable")
+# 诊断维度固定值（PRD1 §11.1）
+DIAGNOSIS_DIMENSIONS: tuple[str, ...] = (
+    "whether_requirement_appears",
+    "whether_evidence_is_sufficient",
+    "whether_sequence_is_reasonable",
+    "whether_risk_is_resolved",
+)
+
+# 旧字段废弃黑名单（PRD1 §13.3 / §12.1.7）——出现一次即拦截，不允许并存
+DEPRECATED_PERSUASION_KEYS: tuple[str, ...] = (
+    "persuasion_profile",
+    "required_persuasion_tasks",
+    "task_id",
+    "task_name",
+    "task_type",
+    "hec_task_mapping",
+)
+
+
+def assert_no_deprecated_persuasion_keys(payload: Any, *, where: str = "payload") -> None:
+    """旧说服任务字段强拦截（PRD1 §12.1.7、§13.3）。
+
+    旧 ``persuasion_profile`` 概念已废弃，不再双写；新协议统一使用
+    ``persuasion_requirement_profile``。任意旧字段出现一次即抛错，禁止静默放过。
+    """
+    if not isinstance(payload, dict):
+        return
+    hit = [key for key in DEPRECATED_PERSUASION_KEYS if key in payload]
+    if hit:
+        raise ValueError(
+            f"{where} 命中已废弃说服任务字段 {hit}；旧 persuasion_profile 概念已废弃，"
+            f"请统一使用 persuasion_requirement_profile（PRD1 §12.1.7/§13.3）。"
+        )
+
+
+class PersuasionRequirement(StrictBaseModel):
+    """单条说服要求（PRD1 §7.4）。requirement_id 必须命中 23 条 active 白名单。"""
+
+    requirement_id: str
+    requirement_name: str
+    decision_gap: DecisionGap
+    source: list[str] = Field(default_factory=list)
+    priority: Priority
+    required: bool
+    sequence_rank: int = Field(ge=10, le=59)
+    success_criteria: str
+    related_decision_criteria: list[str] = Field(default_factory=list)
+    required_evidence_requirements: list[str] = Field(default_factory=list)
+    risk_points: list[str] = Field(default_factory=list)
+
+    @validator("requirement_id")
+    def _requirement_in_whitelist(cls, value: str) -> str:
+        if value not in ACTIVE_REQUIREMENT_WHITELIST:
+            raise ValueError(
+                f"requirement_id={value} 不在 23 条 active MVP 白名单内（PRD1 §12.1.1）。"
+            )
+        return value
+
+    @validator("source")
+    def _source_not_empty(cls, value: list[str]) -> list[str]:
+        if not value:
+            raise ValueError("persuasion_requirement.source 不允许为空。")
+        return value
+
+
+class NotApplicableRequirement(StrictBaseModel):
+    """未激活要求（PRD1 §7.4 not_applicable_requirements）。"""
+
+    requirement_id: str
+    decision_gap: DecisionGap
+    status: Literal["not_applicable"] = "not_applicable"
+    reason: str
+
+    @validator("requirement_id")
+    def _requirement_in_whitelist(cls, value: str) -> str:
+        if value not in ACTIVE_REQUIREMENT_WHITELIST:
+            raise ValueError(
+                f"not_applicable requirement_id={value} 不在 23 条 active 白名单内（PRD1 §12.1.1）。"
+            )
+        return value
+
+
+class PrimaryJTBD(StrictBaseModel):
+    level1: str
+    level2: str
+
+
+class CategoryResistance(StrictBaseModel):
+    rule: str
+    summary: str
+
+
+class ProductConversionBarrier(StrictBaseModel):
+    rule: str
+
+
+class MainPersuasionRoute(StrictBaseModel):
+    """主说服路线（PRD1 §7.2 main_persuasion_route）。"""
+
+    primary_jtbd: PrimaryJTBD
+    category_resistance: CategoryResistance
+    product_conversion_barrier: ProductConversionBarrier
+
+
+class ActivatedCategoryRequirements(StrictBaseModel):
+    """品类扩展激活结果（PRD1 §7.2 activated_category_requirements）。
+
+    未命中路由字典时三段固定为空、routing_confidence 为空字符串。
+    routing_confidence 在此结构内透出（PRD1 §9.4 / TC-CR-005），避免污染顶层协议字段集合。
+    """
+
+    category_group: str
+    routing_confidence: str = ""
+    activated_decision_criteria: list[str] = Field(default_factory=list)
+    activated_evidence_requirements: list[str] = Field(default_factory=list)
+    activated_risk_points: list[str] = Field(default_factory=list)
+
+
+class RequirementCompletionSchema(StrictBaseModel):
+    """requirement 完成度契约（PRD1 §11.1）。"""
+
+    status_enum: list[RequirementCompletionStatus] = Field(
+        default_factory=lambda: list(REQUIREMENT_STATUS_ENUM)
+    )
+    minimum_required_requirements: list[str] = Field(default_factory=list)
+    diagnosis_dimensions: list[str] = Field(
+        default_factory=lambda: list(DIAGNOSIS_DIMENSIONS)
+    )
+
+    @validator("status_enum")
+    def _status_enum_fixed(cls, value: list[str]) -> list[str]:
+        if list(value) != list(REQUIREMENT_STATUS_ENUM):
+            raise ValueError(
+                f"status_enum 必须固定为 {list(REQUIREMENT_STATUS_ENUM)}（PRD1 §11.1）。"
+            )
+        return value
+
+    @validator("minimum_required_requirements")
+    def _minimum_in_whitelist(cls, value: list[str]) -> list[str]:
+        illegal = [rid for rid in value if rid not in ACTIVE_REQUIREMENT_WHITELIST]
+        if illegal:
+            raise ValueError(
+                f"minimum_required_requirements 含非白名单项 {illegal}（PRD1 §12.1.1）。"
+            )
+        return value
+
+    @validator("diagnosis_dimensions")
+    def _dimensions_fixed(cls, value: list[str]) -> list[str]:
+        if list(value) != list(DIAGNOSIS_DIMENSIONS):
+            raise ValueError(
+                f"diagnosis_dimensions 必须固定为 {list(DIAGNOSIS_DIMENSIONS)}（PRD1 §11.1）。"
+            )
+        return value
+
+
+class DiagnosisContract(StrictBaseModel):
+    """视频诊断契约（PRD1 §11.1）。"""
+
+    requirement_completion_schema: RequirementCompletionSchema
+
+
+class PersuasionRequirementProfile(StrictBaseModel):
+    """说服要求 profile 顶层协议（PRD1 §7.2）。
+
+    顶层字段集合严格等于 PRD1 §7.2 的 11 项，extra="forbid" 拦截任何越界字段
+    （TC-SC-002）。作为 ProductDiagnosisOutput 的顶层旁路字段输出。
+    """
+
+    profile_version: str = "v3.1"
+    content_goal: ContentGoal
+    category_group: str
+    jtbd_template_status: JTBDTemplateStatus
+    requirement_dictionary_version: str
+    category_purchase_criteria_version: str = ""
+    main_persuasion_route: MainPersuasionRoute
+    activated_category_requirements: ActivatedCategoryRequirements
+    persuasion_requirements: list[PersuasionRequirement] = Field(default_factory=list)
+    not_applicable_requirements: list[NotApplicableRequirement] = Field(default_factory=list)
+    diagnosis_contract: DiagnosisContract
+
+    @root_validator
+    def _action_gap_governance(cls, values: dict[str, Any]) -> dict[str, Any]:
+        """action_gap 激活治理（PRD1 §12.1.3）：
+
+        非转化目标下，persuasion_requirements 不得包含 action_gap 要求；
+        其必须落入 not_applicable_requirements。
+        """
+        content_goal = values.get("content_goal")
+        requirements = values.get("persuasion_requirements") or []
+        if content_goal not in ACTION_GOALS:
+            leaked = [
+                r.requirement_id
+                for r in requirements
+                if getattr(r, "decision_gap", None) == "action_gap"
+            ]
+            if leaked:
+                raise ValueError(
+                    f"content_goal={content_goal} 非转化目标，action_gap 要求 {leaked} "
+                    f"不得进入 persuasion_requirements，必须输出 not_applicable（PRD1 §12.1.3）。"
+                )
+        return values

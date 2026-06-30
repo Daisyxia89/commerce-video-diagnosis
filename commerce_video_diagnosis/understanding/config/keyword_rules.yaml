@@ -226,6 +226,12 @@ product_diagnoser:
       - 内裤
       - 一次性内裤
       - 普通个护
+      - 卸妆
+      - 卸妆膏
+      - 卸妆油
+      - 洁面
+      - 洁面乳
+      - 洗面奶
     emotional_premium_tokens:
       - 香氛
       - 香水
@@ -253,6 +259,20 @@ product_diagnoser:
       - 繁琐
       - 旧动作
       - 旧流程
+    natural_mild_preference_tokens:
+      - 天然
+      - 草本
+      - 植物
+      - 植萃
+      - 少化学
+      - 无添加
+      - 0添加
+      - 无硅油
+      - 温和
+      - 无刺激
+      - 不刺激
+      - 成分干净
+      - 敏感肌可用
     endorsement_tokens:
       - 明星同款
       - 权威认证
@@ -346,6 +366,16 @@ product_diagnoser:
       - 顽固污渍
       - 结块
       - 断裂
+      - 头油
+      - 油腻
+      - 头皮问题
+      - 发根油
+      - 发根油腻
+      - 头皮出油
+      - 头皮屑
+      - 头皮敏感
+      - 脱发
+      - 掉发
     defect_remediation_tokens:
       - 去黄
       - 祛痘
@@ -364,6 +394,54 @@ product_diagnoser:
       - 祛黑头
       - 除垢
       - 抗痘
+      - 控油
+      - 去油
+      - 调理头皮
+      - 改善头油
+      - 修护头皮
+    haircare_defect_signal_tokens:
+      - 头油
+      - 头油困扰
+      - 油腻
+      - 头皮问题
+      - 发根油
+      - 发根油腻
+      - 头皮出油
+      - 头皮屑
+      - 改善头油
+      - 修护头皮
+      - 控油
+    fragrance_category_tokens:
+      - 香水
+      - 香氛
+      - 淡香水
+      - 淡香
+      - 香精
+      - 浓香水
+      - 古龙
+      - 香膏
+    fragrance_sensory_value_tokens:
+      - 持久留香
+      - 留香持久
+      - 前中后调
+      - 前调
+      - 中调
+      - 后调
+      - 香调
+      - 高级香气
+      - 高级撩人香气
+      - 撩人香气
+      - 香氛体验
+    gift_relationship_scene_tokens:
+      - 礼盒
+      - 送礼
+      - 礼物
+      - 送女友
+      - 送男友
+      - 表白
+      - 纪念日
+      - 情人节
+      - 关系表达
     physical_safety_tokens:
       - 烫伤
       - 触电
@@ -650,6 +728,115 @@ product_diagnoser:
       - 黄金珠宝玉石
       - 箱包
       - 眼镜及配件
+  # 第五批：通用 gift_context 送礼场景识别字典（三类：意图 / 时机 / 对象）。
+  # 全部查表，不做 LLM 语义推断；缺该节点时引擎 Crash Early（见 understanding/gift_context.py）。
+  # 不是父亲节/爸爸特例：父亲节/爸爸只是 hla 样本证据，框架对任意送礼对象/时机/意图通用生效。
+  # 注意：避免过短关键词（如单字），防止在标题/ASR 中误触发。
+  gift_context:
+    # 送礼意图（intent）：命中即视为存在送礼信号之一。
+    intent_keywords:
+      - 送礼
+      - 礼物
+      - 礼盒
+      - 礼赠
+      - 送给
+      - 买给
+      - 给他
+      - 给她
+      - 给爸妈
+      - 给长辈
+      - 不出错
+      - 体面
+      - 有面子
+      - 拿得出手
+      - 心意
+      - 仪式感
+    # 送礼时机（scene）：每个 scene 含 keywords；可选 implies_recipient（时机隐含的受礼者）。
+    # scenes 列表顺序即匹配优先级：先出现的 scene 优先命中。
+    scenes:
+      - scene: 父亲节
+        keywords: [父亲节]
+        implies_recipient: 爸爸
+      - scene: 母亲节
+        keywords: [母亲节]
+        implies_recipient: 妈妈
+      - scene: 生日
+        keywords: [生日, 过生日, 生日礼物]
+      - scene: 七夕情人节
+        keywords: [七夕, 情人节, "520"]
+        implies_recipient: 伴侣
+      - scene: 春节过年
+        keywords: [春节, 过年, 年货, 新年礼物]
+      - scene: 中秋端午
+        keywords: [中秋, 端午]
+      - scene: 教师节
+        keywords: [教师节]
+        implies_recipient: 老师
+      - scene: 毕业开学季
+        keywords: [毕业季, 开学季]
+      - scene: 拜访探亲
+        keywords: [结婚, 乔迁, 探亲, 拜访]
+      - scene: 纪念日节日
+        keywords: [纪念日, 节日礼物]
+    # 送礼对象（recipient）：每个 recipient 含 keywords + 受礼者画像 + 购买决策者 + 关系。
+    # recipients 列表顺序即匹配优先级：先出现的 recipient 优先命中。
+    recipients:
+      - recipient: 爸爸
+        demographic: 中年男性
+        purchase_decider: 成年子女
+        relationship: 子女送父亲
+        keywords: [爸爸, 父亲, 老爸, 爸比, 老爹]
+      - recipient: 妈妈
+        demographic: 中年女性
+        purchase_decider: 成年子女
+        relationship: 子女送母亲
+        keywords: [妈妈, 母亲, 老妈, 妈咪]
+      - recipient: 伴侣
+        demographic: 青年
+        purchase_decider: 伴侣
+        relationship: 伴侣互赠
+        keywords: [男朋友, 女朋友, 男友, 女友, 对象, 伴侣, 老公, 老婆, 先生, 太太]
+      - recipient: 孩子
+        demographic: 儿童青少年
+        purchase_decider: 家人
+        relationship: 家庭送礼
+        keywords: [孩子, 宝宝, 儿子, 女儿]
+      - recipient: 长辈
+        demographic: 中老年
+        purchase_decider: 晚辈
+        relationship: 晚辈送长辈
+        keywords: [长辈, 老人, 爷爷, 奶奶, 外公, 外婆, 姥姥, 姥爷]
+      - recipient: 老师
+        demographic: 成年人
+        purchase_decider: 学生或家长
+        relationship: 师生礼赠
+        keywords: [老师]
+      - recipient: 职场关系人
+        demographic: 成年人
+        purchase_decider: 职场关系人
+        relationship: 职场礼赠
+        keywords: [同事, 领导, 客户]
+      - recipient: 朋友
+        demographic: 成年人
+        purchase_decider: 朋友
+        relationship: 朋友互赠
+        keywords: [朋友, 闺蜜, 兄弟, 死党]
+      - recipient: 男士
+        demographic: 男性
+        purchase_decider: 送礼者
+        relationship: 通用送礼
+        keywords: [男士, 男性]
+      - recipient: 女士
+        demographic: 女性
+        purchase_decider: 送礼者
+        relationship: 通用送礼
+        keywords: [女士, 女性]
+    # 无显式/隐含受礼者时的通用回落画像。
+    default_recipient:
+      recipient: 通用受礼者
+      demographic: 不限
+      purchase_decider: 送礼者
+      relationship: 通用送礼
 schema_assertions:
   food_category_tokens:
     - 食品
@@ -680,3 +867,35 @@ video_understanding:
       - 礼物
       - 氛围
       - 收尾
+
+# === PRD-2.2 新增子包登记（本轮仅占位，不引入任何路由分支逻辑）===
+# carried_from_last_round.new_packs_pending_prd
+# kitchen_tools / storage_tools 因 58 池零覆盖不登记，须先补采样本。
+pending_subpackages:
+  makeup_application_tools:
+    status: pending_prd
+    intent: 降本增效
+    sample_terms:
+      - 眼线笔
+      - 眉笔
+      - 粉底工具
+      - 一体盘
+  shaving_grooming_tools:
+    status: pending_prd
+    intent: 降本增效
+    sample_terms:
+      - 剃须刀
+      - 刀头
+  hair_styling_tools:
+    status: pending_prd
+    intent: 缺陷消除
+    sample_terms:
+      - 梳子
+      - 卷发器
+      - 发夹
+  kids_snack_gift:
+    status: pending_prd
+    intent: 社会域→照护/礼赠分层
+    sample_terms:
+      - 儿童零食
+      - 节日礼包

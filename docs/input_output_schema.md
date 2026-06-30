@@ -73,7 +73,15 @@
       "shop_name": "示例店铺",
       "item_name": "示例商品标题",
       "price": 79.9,
-      "core_selling_points": ["快速蓬松定型", "无胶感不粘腻"]
+      "core_selling_points": ["快速蓬松定型", "无胶感不粘腻"],
+      "field_provenance": {
+        "core_selling_points": "caller_product_info",
+        "leaf_category": "caller_product_info",
+        "product_name": "caller_product_info",
+        "brand_name": "product_detail",
+        "product_detail_summary": "product_detail",
+        "category_path": "caller_product_info"
+      }
     },
     "full_product_info": {
       "target_people": ["细软塌发人群"],
@@ -225,7 +233,15 @@
     "shop_name": "示例店铺",
     "item_name": "示例商品标题",
     "price": 79.9,
-    "core_selling_points": ["快速蓬松定型", "无胶感不粘腻"]
+    "core_selling_points": ["快速蓬松定型", "无胶感不粘腻"],
+    "field_provenance": {
+      "core_selling_points": "caller_product_info",
+      "leaf_category": "caller_product_info",
+      "product_name": "caller_product_info",
+      "brand_name": "product_detail",
+      "product_detail_summary": "product_detail",
+      "category_path": "caller_product_info"
+    }
   },
   "full_product_info": {
     "target_people": ["细软塌发人群", "需要快速打理发型的人群"],
@@ -258,7 +274,22 @@
 | `shop_name` | string | **必填** | 店铺名 |
 | `item_name` | string | **必填** | 商品名 / 标题主名 |
 | `price` | number | **必填** | 商品价格 |
-| `core_selling_points` | array[string] | **必填** | 核心卖点列表 |
+| `core_selling_points` | array[string] | **必填** | 核心卖点列表；**只能来自商品信息**（`caller_product_info` 或 `product_detail`），**不得来自视频 ASR/OCR/VLM / video_factpack**；若 `field_provenance.core_selling_points = video_extracted_candidate`，系统必须 Crash Early 阻断 |
+| `field_provenance` | object | 选填 | 字段级来源声明；用于标记 `core_selling_points` / `leaf_category` / `product_name` / `brand_name` / `product_detail_summary` / `category_path` 的来源 |
+
+#### `field_provenance` 来源枚举
+
+`field_provenance` 为可选字段，旧调用可不传；但新增 fixture / regression case 必须显式提供。当前允许的来源枚举值如下：
+
+- `caller_product_info`：调用方直接传入的商品信息
+- `product_detail`：商品详情页抓取
+- `video_extracted_candidate`：从视频 ASR/OCR/VLM 推断
+
+协议硬约束：
+
+- `core_selling_points` **只能**来自 `caller_product_info` 或 `product_detail`
+- `core_selling_points` **不得**来自视频 ASR/OCR/VLM / `video_factpack`
+- 若 `field_provenance.core_selling_points = video_extracted_candidate`，系统必须 **Crash Early**
 
 #### 2）`full_product_info`
 

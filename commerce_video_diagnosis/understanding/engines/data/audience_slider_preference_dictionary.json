@@ -1,0 +1,54 @@
+{
+  "schema_version": "v1",
+  "axes": ["visual", "audio", "proof", "cta"],
+  "preferences": {
+    "年长中高消费力女性": {
+      "visual": {"min": 0.3, "max": 0.7},
+      "audio": {"min": 0.4, "max": 0.8},
+      "proof": {"min": 0.6, "max": 1.0},
+      "cta": {"min": 0.4, "max": 0.8}
+    },
+    "年长低消费力女性": {
+      "visual": {"min": 0.2, "max": 0.6},
+      "audio": {"min": 0.4, "max": 0.8},
+      "proof": {"min": 0.5, "max": 0.9},
+      "cta": {"min": 0.5, "max": 0.9}
+    },
+    "年长中高消费力男性": {
+      "visual": {"min": 0.3, "max": 0.7},
+      "audio": {"min": 0.3, "max": 0.7},
+      "proof": {"min": 0.6, "max": 1.0},
+      "cta": {"min": 0.3, "max": 0.7}
+    },
+    "年长低消费力男性": {
+      "visual": {"min": 0.2, "max": 0.6},
+      "audio": {"min": 0.3, "max": 0.7},
+      "proof": {"min": 0.5, "max": 0.9},
+      "cta": {"min": 0.5, "max": 0.9}
+    },
+    "年轻中高消费力女性": {
+      "visual": {"min": 0.5, "max": 0.9},
+      "audio": {"min": 0.5, "max": 0.9},
+      "proof": {"min": 0.3, "max": 0.7},
+      "cta": {"min": 0.4, "max": 0.8}
+    },
+    "年轻中高消费力男性": {
+      "visual": {"min": 0.5, "max": 0.9},
+      "audio": {"min": 0.4, "max": 0.8},
+      "proof": {"min": 0.4, "max": 0.8},
+      "cta": {"min": 0.4, "max": 0.8}
+    },
+    "年轻低消费力女性": {
+      "visual": {"min": 0.5, "max": 0.9},
+      "audio": {"min": 0.5, "max": 0.9},
+      "proof": {"min": 0.2, "max": 0.6},
+      "cta": {"min": 0.5, "max": 0.9}
+    },
+    "年轻低消费力男性": {
+      "visual": {"min": 0.5, "max": 0.9},
+      "audio": {"min": 0.4, "max": 0.8},
+      "proof": {"min": 0.3, "max": 0.7},
+      "cta": {"min": 0.5, "max": 0.9}
+    }
+  }
+}

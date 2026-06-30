@@ -1,0 +1,28 @@
+{
+  "dictionary_id": "category_group_routing_dictionary",
+  "version": "v3.1_phase1_routing",
+  "note": "leaf_category → category_group 路由 SSOT。category_group 不由 LLM 推断；未命中固定回落 unknown，且不激活品类扩展 requirement。fallback_group 固定为 unknown。",
+  "fallback_group": "unknown",
+  "routes": [
+    {"leaf_category": "速食拌面", "category_group": "食品生鲜", "routing_confidence": "high"},
+    {"leaf_category": "方便速食", "category_group": "食品生鲜", "routing_confidence": "high"},
+    {"leaf_category": "休闲零食", "category_group": "食品生鲜", "routing_confidence": "high"},
+    {"leaf_category": "生鲜水果", "category_group": "食品生鲜", "routing_confidence": "high"},
+    {"leaf_category": "冲调饮品", "category_group": "食品生鲜", "routing_confidence": "medium"},
+    {"leaf_category": "面部精华", "category_group": "美妆个护", "routing_confidence": "high"},
+    {"leaf_category": "面膜", "category_group": "美妆个护", "routing_confidence": "high"},
+    {"leaf_category": "洗发护发", "category_group": "美妆个护", "routing_confidence": "high"},
+    {"leaf_category": "身体护理", "category_group": "美妆个护", "routing_confidence": "medium"},
+    {"leaf_category": "彩妆", "category_group": "美妆个护", "routing_confidence": "high"},
+    {"leaf_category": "女士连衣裙", "category_group": "服饰鞋包", "routing_confidence": "high"},
+    {"leaf_category": "休闲鞋", "category_group": "服饰鞋包", "routing_confidence": "high"},
+    {"leaf_category": "双肩包", "category_group": "服饰鞋包", "routing_confidence": "medium"},
+    {"leaf_category": "男士T恤", "category_group": "服饰鞋包", "routing_confidence": "high"},
+    {"leaf_category": "厨房收纳", "category_group": "居家日用", "routing_confidence": "high"},
+    {"leaf_category": "清洁用品", "category_group": "居家日用", "routing_confidence": "high"},
+    {"leaf_category": "家居纸品", "category_group": "居家日用", "routing_confidence": "medium"},
+    {"leaf_category": "厨房用具", "category_group": "居家日用", "routing_confidence": "high"},
+    {"leaf_category": "宝宝防蚊水", "category_group": "美妆个护", "routing_confidence": "medium"},
+    {"leaf_category": "驱蚊用品", "category_group": "美妆个护", "routing_confidence": "medium"}
+  ]
+}

@@ -1,0 +1,595 @@
+[MAIN] Starting B20_N02 trace run...
+[TOKEN_SETS] ORDINARY_DAILY_TOKENS = ['一次性内裤', '内裤', '卸妆', '卸妆油', '卸妆膏', '基础洗护', '家清', '护肤', '日化', '日用消耗', '普通个护', '普通美妆', '沐浴', '洁面', '洁面乳', '洗发', '洗衣', '洗面奶', '湿巾', '牙膏', '纸巾', '防晒', '面膜']
+[TOKEN_SETS] MAINTENANCE_SUPPLY_TOKENS = ['不糖渍', '不齁甜', '充饥', '口粮', '口腹', '基础', '家用', '常备', '日常', '日用', '柔软透气', '洗护', '清洁', '补水', '补给', '解馋', '配料干净', '零食', '食品', '食用', '鲜果烤制']
+[TOKEN_SETS] cleanse_protection pack action_only_terms = {'去除', '防护'}
+[TOKEN_SETS] cleanse_protection default_state_when_action_only = 维持正常
+[_resolve_household_subcategory_context] result = cleanse_protection
+[_resolve_household_subcategory_context] category_text = '卸妆膏'
+[_resolve_household_subcategory_context] cleanse_protection category_terms = {'卸妆膏', '卸妆膏/卸妆油', '洁面', '卸妆', '防晒喷雾', '卸妆油', '防晒霜/乳', '防晒霜', '洁面乳', '防晒乳'}
+[_resolve_household_subcategory_context] cleanse_protection matches in category_text = ['卸妆膏', '卸妆']
+[_build_subcategory_fact_from_group] clause='快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆...'
+    object_matches=[]
+    state_matches=[]
+    action_matches=['去除']
+    allow_action_only_without_object=True
+    default_state_when_action_only='维持正常'
+    result=FORMED
+[_build_subcategory_fact_from_group]     => problem_state='维持正常', action='去除'
+[_extract_subcategory_facts] subcategory_context=cleanse_protection, clause='快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆...', facts=[
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": ""
+  }
+]
+[_build_subcategory_fact_from_group] clause='YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆...'
+    object_matches=[]
+    state_matches=[]
+    action_matches=['去除']
+    allow_action_only_without_object=True
+    default_state_when_action_only='维持正常'
+    result=FORMED
+[_build_subcategory_fact_from_group]     => problem_state='维持正常', action='去除'
+[_extract_subcategory_facts] subcategory_context=cleanse_protection, clause='YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆...', facts=[
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": ""
+  }
+]
+[_build_subcategory_fact_from_group] clause='YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆...'
+    object_matches=[]
+    state_matches=[]
+    action_matches=['去除']
+    allow_action_only_without_object=True
+    default_state_when_action_only='维持正常'
+    result=FORMED
+[_build_subcategory_fact_from_group]     => problem_state='维持正常', action='去除'
+[_extract_subcategory_facts] subcategory_context=cleanse_protection, clause='YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆...', facts=[
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": ""
+  }
+]
+[_build_subcategory_fact_from_group] clause='YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳...'
+    object_matches=[]
+    state_matches=[]
+    action_matches=['去除']
+    allow_action_only_without_object=True
+    default_state_when_action_only='维持正常'
+    result=FORMED
+[_build_subcategory_fact_from_group]     => problem_state='维持正常', action='去除'
+[_extract_subcategory_facts] subcategory_context=cleanse_protection, clause='YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳...', facts=[
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": ""
+  }
+]
+[_build_subcategory_fact_from_group] clause='YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳...'
+    object_matches=[]
+    state_matches=[]
+    action_matches=['去除']
+    allow_action_only_without_object=True
+    default_state_when_action_only='维持正常'
+    result=FORMED
+[_build_subcategory_fact_from_group]     => problem_state='维持正常', action='去除'
+[_extract_subcategory_facts] subcategory_context=cleanse_protection, clause='YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳...', facts=[
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": ""
+  }
+]
+[_build_subcategory_fact_from_group] clause='快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆...'
+    object_matches=[]
+    state_matches=[]
+    action_matches=['去除']
+    allow_action_only_without_object=True
+    default_state_when_action_only='维持正常'
+    result=FORMED
+[_build_subcategory_fact_from_group]     => problem_state='维持正常', action='去除'
+[_extract_subcategory_facts] subcategory_context=cleanse_protection, clause='快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆...', facts=[
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": ""
+  }
+]
+[_build_cleanse_protection_candidate_pool] sub_pack_facts = [
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": "",
+    "fact_id": "fact_002"
+  },
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": "",
+    "fact_id": "fact_004"
+  },
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": "",
+    "fact_id": "fact_006"
+  }
+]
+[_build_cleanse_protection_candidate_pool] candidate_pool = [
+  {
+    "task_name": "生存/运转维系",
+    "supporting_fact_ids": [
+      "fact_002",
+      "fact_004",
+      "fact_006"
+    ],
+    "mapping_reason": "清洁卸净与基础防护包中的日常卸净、防护维持型事实，优先承接生存/运转维系。",
+    "priority": "cleanse_protection_maintenance"
+  }
+]
+[_build_cleanse_protection_candidate_pool] veto_trace = []
+[_build_cleanse_protection_candidate_pool]   fact 'fact_002': problem_state='维持正常', action='去除', object='肌肤' => 维持
+[_build_cleanse_protection_candidate_pool]   fact 'fact_004': problem_state='维持正常', action='去除', object='肌肤' => 维持
+[_build_cleanse_protection_candidate_pool]   fact 'fact_006': problem_state='维持正常', action='去除', object='肌肤' => 维持
+[_infer_functional_candidates] candidate_tasks = ['生存/运转维系']
+[_infer_functional_candidates] subcategory_context = cleanse_protection
+[_infer_functional_candidates] functional_facts count = 6
+[_infer_functional_candidates] candidate_pool = [
+  {
+    "task_name": "生存/运转维系",
+    "supporting_fact_ids": [
+      "fact_002",
+      "fact_004",
+      "fact_006"
+    ],
+    "mapping_reason": "清洁卸净与基础防护包中的日常卸净、防护维持型事实，优先承接生存/运转维系。",
+    "priority": "cleanse_protection_maintenance"
+  }
+]
+[_build_rule_tree_context] candidate_tasks = ['生存/运转维系']
+[_build_rule_tree_context] candidate_reasons = {"生存/运转维系": ["清洁卸净与基础防护包中的日常卸净、防护维持型事实，优先承接生存/运转维系。"]}
+[_build_rule_tree_context] excluded_tasks = {"降本增效/懒人替代": ["未发现明确流程负担与简化/替代事实组合。"], "缺陷修复/冲突消除": ["未发现“问题对象 × 已发生异常状态 × 修补/去除动作”的事实组合。"]}
+[_build_rule_tree_context] triggered_rule = functional_default_rule
+[_build_rule_tree_context] subcategory_context = cleanse_protection
+[_build_rule_tree_context] trace_tokens = []
+[_build_rule_tree_context] functional_facts = [
+  {
+    "problem_object": "",
+    "problem_state": "",
+    "action_mechanism": "去除",
+    "benefit_target": "用过老款的粉丝人群",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆",
+    "fact_layer": "common_skeleton",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "personalcare_common_skeleton",
+    "confidence": "medium",
+    "matched_terms": {
+      "object_terms": [],
+      "state_terms": [],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "fact_id": "fact_001"
+  },
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": "",
+    "fact_id": "fact_002"
+  },
+  {
+    "problem_object": "",
+    "problem_state": "",
+    "action_mechanism": "去除",
+    "benefit_target": "用过老款的粉丝人群",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆",
+    "fact_layer": "common_skeleton",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "personalcare_common_skeleton",
+    "confidence": "medium",
+    "matched_terms": {
+      "object_terms": [],
+      "state_terms": [],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "fact_id": "fact_003"
+  },
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖能快乳化卸妆，可省时一步到位清洁眼唇脸，适用于日常基础卸妆",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": "",
+    "fact_id": "fact_004"
+  },
+  {
+    "problem_object": "",
+    "problem_state": "",
+    "action_mechanism": "去除",
+    "benefit_target": "用过老款的粉丝人群",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳",
+    "fact_layer": "common_skeleton",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "personalcare_common_skeleton",
+    "confidence": "medium",
+    "matched_terms": {
+      "object_terms": [],
+      "state_terms": [],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "fact_id": "fact_005"
+  },
+  {
+    "problem_object": "肌肤",
+    "problem_state": "维持正常",
+    "action_mechanism": "去除",
+    "benefit_target": "肌肤",
+    "usage_scene": "卸妆膏",
+    "evidence_text": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳",
+    "fact_layer": "subcategory_pack",
+    "subcategory_context": "cleanse_protection",
+    "source_type": "household_subcategory_pack:cleanse_protection:default",
+    "confidence": "high",
+    "matched_terms": {
+      "object_terms": [
+        "肌肤"
+      ],
+      "state_terms": [
+        "维持正常"
+      ],
+      "action_terms": [
+        "去除"
+      ]
+    },
+    "group_name": "default",
+    "group_candidate_task": "",
+    "fact_id": "fact_006"
+  }
+]
+[_build_rule_tree_context] candidate_pool = [
+  {
+    "task_name": "生存/运转维系",
+    "supporting_fact_ids": [
+      "fact_002",
+      "fact_004",
+      "fact_006"
+    ],
+    "mapping_reason": "清洁卸净与基础防护包中的日常卸净、防护维持型事实，优先承接生存/运转维系。",
+    "priority": "cleanse_protection_maintenance"
+  }
+]
+[_build_rule_tree_context] veto_trace = []
+[_build_rule_tree_context] reasoning_path = ['Stage B：未命中社会域/情绪域/安全域的强唯一条件，回到功能域候选池。', 'Stage B 子包路由：cleanse_protection。', 'Stage B 事实层抽取 6 条 functional_facts。', '功能域候选池为：生存/运转维系。']
+[_resolve_jtbd] proposal.primary_task = 生存/运转维系
+[_resolve_jtbd] proposal.domain = 功能域
+[_resolve_jtbd] proposal.candidate_tasks = ['生存/运转维系']
+[_resolve_jtbd] len(candidate_tasks) = 1
+[_resolve_jtbd] proposal.reasoning = 规则树仅做功能域候选池收窄，最终归因留给候选池内归并。
+[_resolve_jtbd] 单候选直接定 or LLM选? = 单候选直接定
+[_apply_hard_gates] INPUT proposal.primary_task = 生存/运转维系
+[_is_ordinary_daily_category] result = True, text snippet = '卸妆膏 YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳 快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆...', hits = ['卸妆膏', '卸妆']
+[_apply_hard_gates] OUTPUT gated.primary_task = 生存/运转维系
+[_apply_hard_gates] gate_notes = ['Stage A 未命中物理安全 / 社会域 / 情绪域强门槛，进入功能域候选池。', 'Stage D：仅执行越权/最小证据/审计字段断言，本轮未发生任务改写。']
+[MAIN] 
+============================================================
+[MAIN] FINAL jtbd = 生存/运转维系
+[MAIN] FINAL jtbd field in output = 生存/运转维系
+[MAIN] FINAL RESULT (truncated):
+{
+  "product_id": "jtbd-生存/运转维系",
+  "leaf_category": "卸妆膏",
+  "shop_name": "YOUFE旗舰店",
+  "product_name": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳",
+  "price": 49.9,
+  "domain": "功能域",
+  "primary_task": "生存/运转维系",
+  "sub_task": null,
+  "category_intent": "优先完成存量同类替换，证明在熟悉用法下换它更值。",
+  "product_intent": "先补基础可信度，再承接低门槛试单与顺手成交。",
+  "category_intent_matrix": {
+    "ocean": "红海",
+    "competition_focus": "核心",
+    "frequency": "快消",
+    "domain_route_rule": "A_functional_competitor_rule",
+    "matrix_label": "红海-核心×快消",
+    "category_intent": "优先完成存量同类替换，证明在熟悉用法下换它更值。",
+    "competition_focus_reason": "comparison_object 为空，按 PRD 空值协议默认回落核心竞争，避免无证据触发破圈路由。",
+    "competition_focus_evidence_chain": [
+      {
+        "evidence_source": "商品信息",
+        "evidence_text": "YOUFE净透卸妆膏小金砖快乳化眼唇脸清洁油乳"
+      },
+      {
+        "evidence_source": "商品信息",
+        "evidence_text": "快乳化卸妆，省时一步到位清洁眼唇脸，日常基础卸妆"
+      }
+    ],
+    "difference_type_route_result": "functional.自身卖点陈述->comparison_object:null->核心",
+    "reasoning": [
+      "Step 1：根据商品文本判定品类状态为 红海。",
+      "Step 2：优先读取 difference_domain + difference_type=functional.自身卖点陈述。",
+      "comparison_object=null，业务假设为证据不足不触发旧路径替代，因此默认回落核心。",
+      "Step 3：消费频次判定为 快消。"
+    ]
+  },
+  "product_intent_matrix": {
+    "brand_tier": "白牌",
+    "trust_barrier": "高",
+    "financial_risk": "低",
+    "relative_price_level": "低水位",
+    "matrix_label": "白牌×低水位",
+    "business_category": "卸妆",
+    "median_price_threshold": 48.81948,
+    "price_value": 49.9,
+    "product_intent": "先补基础可信度，再承接低门槛试单与顺手成交。",
+    "reasoning": [
+      "信任阻力：店铺 未命中 brand_whitelist.csv，因此品牌层级判定为 白牌。",
+      "财务阻力：类目 卸妆 的价格带中位数资产为 48.82，但外层仅用于审计留痕。",
+      "价格属性严格读取 engine_node 输出，当前水位为 低水位，因此财务风险为 低。"
+    ]
+  },
+  "reasoning_path": [
+    "规则树候选池：生存/运转维系；触发规则：functional_default_rule",
+    "Stage B：未命中社会域/情绪域/安全域的强唯一条件，回到功能域候选池。",
+    "Stage B 子包路由：cleanse_protection。",
+    "Stage B 事实层抽取 6 条 functional_facts。",
+    "功能域候选池为：生存/运转维系。",
+    "Stage A 未命中物理安全 / 社会域 / 情绪域强门槛，进入功能域候选池。",
+    "Stage D：仅执行越权/最小证据/审计字段断言，本轮未发生任务改写。",
+    "Step 1：根据商品文本判定品类状态为 红海。",
+    "Step 2：优先读取 difference_domain + difference_type=functional.自身卖点陈述。",
+    "comparison_object=null，业务假设为证据不足不触发旧路径替代，因此默认回落核心。",
+    "Step 3：消费频次判定为 快消。",
+    "信任阻力：店铺 未命中 brand_whitelist.csv，因此品牌层级判定为 白牌。",
+    "财务阻力：类目 卸妆 的价格带中位数资产为 48.82，但外层仅用于审计留痕。",
+    "价格属性严格读取 engine_node 输出，当前水位为 低水位，因此财务风险为 低。"
+  ],
+  "warnings": [],
+  "persuasion_requirement_profile": null,
+  "product_target_audience": {
+    "primary_audiences": [
+      {
+        "audience_group": "年轻低消费力女性",
+        "fit_level": "primary",
+        "reason": "任务「生存/运转维系」对应购买角色「运转责任人」；无显式年龄信号且角色「运转责任人」无强默认 → 年龄 mixed；品类性别信号不唯一且角色「运转责任人」无强默认 → 性别 mixed；白牌 + 低水位（处类目低价带）→ 低消费力。"
+      }
+    ],
+    "secondary_audiences": [
+      {
+        "audience_group": "年轻低消费力男性",
+        "fit_level": "secondary",
+        "reason": "购买角色「运转责任人」的年龄/性别边界不唯一（无显式年龄信号且角色「运转责任人」无强默认 → 年龄 mixed；品类性别信号不唯一且角色「运转责任人」无强默认 → 性别 mixed），该组合作为次级覆盖目标。"
+      },
+      {
+        "audience_group":
+
+
+Trace saved to: /workspace/iris_72fb6608-39b2-4dd3-9702-0a5f8a377abb/commerce-video-diagnosis/jg_jtbd_expansion/trace_b20n02_output.txt

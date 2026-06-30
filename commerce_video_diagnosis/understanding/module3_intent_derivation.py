@@ -126,57 +126,68 @@ MODIFIER_DEFINITIONS: Final[dict[str, dict[str, Any]]] = {
 JTBD_POOL_CONFIG: Final[dict[str, dict[str, str]]] = {
     "生存/运转维系": {
         "pool_id": "jtbd.functional.maintenance",
-        "source_record": "功能型任务",
+        "source_record": "生存/运转维系",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认商品承担的是基础维系/正常运转任务，再证明它能稳定承接日常刚需，避免表达跳成情绪价值或身份表达。",
     },
     "缺陷修复/冲突消除": {
         "pool_id": "jtbd.functional.defect_repair",
         "source_record": "缺陷修复/冲突消除",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先把缺陷、异常或冲突问题具象化，再证明当前商品能把问题修掉、压下去或纠正回来。",
     },
     "降本增效/懒人替代": {
         "pool_id": "jtbd.functional.efficiency_replace",
-        "source_record": "功能型任务",
+        "source_record": "降本增效/懒人替代",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认旧流程的繁琐、费时或费力，再证明当前商品能用更省事的新方案完成同一任务。",
     },
     "物理安全与风险规避": {
         "pool_id": "jtbd.functional.safety_avoidance",
-        "source_record": "功能型任务",
+        "source_record": "物理安全与风险规避",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先把客观风险说清，再证明当前商品如何通过更稳妥的路径降低真实受伤或事故风险。",
     },
     "情绪安心/主观降险": {
         "pool_id": "jtbd.emotional.reassurance",
-        "source_record": "功能型任务",
+        "source_record": "情绪安心/主观降险",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认用户的不确定感与主观顾虑，再证明当前商品如何提供可持续的安心感与心理兜底。",
     },
     "新奇探索/瞬时刺激": {
         "pool_id": "jtbd.emotional.novelty",
-        "source_record": "功能型任务",
+        "source_record": "新奇探索/瞬时刺激",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认用户对新奇刺激的驱动，再证明当前商品为何能提供可被感知的尝鲜价值。",
     },
     "自我犒赏与秩序掌控": {
         "pool_id": "jtbd.emotional.reward_and_control",
-        "source_record": "功能型任务",
+        "source_record": "自我犒赏与秩序掌控",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认用户的悦己、秩序或掌控诉求，再证明当前商品如何把这种感受稳定兑现。",
     },
     "照护与责任履行": {
         "pool_id": "jtbd.social.care_responsibility",
-        "source_record": "功能型任务",
+        "source_record": "照护与责任履行",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认照护责任与履责压力，再证明当前商品如何帮助用户把照护任务做对、做到位。",
     },
     "礼赠与关系表达": {
         "pool_id": "jtbd.social.gifting",
-        "source_record": "功能型任务",
+        "source_record": "礼赠与关系表达",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认礼赠场景与关系表达诉求，再证明当前商品如何承担体面表达与关系传递。",
     },
     "圈层认同（圈层归属/身份锚定）": {
         "pool_id": "jtbd.social.community_identity",
-        "source_record": "功能型任务",
+        "source_record": "圈层认同（圈层归属/身份锚定）",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认圈层共识与同好归属，再证明当前商品为何能成为该圈层的身份锚点。",
     },
     "阶层与审美发信": {
         "pool_id": "jtbd.social.aesthetic_signaling",
-        "source_record": "功能型任务",
+        "source_record": "阶层与审美发信",
+        "candidate_pool_source": "hec_weapon_library_snapshot.json",
         "primary_path": "先确认用户希望发出的审美与阶层信号，再证明当前商品如何承担这种外显表达。",
     },
 }
@@ -204,17 +215,17 @@ HOOK_SOFT_CONSTRAINTS: Final[dict[str, dict[str, Any]]] = {
     "H5": {
         "trigger_cta_tags": ["C1", "C2"],
         "required_effect_capabilities_all": ["answer_revealed"],
-        "unmet_risk_flag": "tempo_discount",
+        "unmet_risk_flag": "rhythm_discount",
     },
     "H6": {
         "trigger_cta_tags": ["C1", "C2"],
         "required_effect_capabilities_all": ["identity_binding_complete"],
-        "unmet_risk_flag": "resonance_break_risk",
+        "unmet_risk_flag": "resonance_risk",
     },
     "H7": {
         "trigger_cta_tags": ["C1", "C2"],
         "required_effect_capabilities_all": ["identity_binding_complete"],
-        "unmet_risk_flag": "resonance_break_risk",
+        "unmet_risk_flag": "resonance_risk",
     },
 }
 
@@ -231,12 +242,119 @@ class Module3IntentInput:
     modifiers: list[str] = field(default_factory=list)
 
 
+# PRD §5.5.2 forbidden_boundary 逐字基线（用于加载层断言 #6 hash 对齐校验）
+PRD_FORBIDDEN_BOUNDARY_FIXTURE: Final[dict[str, str]] = {
+    "生存/运转维系": "禁止把普通续航型商品硬写成强反差炫技或纯情绪奖励；没有明确风险或效率差距时，谨慎使用强对比或暴力实测。",
+    "缺陷修复/冲突消除": "禁止空泛氛围型 `H6`；禁止只有概念没有修复证明的空讲 `E6`；禁止无动作指令的纯留白 `C5`；缺陷未被具体暴露时整条任务不成立。",
+    "降本增效/懒人替代": "禁止把高频替代误写成单纯教程；禁止没有旧动作参照的“伪省事”表达；若不能证明替代关系，不可生搬硬套 `E3`。",
+    "物理安全与风险规避": "禁止为刺激眼球设计危险动作；禁止用违规极限测试伪装风险证明；任何鼓励模仿危险行为的证据表达必须熔断。",
+    "情绪安心/主观降险": "禁止把主观安慰写成客观医疗或绝对防护承诺；一旦涉及刚性功效证明，必须改判到功能任务武器库。",
+    "新奇探索/瞬时刺激": "禁止把并不成立的感官镜头硬写成 `E4`；禁止把长期功效型商品伪装成瞬时刺激任务；`E4` 必须同时通过“等价律”和“品类黑名单”两层拦截。",
+    "自我犒赏与秩序掌控": "禁止把基础功能型商品仅凭“下班放松”场景就抬进本任务；情绪成立必须来自商品属性本身，而非文案包装。",
+    "照护与责任履行": "禁止把照护责任任务硬写成炫耀型身份表达；若核心收益不是“照顾好别人”，不可留在本任务。",
+    "礼赠与关系表达": "禁止把礼赠任务写成单纯自我炫耀；禁止过度强调功能而忽略关系表达；内容若无法回答“送给谁、为什么合适”则不成立。",
+    "圈层认同（圈层归属/身份锚定）": "禁止在没有圈层共识时乱写圈层任务；禁止把普通大众流行误写成圈层徽章；圈层成立的前提是群体识别，而非文案自称。",
+    "阶层与审美发信": "禁止仅凭“贵”“好看”“高级感文案”就硬判进来；若缺少公共可识别的外显信号，本任务不成立；子标签处理见 §5.5.4。",
+}
+
+EXPECTED_JTBD_LEVEL2_SET: Final[frozenset[str]] = frozenset(PRD_FORBIDDEN_BOUNDARY_FIXTURE.keys())
+
+
 @lru_cache(maxsize=1)
 def _load_weapon_library() -> dict[str, Any]:
     with WEAPON_LIBRARY_PATH.open("r", encoding="utf-8") as f:
         payload = json.load(f)
     _assert_weapon_library_clean(payload)
+    _assert_loader_contract(payload)
     return payload
+
+
+def _extract_forbidden_boundary(record: dict[str, Any]) -> str:
+    constraints = record.get("constraints")
+    if isinstance(constraints, dict):
+        value = constraints.get("forbidden_boundary")
+    elif isinstance(constraints, str):
+        value = constraints
+    else:
+        value = None
+    return str(value or "")
+
+
+def _assert_loader_contract(payload: dict[str, Any]) -> None:
+    """PRD §5.5.3.4 加载层 6 条强制断言 —— 任意一条失败必须 Crash Early。"""
+    records = payload.get("records") or {}
+    if not isinstance(records, dict):
+        raise ValueError("武器库 snapshot.records 必须为 dict（PRD §5.5.3.4 #1）。")
+
+    # 断言 1：snapshot 完整性 —— 记录数 >= 11 且 11 个 jtbd_level2 全部覆盖
+    if len(records) < 11:
+        raise ValueError(
+            f"武器库 snapshot 记录数 {len(records)} < 11，违反 PRD §5.5.3.4 #1（snapshot 完整性）。"
+        )
+    actual_keys = set(records.keys())
+    missing = EXPECTED_JTBD_LEVEL2_SET - actual_keys
+    if missing:
+        raise ValueError(
+            f"武器库 snapshot 缺失 jtbd_level2 任务: {sorted(missing)}（PRD §5.5.3.4 #1）。"
+        )
+    extra = actual_keys - EXPECTED_JTBD_LEVEL2_SET
+    if extra:
+        raise ValueError(
+            f"武器库 snapshot 出现 PRD §5.5.2 未声明的任务: {sorted(extra)}（PRD §5.5.3.4 #1）。"
+        )
+
+    # 加载全局标签字典，用于断言 4
+    label_map = _load_taxonomy_label_map()
+    valid_codes = set(label_map.keys())
+
+    # JTBD_POOL_CONFIG 中所有 source_record 的合法集合 = 当前 snapshot keys（断言 3）
+    snapshot_jtbd_ids = set(records.keys())
+
+    for jtbd_name, record in records.items():
+        if not isinstance(record, dict):
+            raise ValueError(f"武器库记录 {jtbd_name} 必须为 dict。")
+
+        # 断言 2：池非空性
+        for pool_key in ("candidate_h", "candidate_e", "candidate_c"):
+            pool = record.get(pool_key) or []
+            if not isinstance(pool, list) or len(pool) < 1:
+                raise ValueError(
+                    f"武器库 [{jtbd_name}].{pool_key} 为空（违反 PRD §5.5.3.4 #2 池非空性）。"
+                )
+            # 断言 4：标签字典一致性 —— 元素必须命中全局 H/E/C 标签字典
+            for item in pool:
+                code = str(item).split()[0].strip()
+                if code not in valid_codes:
+                    raise ValueError(
+                        f"武器库 [{jtbd_name}].{pool_key} 含越界标签 `{item}`，"
+                        f"未命中全局 H/E/C 标签字典（违反 PRD §5.5.3.4 #4）。"
+                    )
+
+        # 断言 5：forbidden_boundary 非空
+        forbidden = _extract_forbidden_boundary(record)
+        if not forbidden.strip():
+            raise ValueError(
+                f"武器库 [{jtbd_name}].constraints.forbidden_boundary 为空"
+                f"（违反 PRD §5.5.3.4 #5）。"
+            )
+
+        # 断言 6：禁用边界文本须与 PRD §5.5.2 附表逐字对齐
+        expected = PRD_FORBIDDEN_BOUNDARY_FIXTURE[jtbd_name]
+        if forbidden != expected:
+            raise ValueError(
+                f"武器库 [{jtbd_name}].constraints.forbidden_boundary 与 PRD §5.5.2 附表不一致"
+                f"（违反 PRD §5.5.3.4 #6 禁用边界对齐）。\n"
+                f"expected={expected!r}\nactual  ={forbidden!r}"
+            )
+
+    # 断言 3：source_record 命中性 —— JTBD_POOL_CONFIG 中每条 source_record 必须命中 snapshot 真实 jtbd_level2
+    for pool_key, cfg in JTBD_POOL_CONFIG.items():
+        sr = cfg.get("source_record")
+        if sr not in snapshot_jtbd_ids:
+            raise ValueError(
+                f"JTBD_POOL_CONFIG[{pool_key}].source_record={sr!r} 未命中 snapshot 中真实 jtbd_level2"
+                f"（违反 PRD §5.5.3.4 #3 source_record 命中性）。"
+            )
 
 
 def _normalize_label(value: str) -> dict[str, str]:
@@ -316,22 +434,36 @@ def _rule_code(value: str) -> str:
 
 
 def _ordered_intersection(pool_codes: list[str], category_preferences: tuple[str, ...], product_preferences: tuple[str, ...]) -> list[str]:
-    product_rank = {code: index for index, code in enumerate(product_preferences)}
+    """严格两轴交集（PRD 8.5.1）。
+
+    R×P 严格交集语义：仅保留同时出现在 `weapon_pool`、`R 轴偏好`、`P 轴偏好` 三者中的编码；
+    若任一轴未提供（空 tuple），则视为该轴不约束。排序优先 R 轴偏好顺序，次按 P 轴偏好顺序。
+    """
+    pool_set = set(pool_codes)
+    category_set = set(category_preferences)
+    product_set = set(product_preferences)
+
+    if category_preferences and product_preferences:
+        intersected = pool_set & category_set & product_set
+    elif category_preferences:
+        intersected = pool_set & category_set
+    elif product_preferences:
+        intersected = pool_set & product_set
+    else:
+        intersected = pool_set
+
     category_rank = {code: index for index, code in enumerate(category_preferences)}
+    product_rank = {code: index for index, code in enumerate(product_preferences)}
     pool_rank = {code: index for index, code in enumerate(pool_codes)}
 
-    def sort_key(code: str) -> tuple[int, int, int, int]:
-        in_category = 0 if code in category_rank else 1
-        in_product = 0 if code in product_rank else 1
+    def sort_key(code: str) -> tuple[int, int, int]:
         return (
-            in_category,
             category_rank.get(code, len(category_rank) + len(pool_codes)),
-            in_product,
-            product_rank.get(code, pool_rank.get(code, len(pool_codes))),
+            product_rank.get(code, len(product_rank) + len(pool_codes)),
+            pool_rank.get(code, len(pool_codes)),
         )
 
-    ordered = sorted(dict.fromkeys(pool_codes), key=sort_key)
-    return ordered
+    return sorted(intersected, key=sort_key)
 
 
 def _pool_codes(items: list[str]) -> list[str]:
@@ -431,12 +563,13 @@ def _cross_map_weapon_pool(
     product_e_preferences = E_AXIS_PREFERENCES.get(product_code, ())
     category_c_preferences = C_AXIS_PREFERENCES.get(category_code, ())
     product_c_preferences = C_AXIS_PREFERENCES.get(product_code, ())
-    category_h_preferences = H_AXIS_PREFERENCES.get(category_code, ())
-    product_h_preferences = H_AXIS_PREFERENCES.get(product_code, ())
 
     core_e_codes = _ordered_intersection(weapon_e_pool, category_e_preferences, product_e_preferences)
     core_c_codes = _ordered_intersection(weapon_c_pool, category_c_preferences, product_c_preferences)
-    candidate_h_codes = _ordered_intersection(weapon_h_pool, product_h_preferences, category_h_preferences)
+    # 工序 0 · H 透传（PRD 6.4.2 工序 0 / 8.5.1）：候选 H 库由子模块 3.1（定义说服主线）
+    # 基于 JTBD + 主说服路线从任务武器库直接取出，不参与 R×P 交叉合力筛选，不经 R/P 过滤。
+    # H 轴产出为武器库直接产物（保持武器库 / JTBD 既定顺序），后续仅由修饰符强插（工序 2）追加例外动作。
+    candidate_h_codes = list(weapon_h_pool)
 
     core_e_codes, candidate_h_codes, modifier_notes = _inject_modifiers(
         modifiers=modifiers,
@@ -446,10 +579,10 @@ def _cross_map_weapon_pool(
         weapon_h_pool=weapon_h_pool,
     )
 
+    # H 轴不再走 R×P 交集（工序 0 透传），因此只对 E/C 轴统计跨池越权拦截。
     intercept_logs = [
         *_collect_cross_pool_intercepts(category_e_preferences + product_e_preferences, weapon_e_pool, "E"),
         *_collect_cross_pool_intercepts(category_c_preferences + product_c_preferences, weapon_c_pool, "C"),
-        *_collect_cross_pool_intercepts(category_h_preferences + product_h_preferences, weapon_h_pool, "H"),
     ]
     sorting_note = _build_rp_axis_sorting_note(
         jtbd_pool_id=jtbd_pool_id,
@@ -464,6 +597,9 @@ def _cross_map_weapon_pool(
     return core_e, core_c, candidate_h, modifier_notes, intercept_logs, sorting_note
 
 
+RULE_VERSION = "JTBD_dict_v1_2026-06-24"
+
+
 def _task_domain_bucket(jtbd: str) -> str:
     return "functional" if jtbd in FUNCTIONAL_JTBDS else "emotion_social"
 
@@ -472,7 +608,12 @@ def _effect_completion_capabilities(effect_code: str) -> list[str]:
     return list(EFFECT_COMPLETION_CAPABILITY_MAP.get(effect_code, ()))
 
 
-def _build_effect_candidate(effect_code: str) -> dict[str, Any]:
+def _build_effect_candidate(
+    effect_code: str,
+    *,
+    source_role: str = "primary",
+    source_requirement_ref: str = "primary_requirement",
+) -> dict[str, Any]:
     payload = _normalize_label(effect_code)
     capabilities = _effect_completion_capabilities(effect_code)
     payload.update(
@@ -480,12 +621,20 @@ def _build_effect_candidate(effect_code: str) -> dict[str, Any]:
             "effect_tag": effect_code,
             "completion_capabilities": capabilities,
             "completion_reason_codes": [f"capability_from_{effect_code.lower()}:{item}" for item in capabilities],
+            "source_role": source_role,
+            "source_requirement_ref": source_requirement_ref,
         }
     )
     return payload
 
 
-def _build_cta_candidate(cta_code: str, *, task_domain: str) -> dict[str, Any]:
+def _build_cta_candidate(
+    cta_code: str,
+    *,
+    task_domain: str,
+    source_role: str = "primary",
+    source_requirement_ref: str = "primary_requirement",
+) -> dict[str, Any]:
     payload = _normalize_label(cta_code)
     required_effect_capabilities_any: list[str] = []
     fallback_priority: list[str] = []
@@ -503,15 +652,24 @@ def _build_cta_candidate(cta_code: str, *, task_domain: str) -> dict[str, Any]:
             "close_strength": close_strength,
             "required_effect_capabilities_any": required_effect_capabilities_any,
             "fallback_priority": fallback_priority,
+            "source_role": source_role,
+            "source_requirement_ref": source_requirement_ref,
         }
     )
     return payload
 
 
-def _build_hook_candidate(hook_code: str) -> dict[str, Any]:
+def _build_hook_candidate(
+    hook_code: str,
+    *,
+    source_role: str = "primary",
+    source_requirement_ref: str = "primary_requirement",
+) -> dict[str, Any]:
     payload = _normalize_label(hook_code)
     payload["hook_tag"] = hook_code
     payload["soft_constraint_contract"] = HOOK_SOFT_CONSTRAINTS.get(hook_code)
+    payload["source_role"] = source_role
+    payload["source_requirement_ref"] = source_requirement_ref
     return payload
 
 
@@ -554,18 +712,58 @@ def derive_candidate_set(input_data: Module3IntentInput) -> CandidateSet:
         jtbd_pool_id=pool_config["pool_id"],
     )
     task_domain = _task_domain_bucket(input_data.jtbd)
+    primary_source_role = "primary"
+    primary_requirement_ref = "primary_requirement"
 
-    return CandidateSet(
+    candidate_set = CandidateSet(
         schema_version="v0.5",
         jtbd=input_data.jtbd,
         persuasion_route=pool_config["primary_path"],
         r_rule=category_intent,
         p_rule=product_intent,
         task_domain=task_domain,
-        h_list=[_build_hook_candidate(item["code"]) for item in candidate_h],
-        effect_list=[_build_effect_candidate(item["code"]) for item in core_e],
-        cta_list=[_build_cta_candidate(item["code"], task_domain=task_domain) for item in core_c],
+        h_list=[
+            _build_hook_candidate(
+                item["code"],
+                source_role=primary_source_role,
+                source_requirement_ref=primary_requirement_ref,
+            )
+            for item in candidate_h
+        ],
+        effect_list=[
+            _build_effect_candidate(
+                item["code"],
+                source_role=primary_source_role,
+                source_requirement_ref=primary_requirement_ref,
+            )
+            for item in core_e
+        ],
+        cta_list=[
+            _build_cta_candidate(
+                item["code"],
+                task_domain=task_domain,
+                source_role=primary_source_role,
+                source_requirement_ref=primary_requirement_ref,
+            )
+            for item in core_c
+        ],
+        rule_version=RULE_VERSION,
     )
+
+    if not candidate_set.rule_version:
+        raise ValueError("CandidateSet.rule_version 不能为空")
+
+    valid_source_roles = {"primary", "secondary"}
+    for list_name in ("h_list", "effect_list", "cta_list"):
+        for candidate in getattr(candidate_set, list_name):
+            source_role = candidate.get("source_role")
+            source_requirement_ref = candidate.get("source_requirement_ref")
+            if source_role not in valid_source_roles:
+                raise ValueError(f"{list_name} candidate source_role 非法: {candidate}")
+            if not source_requirement_ref:
+                raise ValueError(f"{list_name} candidate source_requirement_ref 不能为空: {candidate}")
+
+    return candidate_set
 
 
 __all__ = [

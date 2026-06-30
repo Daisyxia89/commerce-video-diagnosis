@@ -1,0 +1,3438 @@
+{
+  "status": "diagnosis_completed",
+  "diagnosis_meta": {
+    "diagnosis_id": "diag-d7aa110bb18f41c5",
+    "request_id": "req-runben-20260628-001",
+    "created_at": "2026-06-30T01:06:18.412389+00:00",
+    "workflow_version": "jtbd-diagnosis-mvp-v1",
+    "model_version": null,
+    "model_provider": null,
+    "source_product_id": "runben_repellent_24p9",
+    "video_id": "runben_video_001",
+    "qa_status": "NOT_RUN",
+    "e2e_status": "not_run"
+  },
+  "product_understanding": {
+    "basic_info": {
+      "product_name": "【A级驱蚊力】润本驱蚊液防蚊喷雾派卡瑞丁驱蚊水防蚊叮蚊怕花露水",
+      "leaf_category": "宝宝防蚊水",
+      "brand_name": "润本",
+      "shop_name": "润本官方旗舰店",
+      "price": 24.9,
+      "audience_hint": [
+        "婴幼儿",
+        "儿童",
+        "家庭日常户外人群"
+      ],
+      "core_selling_points": [
+        "派卡瑞丁A级驱蚊力",
+        "长效防蚊驱虫",
+        "温和无刺激"
+      ]
+    },
+    "product_fact_vector": {
+      "cognition_attribute": "红海-核心",
+      "frequency_attribute": "快消",
+      "trust_attribute": "大牌",
+      "price_attribute": "高",
+      "endorsement_attribute": null,
+      "channel_risk_attribute": null,
+      "conversion_barriers": [
+        "价格水位偏高，需强化价值证明与算账说服以化解价格顾虑。"
+      ]
+    },
+    "module3": {
+      "persuasion_requirement_profile": {
+        "profile_version": "v3.1",
+        "content_goal": "purchase",
+        "category_group": "美妆个护",
+        "jtbd_template_status": "matched",
+        "requirement_dictionary_version": "v3.1_active_mvp_23",
+        "category_purchase_criteria_version": "v3.1_phase1_4groups",
+        "main_persuasion_route": {
+          "primary_jtbd": {
+            "level1": "功能域",
+            "level2": "物理安全与风险规避"
+          },
+          "category_resistance": {
+            "rule": "红海-核心 × 快消",
+            "summary": "在红海-核心、快消的品类竞争态势下组织购买判断主路径。"
+          },
+          "product_conversion_barrier": {
+            "rule": "极低 × 高水位"
+          }
+        },
+        "activated_category_requirements": {
+          "category_group": "美妆个护",
+          "routing_confidence": "medium",
+          "activated_decision_criteria": [
+            "ingredient_credibility",
+            "irritation_risk",
+            "routine_fit",
+            "skin_fit",
+            "usage_effect"
+          ],
+          "activated_evidence_requirements": [
+            "before_after_demonstration",
+            "ingredient_proof",
+            "irritation_test",
+            "routine_guidance",
+            "skin_type_guidance"
+          ],
+          "activated_risk_points": [
+            "ingredient_doubt_risk",
+            "irritation_risk",
+            "no_effect_risk",
+            "routine_conflict_risk",
+            "skin_mismatch_risk"
+          ]
+        },
+        "persuasion_requirements": [
+          {
+            "requirement_id": "expose_current_pain",
+            "requirement_name": "暴露当前痛点",
+            "decision_gap": "need_gap",
+            "source": [
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 10,
+            "success_criteria": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          },
+          {
+            "requirement_id": "prove_user_fit",
+            "requirement_name": "证明人群适配",
+            "decision_gap": "fit_gap",
+            "source": [
+              "category_purchase_criteria_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 14,
+            "success_criteria": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [
+              "skin_fit"
+            ],
+            "required_evidence_requirements": [
+              "skin_type_guidance"
+            ],
+            "risk_points": [
+              "skin_mismatch_risk"
+            ]
+          },
+          {
+            "requirement_id": "prove_scenario_fit",
+            "requirement_name": "证明场景适配",
+            "decision_gap": "fit_gap",
+            "source": [
+              "category_purchase_criteria_dictionary"
+            ],
+            "priority": "medium",
+            "required": true,
+            "sequence_rank": 16,
+            "success_criteria": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [
+              "routine_fit"
+            ],
+            "required_evidence_requirements": [
+              "routine_guidance"
+            ],
+            "risk_points": [
+              "routine_conflict_risk"
+            ]
+          },
+          {
+            "requirement_id": "prove_core_benefit",
+            "requirement_name": "证明核心收益",
+            "decision_gap": "value_gap",
+            "source": [
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 20,
+            "success_criteria": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          },
+          {
+            "requirement_id": "provide_visible_result",
+            "requirement_name": "提供可见效果",
+            "decision_gap": "proof_gap",
+            "source": [
+              "category_purchase_criteria_dictionary",
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 30,
+            "success_criteria": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [
+              "usage_effect"
+            ],
+            "required_evidence_requirements": [
+              "before_after_demonstration"
+            ],
+            "risk_points": [
+              "no_effect_risk"
+            ]
+          },
+          {
+            "requirement_id": "establish_basic_trust",
+            "requirement_name": "建立基础信任",
+            "decision_gap": "trust_gap",
+            "source": [
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 40,
+            "success_criteria": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          },
+          {
+            "requirement_id": "reduce_trial_risk",
+            "requirement_name": "降低试错风险",
+            "decision_gap": "risk_gap",
+            "source": [
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 40,
+            "success_criteria": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          },
+          {
+            "requirement_id": "prove_source_credibility",
+            "requirement_name": "证明来源可信",
+            "decision_gap": "trust_gap",
+            "source": [
+              "category_purchase_criteria_dictionary",
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 41,
+            "success_criteria": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [
+              "ingredient_credibility"
+            ],
+            "required_evidence_requirements": [
+              "ingredient_proof"
+            ],
+            "risk_points": [
+              "ingredient_doubt_risk"
+            ]
+          },
+          {
+            "requirement_id": "provide_authority_endorsement",
+            "requirement_name": "权威背书",
+            "decision_gap": "trust_gap",
+            "source": [
+              "JTBD_requirement_template_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 43,
+            "success_criteria": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          },
+          {
+            "requirement_id": "resolve_safety_risk",
+            "requirement_name": "证明安全风险降低",
+            "decision_gap": "risk_gap",
+            "source": [
+              "JTBD_requirement_template_dictionary",
+              "category_purchase_criteria_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 46,
+            "success_criteria": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [
+              "irritation_risk"
+            ],
+            "required_evidence_requirements": [
+              "irritation_test"
+            ],
+            "risk_points": [
+              "irritation_risk"
+            ]
+          },
+          {
+            "requirement_id": "prove_current_purchase_reason",
+            "requirement_name": "证明当下购买理由",
+            "decision_gap": "action_gap",
+            "source": [
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "high",
+            "required": true,
+            "sequence_rank": 50,
+            "success_criteria": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          },
+          {
+            "requirement_id": "clarify_purchase_threshold",
+            "requirement_name": "明确购买门槛",
+            "decision_gap": "action_gap",
+            "source": [
+              "persuasion_requirement_dictionary"
+            ],
+            "priority": "medium",
+            "required": false,
+            "sequence_rank": 52,
+            "success_criteria": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "related_decision_criteria": [],
+            "required_evidence_requirements": [],
+            "risk_points": []
+          }
+        ],
+        "not_applicable_requirements": [],
+        "diagnosis_contract": {
+          "requirement_completion_schema": {
+            "status_enum": [
+              "completed",
+              "partial",
+              "missing",
+              "not_applicable"
+            ],
+            "minimum_required_requirements": [
+              "prove_core_benefit",
+              "provide_visible_result"
+            ],
+            "diagnosis_dimensions": [
+              "whether_requirement_appears",
+              "whether_evidence_is_sufficient",
+              "whether_sequence_is_reasonable",
+              "whether_risk_is_resolved"
+            ]
+          }
+        }
+      },
+      "product_target_audience": {
+        "primary_audiences": [
+          {
+            "audience_group": "年长中高消费力女性",
+            "fit_level": "primary",
+            "reason": "任务「物理安全与风险规避」对应购买角色「风险责任人」；命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性；大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+          }
+        ],
+        "secondary_audiences": [
+          {
+            "audience_group": "年长低消费力女性",
+            "fit_level": "secondary",
+            "reason": "购买角色「风险责任人」下，大牌官方套装/分量价值也可覆盖低消费力人群，作为次级目标。"
+          }
+        ],
+        "weak_fit_audiences": [],
+        "reasoning_chain": {
+          "task_to_role": "唯一任务「物理安全与风险规避」对应购买角色「风险责任人」。",
+          "role_category_to_age_gender": "购买角色「风险责任人」叠加品类信号：命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性。",
+          "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。",
+          "persuasion_profile_to_audience": "需满足说服要求「暴露当前痛点(expose_current_pain)」、「证明人群适配(prove_user_fit)」、「证明场景适配(prove_scenario_fit)」（profile 共 12 条说服要求，其中 required/high 优先项 11 条）→ 因此核心说服对象指向「年长中高消费力女性」。"
+        },
+        "caveats": [
+          "大牌官方且高水位：若强调套装/分量价值，也可覆盖低消费力人群（追加低消费力 secondary）。"
+        ]
+      }
+    },
+    "candidate_set": {
+      "candidate_h": [
+        {
+          "code": "H1",
+          "label": "H1 痛点/焦虑直击",
+          "hook_tag": "H1",
+          "soft_constraint_contract": null,
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        },
+        {
+          "code": "H5",
+          "label": "H5 反常识与悬念",
+          "hook_tag": "H5",
+          "soft_constraint_contract": {
+            "trigger_cta_tags": [
+              "C1",
+              "C2"
+            ],
+            "required_effect_capabilities_all": [
+              "answer_revealed"
+            ],
+            "unmet_risk_flag": "rhythm_discount"
+          },
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        },
+        {
+          "code": "H6",
+          "label": "H6 场景/人群代入",
+          "hook_tag": "H6",
+          "soft_constraint_contract": {
+            "trigger_cta_tags": [
+              "C1",
+              "C2"
+            ],
+            "required_effect_capabilities_all": [
+              "identity_binding_complete"
+            ],
+            "unmet_risk_flag": "resonance_risk"
+          },
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        },
+        {
+          "code": "H7",
+          "label": "H7 明星/权威同款",
+          "hook_tag": "H7",
+          "soft_constraint_contract": {
+            "trigger_cta_tags": [
+              "C1",
+              "C2"
+            ],
+            "required_effect_capabilities_all": [
+              "identity_binding_complete"
+            ],
+            "unmet_risk_flag": "resonance_risk"
+          },
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        }
+      ],
+      "core_e": [
+        {
+          "code": "E1",
+          "label": "E1 效果测评",
+          "effect_tag": "E1",
+          "completion_capabilities": [
+            "functional_proof_complete"
+          ],
+          "completion_reason_codes": [
+            "capability_from_e1:functional_proof_complete"
+          ],
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        },
+        {
+          "code": "E6",
+          "label": "E6 成分/参数科普",
+          "effect_tag": "E6",
+          "completion_capabilities": [
+            "functional_proof_complete",
+            "identity_binding_complete"
+          ],
+          "completion_reason_codes": [
+            "capability_from_e6:functional_proof_complete",
+            "capability_from_e6:identity_binding_complete"
+          ],
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        }
+      ],
+      "core_c": [
+        {
+          "code": "C4",
+          "label": "C4 人群/场景总结",
+          "cta_tag": "C4",
+          "close_strength": "passive_close",
+          "required_effect_capabilities_any": [
+            "functional_proof_complete",
+            "scenario_proof_complete"
+          ],
+          "fallback_priority": [
+            "C3",
+            "C1",
+            "C2"
+          ],
+          "source_role": "primary",
+          "source_requirement_ref": "primary_requirement"
+        }
+      ],
+      "primary_effect": "E1",
+      "primary_cta": "C4",
+      "derived_from": {
+        "requirement_ids": [
+          "expose_current_pain",
+          "prove_user_fit",
+          "prove_scenario_fit",
+          "prove_core_benefit",
+          "provide_visible_result",
+          "establish_basic_trust",
+          "reduce_trial_risk",
+          "prove_source_credibility",
+          "provide_authority_endorsement",
+          "resolve_safety_risk",
+          "prove_current_purchase_reason"
+        ],
+        "audience_groups": [
+          "年长中高消费力女性"
+        ]
+      }
+    },
+    "product_hec": [
+      {
+        "variant_id": "runben_repellent_24p9-v1",
+        "hook": {
+          "code": "H1",
+          "name": "痛点/焦虑直击",
+          "definition": "诉诸避害。直接暴露症状、制造麻烦与焦虑（如卡粉特写、直击脱发）。"
+        },
+        "effect": {
+          "code": "E1",
+          "name": "效果测评",
+          "definition": "有明确验证目标的常规实测验证（如喷水测眉笔防水、吸油纸测清爽度）。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v2",
+        "hook": {
+          "code": "H1",
+          "name": "痛点/焦虑直击",
+          "definition": "诉诸避害。直接暴露症状、制造麻烦与焦虑（如卡粉特写、直击脱发）。"
+        },
+        "effect": {
+          "code": "E6",
+          "name": "成分/参数科普",
+          "definition": "提供客观的物质依据，包括化学成分解释、物理参数展示、专有技术名词，或官方的检疫/鉴定证书背书。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v3",
+        "hook": {
+          "code": "H5",
+          "name": "反常识与悬念",
+          "definition": "诉诸认知冲突与信息差。拆分为三个二级子类： H5-1 行为猎奇/反常规：视觉与操作违背常理（如开水煮馒头、火鸡面+螺蛳粉）。 H5-2 认知/观点冲突：直接挑战大众固有认知（如“全网夸的其实是智商税”）。 H5-3 质疑打假/亲测验证：博主化身嘴替，对夸大宣传或负面评论提出质疑并实测。"
+        },
+        "effect": {
+          "code": "E1",
+          "name": "效果测评",
+          "definition": "有明确验证目标的常规实测验证（如喷水测眉笔防水、吸油纸测清爽度）。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v4",
+        "hook": {
+          "code": "H5",
+          "name": "反常识与悬念",
+          "definition": "诉诸认知冲突与信息差。拆分为三个二级子类： H5-1 行为猎奇/反常规：视觉与操作违背常理（如开水煮馒头、火鸡面+螺蛳粉）。 H5-2 认知/观点冲突：直接挑战大众固有认知（如“全网夸的其实是智商税”）。 H5-3 质疑打假/亲测验证：博主化身嘴替，对夸大宣传或负面评论提出质疑并实测。"
+        },
+        "effect": {
+          "code": "E6",
+          "name": "成分/参数科普",
+          "definition": "提供客观的物质依据，包括化学成分解释、物理参数展示、专有技术名词，或官方的检疫/鉴定证书背书。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v5",
+        "hook": {
+          "code": "H6",
+          "name": "场景/人群代入",
+          "definition": "诉诸社交归属。为防止外延过于宽泛，明确拆分为四个基础子标签： H6-1 剧情/关系演绎：用生活短剧、POV视角或关系冲突（夫妻/代际/职场）起手。 H6-2 节点/时空限定：利用特定时间（如换季、节日、早八）或空间（如高铁、宿舍）制造场景规律性刚需。 H6-3 人群/特征点名：直接呼唤具有特定社会身份（宝妈、手残党）或生理特征（黄黑皮、敏感肌）的受众。 H6-4 热点/公共话题代入：利用突发不可预见的社会新闻、娱乐八卦、全网爆梗起手，强行建立“吃瓜/围观”的社交共识，借势引流（区别于H6-2的个人场景刚需，也区别于H5-3针对产品本身的打假）。"
+        },
+        "effect": {
+          "code": "E1",
+          "name": "效果测评",
+          "definition": "有明确验证目标的常规实测验证（如喷水测眉笔防水、吸油纸测清爽度）。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v6",
+        "hook": {
+          "code": "H6",
+          "name": "场景/人群代入",
+          "definition": "诉诸社交归属。为防止外延过于宽泛，明确拆分为四个基础子标签： H6-1 剧情/关系演绎：用生活短剧、POV视角或关系冲突（夫妻/代际/职场）起手。 H6-2 节点/时空限定：利用特定时间（如换季、节日、早八）或空间（如高铁、宿舍）制造场景规律性刚需。 H6-3 人群/特征点名：直接呼唤具有特定社会身份（宝妈、手残党）或生理特征（黄黑皮、敏感肌）的受众。 H6-4 热点/公共话题代入：利用突发不可预见的社会新闻、娱乐八卦、全网爆梗起手，强行建立“吃瓜/围观”的社交共识，借势引流（区别于H6-2的个人场景刚需，也区别于H5-3针对产品本身的打假）。"
+        },
+        "effect": {
+          "code": "E6",
+          "name": "成分/参数科普",
+          "definition": "提供客观的物质依据，包括化学成分解释、物理参数展示、专有技术名词，或官方的检疫/鉴定证书背书。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v7",
+        "hook": {
+          "code": "H7",
+          "name": "明星/权威同款",
+          "definition": "诉诸信任转移。借势明星、大V的脸或权威身份留人（包含明星同款妆容/穿搭等场景代入）。"
+        },
+        "effect": {
+          "code": "E1",
+          "name": "效果测评",
+          "definition": "有明确验证目标的常规实测验证（如喷水测眉笔防水、吸油纸测清爽度）。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      },
+      {
+        "variant_id": "runben_repellent_24p9-v8",
+        "hook": {
+          "code": "H7",
+          "name": "明星/权威同款",
+          "definition": "诉诸信任转移。借势明星、大V的脸或权威身份留人（包含明星同款妆容/穿搭等场景代入）。"
+        },
+        "effect": {
+          "code": "E6",
+          "name": "成分/参数科普",
+          "definition": "提供客观的物质依据，包括化学成分解释、物理参数展示、专有技术名词，或官方的检疫/鉴定证书背书。"
+        },
+        "cta": {
+          "code": "C4",
+          "name": "人群/场景总结",
+          "definition": "诉诸身份与逻辑闭环。在尾部再次圈定特定受众或情境呼应（如“干皮的姐妹冲”、“打工人必备”）。"
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "source": "product_factpack",
+        "field": "basic_info.product_name",
+        "value": "【A级驱蚊力】润本驱蚊液防蚊喷雾派卡瑞丁驱蚊水防蚊叮蚊怕花露水",
+        "segment_id": null,
+        "confidence": null
+      },
+      {
+        "source": "product_factpack",
+        "field": "basic_info.leaf_category",
+        "value": "宝宝防蚊水",
+        "segment_id": null,
+        "confidence": null
+      },
+      {
+        "source": "product_understanding",
+        "field": "product_fact_vector.cognition_attribute",
+        "value": "红海-核心",
+        "segment_id": null,
+        "confidence": null
+      },
+      {
+        "source": "product_understanding",
+        "field": "product_hec",
+        "value": "H1/E1/C4",
+        "segment_id": null,
+        "confidence": null
+      }
+    ]
+  },
+  "video_understanding": {
+    "video_meta": {
+      "video_id": "runben_video_001",
+      "source_platform": null,
+      "source_url": null,
+      "duration_sec": null
+    },
+    "text_stream": {
+      "asr_summary": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰；手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见；成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全；认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障；大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定",
+      "asr_segments": [
+        {
+          "segment_id": "seg_hook_1",
+          "start_sec": 0.0,
+          "end_sec": 4.0,
+          "text": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰",
+          "text_summary": null,
+          "confidence": null
+        },
+        {
+          "segment_id": "seg_effect_1",
+          "start_sec": 4.0,
+          "end_sec": 9.0,
+          "text": "手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见",
+          "text_summary": null,
+          "confidence": null
+        },
+        {
+          "segment_id": "seg_effect_2",
+          "start_sec": 9.0,
+          "end_sec": 13.0,
+          "text": "成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全",
+          "text_summary": null,
+          "confidence": null
+        },
+        {
+          "segment_id": "seg_effect_3",
+          "start_sec": 13.0,
+          "end_sec": 17.0,
+          "text": "认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障",
+          "text_summary": null,
+          "confidence": null
+        },
+        {
+          "segment_id": "seg_cta_1",
+          "start_sec": 17.0,
+          "end_sec": 22.0,
+          "text": "大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定",
+          "text_summary": null,
+          "confidence": null
+        }
+      ],
+      "ocr_text": "700只蚊子挑战 / 15分钟 无包 / 小朋友也能用 · 无味道 / 官方正品 · 检测报告 认证 / 大瓶家用划算+小瓶便携",
+      "ocr_texts": [
+        {
+          "segment_id": "seg_hook_1",
+          "start_sec": 0.0,
+          "end_sec": 4.0,
+          "text": "700只蚊子挑战"
+        },
+        {
+          "segment_id": "seg_effect_1",
+          "start_sec": 4.0,
+          "end_sec": 9.0,
+          "text": "15分钟 无包"
+        },
+        {
+          "segment_id": "seg_effect_2",
+          "start_sec": 9.0,
+          "end_sec": 13.0,
+          "text": "小朋友也能用 · 无味道"
+        },
+        {
+          "segment_id": "seg_effect_3",
+          "start_sec": 13.0,
+          "end_sec": 17.0,
+          "text": "官方正品 · 检测报告 认证"
+        },
+        {
+          "segment_id": "seg_cta_1",
+          "start_sec": 17.0,
+          "end_sec": 22.0,
+          "text": "大瓶家用划算+小瓶便携"
+        }
+      ]
+    },
+    "visual_stream": {
+      "visual_summary": "博主举起手臂正对镜头，画面叠加「700只蚊子挑战」字幕，桌上放着装满蚊子的透明蚊箱，手臂上能看到被叮后的红肿包；博主把喷过驱蚊液的手臂伸进装满蚊子的透明蚊箱中静置，计时器显示15分钟，取出后特写手臂皮肤完好无叮咬包；镜头切到给小朋友手臂上喷驱蚊液的画面，家长凑近闻喷雾后的皮肤表示无味道，画面安静温和；特写官方旗舰店正品外包装与第三方检测报告、派卡瑞丁成分说明文档，镜头平移逐一展示资质；桌面并排摆放大瓶家用装与小瓶便携装，博主拿起两瓶向镜头介绍家用加便携的组合更划算",
+      "visual_segments": [
+        {
+          "segment_id": "seg_hook_1",
+          "start_sec": 0.0,
+          "end_sec": 4.0,
+          "core_scene_desc": "博主举起手臂正对镜头，画面叠加「700只蚊子挑战」字幕，桌上放着装满蚊子的透明蚊箱，手臂上能看到被叮后的红肿包",
+          "core_action": "举起手臂展示叮咬痛点、指向蚊箱引出挑战",
+          "related_asr_segment_id": "seg_hook_1",
+          "related_ocr_texts": [
+            "700只蚊子挑战"
+          ],
+          "is_rhythm_change_point": true,
+          "rhythm_change_reason": "开场痛点 Hook 切入，强视觉冲击建立挑战悬念",
+          "evidence_role": "hook"
+        },
+        {
+          "segment_id": "seg_effect_1",
+          "start_sec": 4.0,
+          "end_sec": 9.0,
+          "core_scene_desc": "博主把喷过驱蚊液的手臂伸进装满蚊子的透明蚊箱中静置，计时器显示15分钟，取出后特写手臂皮肤完好无叮咬包",
+          "core_action": "将手臂伸入蚊箱实测、取出手臂展示无包效果",
+          "related_asr_segment_id": "seg_effect_1",
+          "related_ocr_texts": [
+            "15分钟 无包"
+          ],
+          "is_rhythm_change_point": true,
+          "rhythm_change_reason": "由 Hook 痛点切换到效果实测，进入功效证明段",
+          "evidence_role": "proof"
+        },
+        {
+          "segment_id": "seg_effect_2",
+          "start_sec": 9.0,
+          "end_sec": 13.0,
+          "core_scene_desc": "镜头切到给小朋友手臂上喷驱蚊液的画面，家长凑近闻喷雾后的皮肤表示无味道，画面安静温和",
+          "core_action": "给小朋友喷涂驱蚊液、凑近闻喷后皮肤验证无味",
+          "related_asr_segment_id": "seg_effect_2",
+          "related_ocr_texts": [
+            "小朋友也能用 · 无味道"
+          ],
+          "is_rhythm_change_point": true,
+          "rhythm_change_reason": "场景由实测切换到安全背书，语气转柔和",
+          "evidence_role": "safety"
+        },
+        {
+          "segment_id": "seg_effect_3",
+          "start_sec": 13.0,
+          "end_sec": 17.0,
+          "core_scene_desc": "特写官方旗舰店正品外包装与第三方检测报告、派卡瑞丁成分说明文档，镜头平移逐一展示资质",
+          "core_action": "展示官方正品包装、翻开检测报告与成分文档",
+          "related_asr_segment_id": "seg_effect_3",
+          "related_ocr_texts": [
+            "官方正品 · 检测报告 认证"
+          ],
+          "is_rhythm_change_point": false,
+          "rhythm_change_reason": null,
+          "evidence_role": "proof"
+        },
+        {
+          "segment_id": "seg_cta_1",
+          "start_sec": 17.0,
+          "end_sec": 22.0,
+          "core_scene_desc": "桌面并排摆放大瓶家用装与小瓶便携装，博主拿起两瓶向镜头介绍家用加便携的组合更划算",
+          "core_action": "并排展示大瓶小瓶组合、拿起产品介绍场景与人群",
+          "related_asr_segment_id": "seg_cta_1",
+          "related_ocr_texts": [
+            "大瓶家用划算+小瓶便携"
+          ],
+          "is_rhythm_change_point": true,
+          "rhythm_change_reason": "进入 CTA 收口段，落到人群/场景总结",
+          "evidence_role": "cta"
+        }
+      ]
+    },
+    "video_base_fact": {
+      "total_segment_count": 5,
+      "rhythm_change_points": [
+        {
+          "time_sec": 0.0,
+          "desc": "开场痛点 Hook 切入，强视觉冲击建立挑战悬念"
+        },
+        {
+          "time_sec": 4.0,
+          "desc": "由 Hook 痛点切换到效果实测，进入功效证明段"
+        },
+        {
+          "time_sec": 9.0,
+          "desc": "场景由实测切换到安全背书，语气转柔和"
+        },
+        {
+          "time_sec": 17.0,
+          "desc": "进入 CTA 收口段，落到人群/场景总结"
+        }
+      ],
+      "key_evidence_actions": [
+        {
+          "segment_id": "seg_hook_1",
+          "time_range": "0.0-4.0s",
+          "action_desc": "举起手臂展示叮咬痛点、指向蚊箱引出挑战"
+        },
+        {
+          "segment_id": "seg_effect_1",
+          "time_range": "4.0-9.0s",
+          "action_desc": "将手臂伸入蚊箱实测、取出手臂展示无包效果"
+        },
+        {
+          "segment_id": "seg_effect_2",
+          "time_range": "9.0-13.0s",
+          "action_desc": "给小朋友喷涂驱蚊液、凑近闻喷后皮肤验证无味"
+        },
+        {
+          "segment_id": "seg_effect_3",
+          "time_range": "13.0-17.0s",
+          "action_desc": "展示官方正品包装、翻开检测报告与成分文档"
+        },
+        {
+          "segment_id": "seg_cta_1",
+          "time_range": "17.0-22.0s",
+          "action_desc": "并排展示大瓶小瓶组合、拿起产品介绍场景与人群"
+        }
+      ],
+      "original_fact_record": "[{\"segment_id\": \"seg_hook_1\", \"role\": \"hook\", \"evidence_role\": \"hook\", \"start_sec\": 0.0, \"end_sec\": 4.0, \"asr\": \"实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰\", \"ocr\": \"700只蚊子挑战\", \"visual_facts\": {\"shot_size\": \"medium_close_up\", \"camera_movement\": \"static\", \"visual_subject\": \"博主举起手臂正对镜头，画面叠加「700只蚊子挑战」字幕，桌上放着装满蚊子的透明蚊箱，手臂上能看到被叮后的红肿包\", \"lighting_tone\": \"flat_neutral\", \"key_objects\": [\"手臂\", \"红肿包\", \"透明蚊箱\", \"700只蚊子挑战字幕\"], \"actions\": [{\"action_name\": \"举起手臂展示叮咬痛点\", \"physical_intensity\": \"medium\"}, {\"action_name\": \"指向蚊箱引出挑战\", \"physical_intensity\": \"low\"}]}, \"rhythm_facts\": {\"transition_type\": \"hard_cut\", \"pace_marker\": \"fast\", \"is_rhythm_change_point\": true, \"rhythm_change_reason\": \"开场痛点 Hook 切入，强视觉冲击建立挑战悬念\"}}, {\"segment_id\": \"seg_effect_1\", \"role\": \"effect\", \"evidence_role\": \"proof\", \"start_sec\": 4.0, \"end_sec\": 9.0, \"asr\": \"手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见\", \"ocr\": \"15分钟 无包\", \"visual_facts\": {\"shot_size\": \"close_up\", \"camera_movement\": \"slow_push_in\", \"visual_subject\": \"博主把喷过驱蚊液的手臂伸进装满蚊子的透明蚊箱中静置，计时器显示15分钟，取出后特写手臂皮肤完好无叮咬包\", \"lighting_tone\": \"flat_neutral\", \"key_objects\": [\"手臂\", \"透明蚊箱\", \"15分钟计时器\", \"无叮咬的皮肤特写\"], \"actions\": [{\"action_name\": \"将手臂伸入蚊箱实测\", \"physical_intensity\": \"high\"}, {\"action_name\": \"取出手臂展示无包效果\", \"physical_intensity\": \"medium\"}]}, \"rhythm_facts\": {\"transition_type\": \"match_cut\", \"pace_marker\": \"normal\", \"is_rhythm_change_point\": true, \"rhythm_change_reason\": \"由 Hook 痛点切换到效果实测，进入功效证明段\"}}, {\"segment_id\": \"seg_effect_2\", \"role\": \"effect\", \"evidence_role\": \"safety\", \"start_sec\": 9.0, \"end_sec\": 13.0, \"asr\": \"成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全\", \"ocr\": \"小朋友也能用 · 无味道\", \"visual_facts\": {\"shot_size\": \"medium\", \"camera_movement\": \"static\", \"visual_subject\": \"镜头切到给小朋友手臂上喷驱蚊液的画面，家长凑近闻喷雾后的皮肤表示无味道，画面安静温和\", \"lighting_tone\": \"warm_soft\", \"key_objects\": [\"小朋友手臂\", \"驱蚊喷雾\", \"家长\", \"无味道字幕\"], \"actions\": [{\"action_name\": \"给小朋友喷涂驱蚊液\", \"physical_intensity\": \"low\"}, {\"action_name\": \"凑近闻喷后皮肤验证无味\", \"physical_intensity\": \"low\"}]}, \"rhythm_facts\": {\"transition_type\": \"hard_cut\", \"pace_marker\": \"slow\", \"is_rhythm_change_point\": true, \"rhythm_change_reason\": \"场景由实测切换到安全背书，语气转柔和\"}}, {\"segment_id\": \"seg_effect_3\", \"role\": \"effect\", \"evidence_role\": \"proof\", \"start_sec\": 13.0, \"end_sec\": 17.0, \"asr\": \"认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障\", \"ocr\": \"官方正品 · 检测报告 认证\", \"visual_facts\": {\"shot_size\": \"close_up\", \"camera_movement\": \"pan\", \"visual_subject\": \"特写官方旗舰店正品外包装与第三方检测报告、派卡瑞丁成分说明文档，镜头平移逐一展示资质\", \"lighting_tone\": \"flat_neutral\", \"key_objects\": [\"官方正品包装\", \"第三方检测报告\", \"派卡瑞丁成分说明\", \"认证标识\"], \"actions\": [{\"action_name\": \"展示官方正品包装\", \"physical_intensity\": \"low\"}, {\"action_name\": \"翻开检测报告与成分文档\", \"physical_intensity\": \"low\"}]}, \"rhythm_facts\": {\"transition_type\": \"hard_cut\", \"pace_marker\": \"normal\", \"is_rhythm_change_point\": false, \"rhythm_change_reason\": null}}, {\"segment_id\": \"seg_cta_1\", \"role\": \"cta\", \"evidence_role\": \"cta\", \"start_sec\": 17.0, \"end_sec\": 22.0, \"asr\": \"大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定\", \"ocr\": \"大瓶家用划算+小瓶便携\", \"visual_facts\": {\"shot_size\": \"medium\", \"camera_movement\": \"static\", \"visual_subject\": \"桌面并排摆放大瓶家用装与小瓶便携装，博主拿起两瓶向镜头介绍家用加便携的组合更划算\", \"lighting_tone\": \"warm_soft\", \"key_objects\": [\"大瓶家用装\", \"小瓶便携装\", \"组合套装\"], \"actions\": [{\"action_name\": \"并排展示大瓶小瓶组合\", \"physical_intensity\": \"low\"}, {\"action_name\": \"拿起产品介绍场景与人群\", \"physical_intensity\": \"low\"}]}, \"rhythm_facts\": {\"transition_type\": \"hard_cut\", \"pace_marker\": \"normal\", \"is_rhythm_change_point\": true, \"rhythm_change_reason\": \"进入 CTA 收口段，落到人群/场景总结\"}}]"
+    },
+    "video_jtbd": {
+      "primary_task": "驱蚊防护（物理安全与风险规避）",
+      "reasoning": "视频以 700 只蚊子实测挑战为 Hook，围绕 15 分钟无包效果、小朋友也能用的安全背书、官方正品检测报告组织内容，整体演示的是为家庭/儿童规避蚊虫叮咬风险的驱蚊防护任务。",
+      "evidence": [
+        {
+          "source": "video_factpack",
+          "field": "asr",
+          "value": "实测700只蚊子挑战，被叮一身红肿包真的很困扰",
+          "segment_id": "seg_hook_1",
+          "confidence": null
+        },
+        {
+          "source": "video_factpack",
+          "field": "asr",
+          "value": "15分钟一个包都没有，真的无包，驱蚊效果肉眼可见",
+          "segment_id": "seg_effect_1",
+          "confidence": null
+        },
+        {
+          "source": "video_factpack",
+          "field": "asr",
+          "value": "成分温和，小朋友也能用，敏感肌也安全",
+          "segment_id": "seg_effect_2",
+          "confidence": null
+        }
+      ]
+    },
+    "actual_hec": {
+      "hook_tag": "H5",
+      "effect_tag": "E1",
+      "cta_tag": "C4",
+      "reason": "H5安全场景切入→E1效果测评→C4人群场景总结"
+    },
+    "slider_signature": {
+      "visual": 0.82,
+      "audio": 0.6,
+      "proof": 0.75,
+      "cta": 0.3,
+      "summary": "视觉0.82/音频0.6/证明0.75/CTA0.3"
+    },
+    "evidence_spans": [
+      {
+        "source": "video_factpack",
+        "field": "evidence_span:span_pain",
+        "value": "蚊子太多被叮一身包很困扰",
+        "segment_id": null,
+        "confidence": null
+      },
+      {
+        "source": "video_factpack",
+        "field": "evidence_span:span_proof",
+        "value": "15分钟无包，700只蚊子挑战实测效果",
+        "segment_id": null,
+        "confidence": null
+      },
+      {
+        "source": "video_factpack",
+        "field": "evidence_span:span_safety",
+        "value": "小朋友也能用，温和无味道无刺激",
+        "segment_id": null,
+        "confidence": null
+      },
+      {
+        "source": "video_factpack",
+        "field": "evidence_span:span_cta",
+        "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+        "segment_id": null,
+        "confidence": null
+      }
+    ]
+  },
+  "diagnosis": {
+    "overview": {
+      "overall_status": "needs_minor_repair",
+      "audience_match_status": "high_match",
+      "profile_match_status": "partial",
+      "hec_match_status": "acceptable_deviation",
+      "slider_match_status": "mixed_deviation",
+      "requirement_coverage_status": "partial",
+      "requirement_coverage_text": "10/12 completed",
+      "summary": "人群匹配：high_match。 说服要求覆盖：partial。 HEC 匹配：acceptable_deviation。 Slider 匹配：mixed_deviation。"
+    },
+    "profile_match": {
+      "status": "insufficient_evidence",
+      "product_audience": {
+        "primary": "",
+        "scene": "",
+        "core_need": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。"
+      },
+      "video_audience": {
+        "primary": "",
+        "scene": "",
+        "core_need": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+      },
+      "gap": {
+        "level": "medium",
+        "description": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+      },
+      "match_result": "partial",
+      "evidence": [
+        {
+          "source": "product_factpack",
+          "field": "persuasion_requirements.success_criteria",
+          "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "segment_id": null,
+          "confidence": null
+        },
+        {
+          "source": "video_factpack",
+          "field": "video_corpus.full_text",
+          "value": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+          "segment_id": null,
+          "confidence": null
+        }
+      ],
+      "summary": "证据不足，缺失字段：['product_audience.primary', 'video_audience.primary']。必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+    },
+    "hec_match": {
+      "status": "acceptable_deviation",
+      "product_expected": {
+        "hook_tag": "H1",
+        "effect_tag": "E1",
+        "cta_tag": "C4"
+      },
+      "video_actual": {
+        "hook_tag": "H5",
+        "effect_tag": "E1",
+        "cta_tag": "C4"
+      },
+      "dimension_results": [
+        {
+          "dimension": "hook",
+          "expected": "H1",
+          "actual": "H5",
+          "status": "acceptable_deviation",
+          "impact": "hook 偏移：应然 H1 → 实然 H5（effect 一致时属可接受偏差）。",
+          "suggestion": "如需精准对齐，可将 hook 标签调整为 H1。"
+        },
+        {
+          "dimension": "effect",
+          "expected": "E1",
+          "actual": "E1",
+          "status": "matched",
+          "impact": "effect 维度商品应然与视频实然一致（E1）。",
+          "suggestion": ""
+        },
+        {
+          "dimension": "cta",
+          "expected": "C4",
+          "actual": "C4",
+          "status": "matched",
+          "impact": "cta 维度商品应然与视频实然一致（C4）。",
+          "suggestion": ""
+        },
+        {
+          "dimension": "chain",
+          "expected": "H1/E1/C4",
+          "actual": "H5/E1/C4",
+          "status": "acceptable_deviation",
+          "impact": "actual={'H': 'H5', 'E': 'E1', 'C': 'C4'}；H_hit=False, E_hit=True, C_hit=True, full_combination_hit=False → acceptable_deviation。",
+          "suggestion": "对齐三轴组合至商品候选 HEC。"
+        }
+      ],
+      "acceptable_deviation_reason": "effect（说服核心）命中候选集合，hook/cta 偏移属可接受偏差；建议结合业务判断是否需要精准对齐。",
+      "hec_gap_summary": "hook H5 不在候选 H 集 ['H1']"
+    },
+    "slider_match": {
+      "status": "mixed_deviation",
+      "target_audience_reference": [
+        "年长中高消费力女性"
+      ],
+      "expected_slider_preference": {
+        "visual": "0.3-0.7",
+        "audio": "0.4-0.8",
+        "proof": "0.6-1.0",
+        "cta": "0.4-0.8"
+      },
+      "actual_slider_signature": {
+        "visual": 0.82,
+        "audio": 0.6,
+        "proof": 0.75,
+        "cta": 0.3
+      },
+      "axis_results": [
+        {
+          "axis": "visual",
+          "fit_status": "too_strong",
+          "expected": "0.3-0.7",
+          "actual": "0.82",
+          "judgment": "visual score=0.82，参照区间[0.30,0.70] → too_strong。",
+          "repair_direction": "visual 偏强（0.82 > 0.70），需收敛表现强度。",
+          "evidence": [
+            {
+              "source": "video_factpack",
+              "field": "slider_signature.visual",
+              "value": "0.82",
+              "segment_id": null,
+              "confidence": null
+            }
+          ]
+        },
+        {
+          "axis": "audio",
+          "fit_status": "fit",
+          "expected": "0.4-0.8",
+          "actual": "0.6",
+          "judgment": "audio score=0.60，参照区间[0.40,0.80] → fit。",
+          "repair_direction": "",
+          "evidence": [
+            {
+              "source": "video_factpack",
+              "field": "slider_signature.audio",
+              "value": "0.6",
+              "segment_id": null,
+              "confidence": null
+            }
+          ]
+        },
+        {
+          "axis": "proof",
+          "fit_status": "fit",
+          "expected": "0.6-1.0",
+          "actual": "0.75",
+          "judgment": "proof score=0.75，参照区间[0.60,1.00] → fit。",
+          "repair_direction": "",
+          "evidence": [
+            {
+              "source": "video_factpack",
+              "field": "slider_signature.proof",
+              "value": "0.75",
+              "segment_id": null,
+              "confidence": null
+            }
+          ]
+        },
+        {
+          "axis": "cta",
+          "fit_status": "too_weak",
+          "expected": "0.4-0.8",
+          "actual": "0.3",
+          "judgment": "cta score=0.30，参照区间[0.40,0.80] → too_weak。",
+          "repair_direction": "cta 偏弱（0.30 < 0.40），需加强表现强度。",
+          "evidence": [
+            {
+              "source": "video_factpack",
+              "field": "slider_signature.cta",
+              "value": "0.3",
+              "segment_id": null,
+              "confidence": null
+            }
+          ]
+        }
+      ],
+      "audience_acceptance_judgment": "参照人群「年长中高消费力女性」对四轴的接受度评估 → mixed_deviation。",
+      "slider_gap_summary": "偏离轴：['visual', 'cta']。"
+    },
+    "requirement_coverage": {
+      "status": "partial",
+      "completed_count": 10,
+      "total_count": 12,
+      "items": [
+        {
+          "requirement_id": "expose_current_pain",
+          "requirement_name": "暴露当前痛点",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「暴露当前痛点」命中关键词 ['蚊', '叮', '包', '红肿', '挑战', '困扰'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_pain",
+              "value": "蚊子太多被叮一身包很困扰",
+              "segment_id": "span_pain",
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_proof",
+              "value": "15分钟无包，700只蚊子挑战实测效果",
+              "segment_id": "span_proof",
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_cta",
+              "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+              "segment_id": "span_cta",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_user_fit",
+          "requirement_name": "证明人群适配",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+          "actual": "要求「证明人群适配」命中关键词 ['小朋友', '家庭', '适合', '也能用'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_safety",
+              "value": "小朋友也能用，温和无味道无刺激",
+              "segment_id": "span_safety",
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_cta",
+              "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+              "segment_id": "span_cta",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_scenario_fit",
+          "requirement_name": "证明场景适配",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+          "actual": "要求「证明场景适配」命中关键词 ['家用', '户外', '便携', '出门', '大瓶', '小瓶'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_cta",
+              "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+              "segment_id": "span_cta",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_core_benefit",
+          "requirement_name": "证明核心收益",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「证明核心收益」命中关键词 ['驱蚊', '防蚊', '无包', '效果'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_proof",
+              "value": "15分钟无包，700只蚊子挑战实测效果",
+              "segment_id": "span_proof",
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_cta",
+              "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+              "segment_id": "span_cta",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "provide_visible_result",
+          "requirement_name": "提供可见效果",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+          "actual": "要求「提供可见效果」命中关键词 ['分钟', '无包', '挑战', '只', '效果', '实测', '可见'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_proof",
+              "value": "15分钟无包，700只蚊子挑战实测效果",
+              "segment_id": "span_proof",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "establish_basic_trust",
+          "requirement_name": "建立基础信任",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「建立基础信任」命中关键词 ['官方', '正品', '旗舰'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "profile_match.judgment",
+              "value": "要求「建立基础信任」命中关键词 ['官方', '正品', '旗舰'] → completed。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "reduce_trial_risk",
+          "requirement_name": "降低试错风险",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「降低试错风险」命中关键词 ['无味道', '无味', '温和', '无刺激', '安全', '敏感肌'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_safety",
+              "value": "小朋友也能用，温和无味道无刺激",
+              "segment_id": "span_safety",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_source_credibility",
+          "requirement_name": "证明来源可信",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+          "actual": "要求「证明来源可信」命中关键词 ['检测', '报告', '成分', '派卡瑞丁', '认证'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "profile_match.judgment",
+              "value": "要求「证明来源可信」命中关键词 ['检测', '报告', '成分', '派卡瑞丁', '认证'] → completed。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "provide_authority_endorsement",
+          "requirement_name": "权威背书",
+          "required": true,
+          "completion_status": "weak",
+          "expected": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「权威背书」命中关键词 ['检测报告', '认证'] → partial。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "profile_match.judgment",
+              "value": "要求「权威背书」命中关键词 ['检测报告', '认证'] → partial。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "missing_reason": "视频对「权威背书」表达偏弱，建议强化证据与口播。",
+          "repair_direction": "视频对「权威背书」表达偏弱，建议强化证据与口播。"
+        },
+        {
+          "requirement_id": "resolve_safety_risk",
+          "requirement_name": "证明安全风险降低",
+          "required": true,
+          "completion_status": "completed",
+          "expected": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+          "actual": "要求「证明安全风险降低」命中关键词 ['安全', '温和', '无刺激', '小朋友', '也能用'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_safety",
+              "value": "小朋友也能用，温和无味道无刺激",
+              "segment_id": "span_safety",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_current_purchase_reason",
+          "requirement_name": "证明当下购买理由",
+          "required": true,
+          "completion_status": "weak",
+          "expected": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「证明当下购买理由」命中关键词 ['夏天'] → weak。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "profile_match.judgment",
+              "value": "要求「证明当下购买理由」命中关键词 ['夏天'] → weak。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "missing_reason": "视频对「证明当下购买理由」表达偏弱，建议强化证据与口播。",
+          "repair_direction": "视频对「证明当下购买理由」表达偏弱，建议强化证据与口播。"
+        },
+        {
+          "requirement_id": "clarify_purchase_threshold",
+          "requirement_name": "明确购买门槛",
+          "required": false,
+          "completion_status": "completed",
+          "expected": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+          "actual": "要求「明确购买门槛」命中关键词 ['大瓶', '小瓶', '家用', '便携'] → completed。",
+          "matched_evidence_spans": [
+            {
+              "source": "product_understanding",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "segment_id": null,
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "evidence_span:span_cta",
+              "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+              "segment_id": "span_cta",
+              "confidence": null
+            }
+          ],
+          "missing_reason": "",
+          "repair_direction": ""
+        }
+      ],
+      "missing_required_requirements": [],
+      "weak_requirements": [
+        "provide_authority_endorsement",
+        "prove_current_purchase_reason"
+      ],
+      "summary": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+    },
+    "top_issues": [
+      {
+        "issue_id": "ISSUE-01",
+        "severity": "low",
+        "module": "requirement_coverage",
+        "title": "说服要求偏弱/部分满足",
+        "description": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+        "evidence": [
+          {
+            "source": "raw_output",
+            "field": "diagnosis_summary.repair_suggestions[0].issue_summary",
+            "value": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+            "segment_id": null,
+            "confidence": null
+          }
+        ],
+        "related_requirement_id": "provide_authority_endorsement"
+      },
+      {
+        "issue_id": "ISSUE-02",
+        "severity": "low",
+        "module": "hec_match",
+        "title": "HEC acceptable_deviation",
+        "description": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+        "evidence": [
+          {
+            "source": "raw_output",
+            "field": "diagnosis_summary.repair_suggestions[1].issue_summary",
+            "value": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+            "segment_id": null,
+            "confidence": null
+          }
+        ],
+        "related_requirement_id": null
+      },
+      {
+        "issue_id": "ISSUE-03",
+        "severity": "low",
+        "module": "slider_match",
+        "title": "Slider mixed_deviation",
+        "description": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+        "evidence": [
+          {
+            "source": "raw_output",
+            "field": "diagnosis_summary.repair_suggestions[2].issue_summary",
+            "value": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+            "segment_id": null,
+            "confidence": null
+          }
+        ],
+        "related_requirement_id": null
+      }
+    ],
+    "suggestions": [
+      {
+        "suggestion_id": "SUGG-01",
+        "priority": "P2",
+        "module": "requirement_coverage",
+        "action": "强化偏弱要求的证据呈现与表达充分度。",
+        "reason": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+        "expected_effect": "修复后预计提升 requirement_coverage 的诊断结论（low 级问题收敛）。",
+        "related_issue_id": "ISSUE-01"
+      },
+      {
+        "suggestion_id": "SUGG-02",
+        "priority": "P2",
+        "module": "hec_match",
+        "action": "对齐 hook/cta 标签，减少 HEC 偏移。",
+        "reason": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+        "expected_effect": "修复后预计提升 hec_match 的诊断结论（low 级问题收敛）。",
+        "related_issue_id": "ISSUE-02"
+      },
+      {
+        "suggestion_id": "SUGG-03",
+        "priority": "P2",
+        "module": "slider_match",
+        "action": "微调偏离轴强度，贴合参照人群偏好区间。",
+        "reason": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+        "expected_effect": "修复后预计提升 slider_match 的诊断结论（low 级问题收敛）。",
+        "related_issue_id": "ISSUE-03"
+      }
+    ]
+  },
+  "artifacts": {
+    "request_payload": {
+      "product_diagnosis": {
+        "source_product_id": "runben_repellent_24p9",
+        "product_fact_vector": {
+          "leaf_category": "宝宝防蚊水",
+          "primary_task": "物理安全与风险规避",
+          "brand_tier": "大牌官方",
+          "relative_price_level": "高水位",
+          "price": 24.9
+        },
+        "product_target_audience": {
+          "primary_audiences": [
+            {
+              "audience_group": "年长中高消费力女性",
+              "fit_level": "primary",
+              "reason": "任务「物理安全与风险规避」对应购买角色「风险责任人」；命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性；大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+            }
+          ],
+          "secondary_audiences": [
+            {
+              "audience_group": "年长低消费力女性",
+              "fit_level": "secondary",
+              "reason": "购买角色「风险责任人」下，大牌官方套装/分量价值也可覆盖低消费力人群，作为次级目标。"
+            }
+          ],
+          "weak_fit_audiences": [],
+          "reasoning_chain": {
+            "task_to_role": "唯一任务「物理安全与风险规避」对应购买角色「风险责任人」。",
+            "role_category_to_age_gender": "购买角色「风险责任人」叠加品类信号：命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性。",
+            "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。",
+            "persuasion_profile_to_audience": "需满足说服要求「暴露当前痛点(expose_current_pain)」、「证明人群适配(prove_user_fit)」、「证明场景适配(prove_scenario_fit)」（profile 共 12 条说服要求，其中 required/high 优先项 11 条）→ 因此核心说服对象指向「年长中高消费力女性」。"
+          },
+          "caveats": [
+            "大牌官方且高水位：若强调套装/分量价值，也可覆盖低消费力人群（追加低消费力 secondary）。"
+          ]
+        },
+        "persuasion_requirement_profile": {
+          "profile_version": "v3.1",
+          "content_goal": "purchase",
+          "category_group": "美妆个护",
+          "jtbd_template_status": "matched",
+          "requirement_dictionary_version": "v3.1_active_mvp_23",
+          "category_purchase_criteria_version": "v3.1_phase1_4groups",
+          "main_persuasion_route": {
+            "primary_jtbd": {
+              "level1": "功能域",
+              "level2": "物理安全与风险规避"
+            },
+            "category_resistance": {
+              "rule": "红海-核心 × 快消",
+              "summary": "在红海-核心、快消的品类竞争态势下组织购买判断主路径。"
+            },
+            "product_conversion_barrier": {
+              "rule": "极低 × 高水位"
+            }
+          },
+          "activated_category_requirements": {
+            "category_group": "美妆个护",
+            "routing_confidence": "medium",
+            "activated_decision_criteria": [
+              "ingredient_credibility",
+              "irritation_risk",
+              "routine_fit",
+              "skin_fit",
+              "usage_effect"
+            ],
+            "activated_evidence_requirements": [
+              "before_after_demonstration",
+              "ingredient_proof",
+              "irritation_test",
+              "routine_guidance",
+              "skin_type_guidance"
+            ],
+            "activated_risk_points": [
+              "ingredient_doubt_risk",
+              "irritation_risk",
+              "no_effect_risk",
+              "routine_conflict_risk",
+              "skin_mismatch_risk"
+            ]
+          },
+          "persuasion_requirements": [
+            {
+              "requirement_id": "expose_current_pain",
+              "requirement_name": "暴露当前痛点",
+              "decision_gap": "need_gap",
+              "source": [
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 10,
+              "success_criteria": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            },
+            {
+              "requirement_id": "prove_user_fit",
+              "requirement_name": "证明人群适配",
+              "decision_gap": "fit_gap",
+              "source": [
+                "category_purchase_criteria_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 14,
+              "success_criteria": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [
+                "skin_fit"
+              ],
+              "required_evidence_requirements": [
+                "skin_type_guidance"
+              ],
+              "risk_points": [
+                "skin_mismatch_risk"
+              ]
+            },
+            {
+              "requirement_id": "prove_scenario_fit",
+              "requirement_name": "证明场景适配",
+              "decision_gap": "fit_gap",
+              "source": [
+                "category_purchase_criteria_dictionary"
+              ],
+              "priority": "medium",
+              "required": true,
+              "sequence_rank": 16,
+              "success_criteria": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [
+                "routine_fit"
+              ],
+              "required_evidence_requirements": [
+                "routine_guidance"
+              ],
+              "risk_points": [
+                "routine_conflict_risk"
+              ]
+            },
+            {
+              "requirement_id": "prove_core_benefit",
+              "requirement_name": "证明核心收益",
+              "decision_gap": "value_gap",
+              "source": [
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 20,
+              "success_criteria": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            },
+            {
+              "requirement_id": "provide_visible_result",
+              "requirement_name": "提供可见效果",
+              "decision_gap": "proof_gap",
+              "source": [
+                "category_purchase_criteria_dictionary",
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 30,
+              "success_criteria": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [
+                "usage_effect"
+              ],
+              "required_evidence_requirements": [
+                "before_after_demonstration"
+              ],
+              "risk_points": [
+                "no_effect_risk"
+              ]
+            },
+            {
+              "requirement_id": "establish_basic_trust",
+              "requirement_name": "建立基础信任",
+              "decision_gap": "trust_gap",
+              "source": [
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 40,
+              "success_criteria": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            },
+            {
+              "requirement_id": "reduce_trial_risk",
+              "requirement_name": "降低试错风险",
+              "decision_gap": "risk_gap",
+              "source": [
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 40,
+              "success_criteria": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            },
+            {
+              "requirement_id": "prove_source_credibility",
+              "requirement_name": "证明来源可信",
+              "decision_gap": "trust_gap",
+              "source": [
+                "category_purchase_criteria_dictionary",
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 41,
+              "success_criteria": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [
+                "ingredient_credibility"
+              ],
+              "required_evidence_requirements": [
+                "ingredient_proof"
+              ],
+              "risk_points": [
+                "ingredient_doubt_risk"
+              ]
+            },
+            {
+              "requirement_id": "provide_authority_endorsement",
+              "requirement_name": "权威背书",
+              "decision_gap": "trust_gap",
+              "source": [
+                "JTBD_requirement_template_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 43,
+              "success_criteria": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            },
+            {
+              "requirement_id": "resolve_safety_risk",
+              "requirement_name": "证明安全风险降低",
+              "decision_gap": "risk_gap",
+              "source": [
+                "JTBD_requirement_template_dictionary",
+                "category_purchase_criteria_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 46,
+              "success_criteria": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [
+                "irritation_risk"
+              ],
+              "required_evidence_requirements": [
+                "irritation_test"
+              ],
+              "risk_points": [
+                "irritation_risk"
+              ]
+            },
+            {
+              "requirement_id": "prove_current_purchase_reason",
+              "requirement_name": "证明当下购买理由",
+              "decision_gap": "action_gap",
+              "source": [
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "high",
+              "required": true,
+              "sequence_rank": 50,
+              "success_criteria": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            },
+            {
+              "requirement_id": "clarify_purchase_threshold",
+              "requirement_name": "明确购买门槛",
+              "decision_gap": "action_gap",
+              "source": [
+                "persuasion_requirement_dictionary"
+              ],
+              "priority": "medium",
+              "required": false,
+              "sequence_rank": 52,
+              "success_criteria": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+              "related_decision_criteria": [],
+              "required_evidence_requirements": [],
+              "risk_points": []
+            }
+          ],
+          "not_applicable_requirements": [],
+          "diagnosis_contract": {
+            "requirement_completion_schema": {
+              "status_enum": [
+                "completed",
+                "partial",
+                "missing",
+                "not_applicable"
+              ],
+              "minimum_required_requirements": [
+                "prove_core_benefit",
+                "provide_visible_result"
+              ],
+              "diagnosis_dimensions": [
+                "whether_requirement_appears",
+                "whether_evidence_is_sufficient",
+                "whether_sequence_is_reasonable",
+                "whether_risk_is_resolved"
+              ]
+            }
+          }
+        },
+        "product_HEC": {
+          "candidates": [
+            {
+              "H": "H1",
+              "E": "E1",
+              "C": "C4"
+            }
+          ]
+        }
+      },
+      "video_understanding": {
+        "video_id": "runben_video_001",
+        "source_product_id": "runben_repellent_24p9",
+        "source_platform": null,
+        "source_url": null,
+        "duration_sec": null,
+        "primary_hec": {
+          "hook_tag": "H5",
+          "effect_tag": "E1",
+          "cta_tag": "C4",
+          "signature": "H5安全场景切入→E1效果测评→C4人群场景总结"
+        },
+        "video_jtbd": {
+          "primary_task": "驱蚊防护（物理安全与风险规避）",
+          "reasoning": "视频以 700 只蚊子实测挑战为 Hook，围绕 15 分钟无包效果、小朋友也能用的安全背书、官方正品检测报告组织内容，整体演示的是为家庭/儿童规避蚊虫叮咬风险的驱蚊防护任务。",
+          "evidence": [
+            {
+              "source": "video_factpack",
+              "field": "asr",
+              "value": "实测700只蚊子挑战，被叮一身红肿包真的很困扰",
+              "segment_id": "seg_hook_1",
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "asr",
+              "value": "15分钟一个包都没有，真的无包，驱蚊效果肉眼可见",
+              "segment_id": "seg_effect_1",
+              "confidence": null
+            },
+            {
+              "source": "video_factpack",
+              "field": "asr",
+              "value": "成分温和，小朋友也能用，敏感肌也安全",
+              "segment_id": "seg_effect_2",
+              "confidence": null
+            }
+          ]
+        },
+        "slider_signature": {
+          "visual": {
+            "score": 0.82,
+            "evidence": "700只蚊子挑战强视觉冲击/猎奇画面"
+          },
+          "audio": {
+            "score": 0.6,
+            "evidence": "口播稳，讲解清晰"
+          },
+          "proof": {
+            "score": 0.75,
+            "evidence": "15分钟无包实测过程"
+          },
+          "cta": {
+            "score": 0.3,
+            "evidence": "大瓶家用+小瓶便携场景总结收口偏弱"
+          }
+        },
+        "storyboard_segments": [
+          {
+            "segment_id": "seg_hook_1",
+            "role": "hook",
+            "evidence_role": "hook",
+            "start_sec": 0.0,
+            "end_sec": 4.0,
+            "asr": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰",
+            "ocr": "700只蚊子挑战",
+            "visual_facts": {
+              "shot_size": "medium_close_up",
+              "camera_movement": "static",
+              "visual_subject": "博主举起手臂正对镜头，画面叠加「700只蚊子挑战」字幕，桌上放着装满蚊子的透明蚊箱，手臂上能看到被叮后的红肿包",
+              "lighting_tone": "flat_neutral",
+              "key_objects": [
+                "手臂",
+                "红肿包",
+                "透明蚊箱",
+                "700只蚊子挑战字幕"
+              ],
+              "actions": [
+                {
+                  "action_name": "举起手臂展示叮咬痛点",
+                  "physical_intensity": "medium"
+                },
+                {
+                  "action_name": "指向蚊箱引出挑战",
+                  "physical_intensity": "low"
+                }
+              ]
+            },
+            "rhythm_facts": {
+              "transition_type": "hard_cut",
+              "pace_marker": "fast",
+              "is_rhythm_change_point": true,
+              "rhythm_change_reason": "开场痛点 Hook 切入，强视觉冲击建立挑战悬念"
+            }
+          },
+          {
+            "segment_id": "seg_effect_1",
+            "role": "effect",
+            "evidence_role": "proof",
+            "start_sec": 4.0,
+            "end_sec": 9.0,
+            "asr": "手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见",
+            "ocr": "15分钟 无包",
+            "visual_facts": {
+              "shot_size": "close_up",
+              "camera_movement": "slow_push_in",
+              "visual_subject": "博主把喷过驱蚊液的手臂伸进装满蚊子的透明蚊箱中静置，计时器显示15分钟，取出后特写手臂皮肤完好无叮咬包",
+              "lighting_tone": "flat_neutral",
+              "key_objects": [
+                "手臂",
+                "透明蚊箱",
+                "15分钟计时器",
+                "无叮咬的皮肤特写"
+              ],
+              "actions": [
+                {
+                  "action_name": "将手臂伸入蚊箱实测",
+                  "physical_intensity": "high"
+                },
+                {
+                  "action_name": "取出手臂展示无包效果",
+                  "physical_intensity": "medium"
+                }
+              ]
+            },
+            "rhythm_facts": {
+              "transition_type": "match_cut",
+              "pace_marker": "normal",
+              "is_rhythm_change_point": true,
+              "rhythm_change_reason": "由 Hook 痛点切换到效果实测，进入功效证明段"
+            }
+          },
+          {
+            "segment_id": "seg_effect_2",
+            "role": "effect",
+            "evidence_role": "safety",
+            "start_sec": 9.0,
+            "end_sec": 13.0,
+            "asr": "成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全",
+            "ocr": "小朋友也能用 · 无味道",
+            "visual_facts": {
+              "shot_size": "medium",
+              "camera_movement": "static",
+              "visual_subject": "镜头切到给小朋友手臂上喷驱蚊液的画面，家长凑近闻喷雾后的皮肤表示无味道，画面安静温和",
+              "lighting_tone": "warm_soft",
+              "key_objects": [
+                "小朋友手臂",
+                "驱蚊喷雾",
+                "家长",
+                "无味道字幕"
+              ],
+              "actions": [
+                {
+                  "action_name": "给小朋友喷涂驱蚊液",
+                  "physical_intensity": "low"
+                },
+                {
+                  "action_name": "凑近闻喷后皮肤验证无味",
+                  "physical_intensity": "low"
+                }
+              ]
+            },
+            "rhythm_facts": {
+              "transition_type": "hard_cut",
+              "pace_marker": "slow",
+              "is_rhythm_change_point": true,
+              "rhythm_change_reason": "场景由实测切换到安全背书，语气转柔和"
+            }
+          },
+          {
+            "segment_id": "seg_effect_3",
+            "role": "effect",
+            "evidence_role": "proof",
+            "start_sec": 13.0,
+            "end_sec": 17.0,
+            "asr": "认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障",
+            "ocr": "官方正品 · 检测报告 认证",
+            "visual_facts": {
+              "shot_size": "close_up",
+              "camera_movement": "pan",
+              "visual_subject": "特写官方旗舰店正品外包装与第三方检测报告、派卡瑞丁成分说明文档，镜头平移逐一展示资质",
+              "lighting_tone": "flat_neutral",
+              "key_objects": [
+                "官方正品包装",
+                "第三方检测报告",
+                "派卡瑞丁成分说明",
+                "认证标识"
+              ],
+              "actions": [
+                {
+                  "action_name": "展示官方正品包装",
+                  "physical_intensity": "low"
+                },
+                {
+                  "action_name": "翻开检测报告与成分文档",
+                  "physical_intensity": "low"
+                }
+              ]
+            },
+            "rhythm_facts": {
+              "transition_type": "hard_cut",
+              "pace_marker": "normal",
+              "is_rhythm_change_point": false,
+              "rhythm_change_reason": null
+            }
+          },
+          {
+            "segment_id": "seg_cta_1",
+            "role": "cta",
+            "evidence_role": "cta",
+            "start_sec": 17.0,
+            "end_sec": 22.0,
+            "asr": "大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定",
+            "ocr": "大瓶家用划算+小瓶便携",
+            "visual_facts": {
+              "shot_size": "medium",
+              "camera_movement": "static",
+              "visual_subject": "桌面并排摆放大瓶家用装与小瓶便携装，博主拿起两瓶向镜头介绍家用加便携的组合更划算",
+              "lighting_tone": "warm_soft",
+              "key_objects": [
+                "大瓶家用装",
+                "小瓶便携装",
+                "组合套装"
+              ],
+              "actions": [
+                {
+                  "action_name": "并排展示大瓶小瓶组合",
+                  "physical_intensity": "low"
+                },
+                {
+                  "action_name": "拿起产品介绍场景与人群",
+                  "physical_intensity": "low"
+                }
+              ]
+            },
+            "rhythm_facts": {
+              "transition_type": "hard_cut",
+              "pace_marker": "normal",
+              "is_rhythm_change_point": true,
+              "rhythm_change_reason": "进入 CTA 收口段，落到人群/场景总结"
+            }
+          }
+        ],
+        "semantic_bundles": [
+          {
+            "bundle_id": "bundle_1",
+            "bundle_role": "effect",
+            "text": "700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障"
+          }
+        ],
+        "evidence_spans": [
+          {
+            "span_id": "span_pain",
+            "text": "蚊子太多被叮一身包很困扰"
+          },
+          {
+            "span_id": "span_proof",
+            "text": "15分钟无包，700只蚊子挑战实测效果"
+          },
+          {
+            "span_id": "span_safety",
+            "text": "小朋友也能用，温和无味道无刺激"
+          },
+          {
+            "span_id": "span_cta",
+            "text": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+          }
+        ]
+      }
+    },
+    "raw_response": {
+      "video_persuasion_diagnosis_result": {
+        "input_validation": {
+          "status": "passed",
+          "blocking_issues": [],
+          "warnings": [
+            "video_HEC 缺失，已回退读取 primary_hec 并归一化为 video_HEC（命名契约映射）。"
+          ]
+        },
+        "video_target_audience": {
+          "primary_audiences": [
+            {
+              "audience_group": "年长中高消费力女性",
+              "fit_level": "primary",
+              "reason": "Hook/场景→入场角色；人设→年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接、女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险；CTA→CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）。",
+              "evidence": [
+                "便携",
+                "出门",
+                "划算",
+                "包",
+                "叮",
+                "品质",
+                "学生",
+                "安全",
+                "官方",
+                "实测",
+                "家庭",
+                "家用",
+                "小朋友",
+                "成分",
+                "户外",
+                "报告",
+                "挑战",
+                "效果",
+                "旗舰",
+                "无包",
+                "检测",
+                "正品",
+                "派卡瑞丁",
+                "温和",
+                "蚊",
+                "认证",
+                "防蚊",
+                "露营",
+                "驱蚊"
+              ]
+            },
+            {
+              "audience_group": "年长低消费力女性",
+              "fit_level": "primary",
+              "reason": "Hook/场景→入场角色；人设→年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接、女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险；CTA→CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）。",
+              "evidence": [
+                "便携",
+                "出门",
+                "划算",
+                "包",
+                "叮",
+                "品质",
+                "学生",
+                "安全",
+                "官方",
+                "实测",
+                "家庭",
+                "家用",
+                "小朋友",
+                "成分",
+                "户外",
+                "报告",
+                "挑战",
+                "效果",
+                "旗舰",
+                "无包",
+                "检测",
+                "正品",
+                "派卡瑞丁",
+                "温和",
+                "蚊",
+                "认证",
+                "防蚊",
+                "露营",
+                "驱蚊"
+              ]
+            }
+          ],
+          "secondary_audiences": [
+            {
+              "audience_group": "年轻中高消费力女性",
+              "fit_level": "secondary",
+              "reason": "主性别下相邻年龄层的次级覆盖人群（跨年龄邻接）。",
+              "evidence": [
+                "便携",
+                "出门",
+                "划算",
+                "包",
+                "叮",
+                "品质",
+                "学生",
+                "安全",
+                "官方",
+                "实测",
+                "家庭",
+                "家用",
+                "小朋友",
+                "成分",
+                "户外",
+                "报告",
+                "挑战",
+                "效果",
+                "旗舰",
+                "无包",
+                "检测",
+                "正品",
+                "派卡瑞丁",
+                "温和",
+                "蚊",
+                "认证",
+                "防蚊",
+                "露营",
+                "驱蚊"
+              ]
+            },
+            {
+              "audience_group": "年轻低消费力女性",
+              "fit_level": "secondary",
+              "reason": "主性别下相邻年龄层的次级覆盖人群（跨年龄邻接）。",
+              "evidence": [
+                "便携",
+                "出门",
+                "划算",
+                "包",
+                "叮",
+                "品质",
+                "学生",
+                "安全",
+                "官方",
+                "实测",
+                "家庭",
+                "家用",
+                "小朋友",
+                "成分",
+                "户外",
+                "报告",
+                "挑战",
+                "效果",
+                "旗舰",
+                "无包",
+                "检测",
+                "正品",
+                "派卡瑞丁",
+                "温和",
+                "蚊",
+                "认证",
+                "防蚊",
+                "露营",
+                "驱蚊"
+              ]
+            }
+          ],
+          "mismatch_risk_audiences": [
+            {
+              "audience_group": "年轻低消费力男性",
+              "fit_level": "mismatch_risk",
+              "reason": "视频出现与主目标性别冲突的少数信号，可能误吸引「年轻低消费力男性」，属错配风险人群。",
+              "evidence": [
+                "便携",
+                "出门",
+                "划算",
+                "包",
+                "叮",
+                "品质",
+                "学生",
+                "安全",
+                "官方",
+                "实测",
+                "家庭",
+                "家用",
+                "小朋友",
+                "成分",
+                "户外",
+                "报告",
+                "挑战",
+                "效果",
+                "旗舰",
+                "无包",
+                "检测",
+                "正品",
+                "派卡瑞丁",
+                "温和",
+                "蚊",
+                "认证",
+                "防蚊",
+                "露营",
+                "驱蚊"
+              ]
+            }
+          ],
+          "axis_judgment": {
+            "age_axis": {
+              "value": "mature",
+              "evidence": [
+                "学生",
+                "家庭",
+                "家用",
+                "小朋友",
+                "防蚊",
+                "驱蚊"
+              ],
+              "reason": "年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接"
+            },
+            "gender_axis": {
+              "value": "female",
+              "evidence": [
+                "家庭",
+                "家用",
+                "小朋友",
+                "户外",
+                "蚊",
+                "防蚊",
+                "驱蚊"
+              ],
+              "reason": "女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险"
+            },
+            "consumption_power_axis": {
+              "value": "mixed",
+              "evidence": [
+                "划算",
+                "品质",
+                "安全",
+                "官方",
+                "实测",
+                "成分",
+                "报告",
+                "挑战",
+                "效果",
+                "旗舰",
+                "无包",
+                "检测",
+                "正品",
+                "派卡瑞丁",
+                "温和",
+                "认证"
+              ],
+              "reason": "CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）"
+            }
+          },
+          "reasoning_chain": {
+            "hook_scene_to_role": "Hook 信号（包、叮、实测、挑战、蚊）+ 场景信号（便携、出门、家庭、家用、户外、露营）→ 入场角色与场景。",
+            "persona_to_age_gender": "人设信号 → 年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接；女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险。",
+            "cta_benefit_to_consumption_power": "CTA/利益点信号 → CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）。"
+          },
+          "evidence_summary": {
+            "hook_signals": [
+              "包",
+              "叮",
+              "实测",
+              "挑战",
+              "蚊"
+            ],
+            "scene_signals": [
+              "便携",
+              "出门",
+              "家庭",
+              "家用",
+              "户外",
+              "露营"
+            ],
+            "persona_signals": [
+              "学生",
+              "家庭",
+              "家用",
+              "小朋友",
+              "户外",
+              "蚊",
+              "防蚊",
+              "驱蚊"
+            ],
+            "cta_benefit_signals": [
+              "划算",
+              "品质",
+              "安全",
+              "官方",
+              "实测",
+              "成分",
+              "报告",
+              "挑战",
+              "效果",
+              "旗舰",
+              "无包",
+              "检测",
+              "正品",
+              "派卡瑞丁",
+              "温和",
+              "认证"
+            ]
+          },
+          "caveats": [
+            "存在 mixed 轴：视频人群信号边界不清，已展开多坐标覆盖。",
+            "存在少数/邻接人群信号，已分别归入次级覆盖或错配风险。"
+          ]
+        },
+        "audience_match_diagnosis": {
+          "match_status": "high_match",
+          "matched_audiences": [
+            "年长中高消费力女性"
+          ],
+          "uncovered_product_audiences": [],
+          "unexpected_video_audiences": [],
+          "judgment": "商品主目标 P=['年长中高消费力女性']；视频主目标 V=['年长中高消费力女性', '年长低消费力女性']；matched=['年长中高消费力女性']，uncovered=[]，unexpected=[] → high_match。",
+          "evidence": [
+            "年长中高消费力女性",
+            "年长低消费力女性"
+          ]
+        },
+        "profile_match_diagnosis": {
+          "status": "insufficient_evidence",
+          "product_audience": {
+            "primary": "",
+            "scene": "",
+            "core_need": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。"
+          },
+          "video_audience": {
+            "primary": "",
+            "scene": "",
+            "core_need": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+          },
+          "gap": {
+            "level": "medium",
+            "description": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+          },
+          "match_result": "partial",
+          "evidence": [
+            {
+              "source": "product_factpack",
+              "field": "persuasion_requirements.success_criteria",
+              "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。"
+            },
+            {
+              "source": "video_factpack",
+              "field": "video_corpus.full_text",
+              "value": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+            }
+          ],
+          "summary": "证据不足，缺失字段：['product_audience.primary', 'video_audience.primary']。必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+          "match_status": "partial",
+          "requirement_results": [
+            {
+              "requirement_id": "expose_current_pain",
+              "requirement_name": "暴露当前痛点",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_pain",
+                "span_proof",
+                "span_cta"
+              ],
+              "judgment": "要求「暴露当前痛点」命中关键词 ['蚊', '叮', '包', '红肿', '挑战', '困扰'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "prove_user_fit",
+              "requirement_name": "证明人群适配",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_safety",
+                "span_cta"
+              ],
+              "judgment": "要求「证明人群适配」命中关键词 ['小朋友', '家庭', '适合', '也能用'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "prove_scenario_fit",
+              "requirement_name": "证明场景适配",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_cta"
+              ],
+              "judgment": "要求「证明场景适配」命中关键词 ['家用', '户外', '便携', '出门', '大瓶', '小瓶'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "prove_core_benefit",
+              "requirement_name": "证明核心收益",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_proof",
+                "span_cta"
+              ],
+              "judgment": "要求「证明核心收益」命中关键词 ['驱蚊', '防蚊', '无包', '效果'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "provide_visible_result",
+              "requirement_name": "提供可见效果",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_proof"
+              ],
+              "judgment": "要求「提供可见效果」命中关键词 ['分钟', '无包', '挑战', '只', '效果', '实测', '可见'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "establish_basic_trust",
+              "requirement_name": "建立基础信任",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [],
+              "judgment": "要求「建立基础信任」命中关键词 ['官方', '正品', '旗舰'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "reduce_trial_risk",
+              "requirement_name": "降低试错风险",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_safety"
+              ],
+              "judgment": "要求「降低试错风险」命中关键词 ['无味道', '无味', '温和', '无刺激', '安全', '敏感肌'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "prove_source_credibility",
+              "requirement_name": "证明来源可信",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [],
+              "judgment": "要求「证明来源可信」命中关键词 ['检测', '报告', '成分', '派卡瑞丁', '认证'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "provide_authority_endorsement",
+              "requirement_name": "权威背书",
+              "required": true,
+              "completion_status": "partial",
+              "matched_evidence_spans": [],
+              "judgment": "要求「权威背书」命中关键词 ['检测报告', '认证'] → partial。",
+              "repair_direction": "视频对「权威背书」表达偏弱，建议强化证据与口播。"
+            },
+            {
+              "requirement_id": "resolve_safety_risk",
+              "requirement_name": "证明安全风险降低",
+              "required": true,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_safety"
+              ],
+              "judgment": "要求「证明安全风险降低」命中关键词 ['安全', '温和', '无刺激', '小朋友', '也能用'] → completed。",
+              "repair_direction": ""
+            },
+            {
+              "requirement_id": "prove_current_purchase_reason",
+              "requirement_name": "证明当下购买理由",
+              "required": true,
+              "completion_status": "weak",
+              "matched_evidence_spans": [],
+              "judgment": "要求「证明当下购买理由」命中关键词 ['夏天'] → weak。",
+              "repair_direction": "视频对「证明当下购买理由」表达偏弱，建议强化证据与口播。"
+            },
+            {
+              "requirement_id": "clarify_purchase_threshold",
+              "requirement_name": "明确购买门槛",
+              "required": false,
+              "completion_status": "completed",
+              "matched_evidence_spans": [
+                "span_cta"
+              ],
+              "judgment": "要求「明确购买门槛」命中关键词 ['大瓶', '小瓶', '家用', '便携'] → completed。",
+              "repair_direction": ""
+            }
+          ],
+          "missing_required_requirements": [],
+          "weak_requirements": [
+            "provide_authority_endorsement",
+            "prove_current_purchase_reason"
+          ],
+          "information_miss_summary": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+          "profile_match_error": {},
+          "blocked_direction_hit": false,
+          "coverage_layers": {
+            "primary_coverage": {
+              "primary_requirement_ref": "primary_requirement",
+              "required_requirement_ids": [
+                "expose_current_pain",
+                "prove_user_fit",
+                "prove_scenario_fit",
+                "prove_core_benefit",
+                "provide_visible_result",
+                "establish_basic_trust",
+                "reduce_trial_risk",
+                "prove_source_credibility",
+                "provide_authority_endorsement",
+                "resolve_safety_risk",
+                "prove_current_purchase_reason"
+              ],
+              "covered_requirement_ids": [
+                "expose_current_pain",
+                "prove_user_fit",
+                "prove_scenario_fit",
+                "prove_core_benefit",
+                "provide_visible_result",
+                "establish_basic_trust",
+                "reduce_trial_risk",
+                "prove_source_credibility",
+                "provide_authority_endorsement",
+                "resolve_safety_risk",
+                "prove_current_purchase_reason"
+              ],
+              "missing_required_requirements": [],
+              "covered": true,
+              "judgment": "主说服要求覆盖：['expose_current_pain', 'prove_user_fit', 'prove_scenario_fit', 'prove_core_benefit', 'provide_visible_result', 'establish_basic_trust', 'reduce_trial_risk', 'prove_source_credibility', 'provide_authority_endorsement', 'resolve_safety_risk', 'prove_current_purchase_reason']。"
+            },
+            "secondary_coverage": {
+              "secondary_benefits": [],
+              "secondary_benefits_hit": [],
+              "overclaimed": false,
+              "secondary_without_primary": false,
+              "judgment": "次级收益命中 无，未越位。"
+            },
+            "blocked_direction_check": {
+              "blocked_directions": [],
+              "blocked_directions_hit": [],
+              "blocked_direction_hit": false,
+              "judgment": "未把任何已阻断方向（GR-02/03/04）当主诉。"
+            }
+          }
+        },
+        "hec_match_diagnosis": {
+          "match_status": "acceptable_deviation",
+          "candidates": [
+            {
+              "H": "H1",
+              "E": "E1",
+              "C": "C4"
+            }
+          ],
+          "actual_video_hec": {
+            "hook_tag": "H5",
+            "effect_tag": "E1",
+            "cta_tag": "C4"
+          },
+          "hook_hit": false,
+          "effect_hit": true,
+          "cta_hit": true,
+          "full_combination_hit": false,
+          "logic_chain_judgment": "actual={'H': 'H5', 'E': 'E1', 'C': 'C4'}；H_hit=False, E_hit=True, C_hit=True, full_combination_hit=False → acceptable_deviation。",
+          "hec_gap_summary": "hook H5 不在候选 H 集 ['H1']"
+        },
+        "slider_match_diagnosis": {
+          "match_status": "mixed_deviation",
+          "target_audience_reference": [
+            "年长中高消费力女性"
+          ],
+          "expected_slider_preference": {
+            "visual": {
+              "min": 0.3,
+              "max": 0.7
+            },
+            "audio": {
+              "min": 0.4,
+              "max": 0.8
+            },
+            "proof": {
+              "min": 0.6,
+              "max": 1.0
+            },
+            "cta": {
+              "min": 0.4,
+              "max": 0.8
+            }
+          },
+          "actual_slider_signature": {
+            "visual": 0.82,
+            "audio": 0.6,
+            "proof": 0.75,
+            "cta": 0.3
+          },
+          "axis_results": [
+            {
+              "axis": "visual",
+              "fit_status": "too_strong",
+              "judgment": "visual score=0.82，参照区间[0.30,0.70] → too_strong。",
+              "repair_direction": "visual 偏强（0.82 > 0.70），需收敛表现强度。"
+            },
+            {
+              "axis": "audio",
+              "fit_status": "fit",
+              "judgment": "audio score=0.60，参照区间[0.40,0.80] → fit。",
+              "repair_direction": ""
+            },
+            {
+              "axis": "proof",
+              "fit_status": "fit",
+              "judgment": "proof score=0.75，参照区间[0.60,1.00] → fit。",
+              "repair_direction": ""
+            },
+            {
+              "axis": "cta",
+              "fit_status": "too_weak",
+              "judgment": "cta score=0.30，参照区间[0.40,0.80] → too_weak。",
+              "repair_direction": "cta 偏弱（0.30 < 0.40），需加强表现强度。"
+            }
+          ],
+          "audience_acceptance_judgment": "参照人群「年长中高消费力女性」对四轴的接受度评估 → mixed_deviation。",
+          "slider_gap_summary": "偏离轴：['visual', 'cta']。"
+        },
+        "diagnosis_summary": {
+          "overall_status": "needs_minor_repair",
+          "key_findings": [
+            "人群匹配：high_match。",
+            "说服要求覆盖：partial。",
+            "HEC 匹配：acceptable_deviation。",
+            "Slider 匹配：mixed_deviation。"
+          ],
+          "priority_issues": [
+            "P2:profile",
+            "P2:hec",
+            "P2:slider"
+          ],
+          "repair_suggestions": [
+            {
+              "priority": "P2",
+              "issue_type": "profile",
+              "issue_summary": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+              "repair_direction": "强化偏弱要求的证据呈现与表达充分度。",
+              "related_evidence_spans": []
+            },
+            {
+              "priority": "P2",
+              "issue_type": "hec",
+              "issue_summary": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+              "repair_direction": "对齐 hook/cta 标签，减少 HEC 偏移。",
+              "related_evidence_spans": []
+            },
+            {
+              "priority": "P2",
+              "issue_type": "slider",
+              "issue_summary": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+              "repair_direction": "微调偏离轴强度，贴合参照人群偏好区间。",
+              "related_evidence_spans": []
+            }
+          ]
+        }
+      }
+    },
+    "normalized_response": {
+      "overview": {
+        "overall_status": "needs_minor_repair",
+        "audience_match_status": "high_match",
+        "profile_match_status": "partial",
+        "hec_match_status": "acceptable_deviation",
+        "slider_match_status": "mixed_deviation",
+        "requirement_coverage_status": "partial",
+        "requirement_coverage_text": "10/12 completed",
+        "summary": "人群匹配：high_match。 说服要求覆盖：partial。 HEC 匹配：acceptable_deviation。 Slider 匹配：mixed_deviation。"
+      },
+      "profile_match": {
+        "status": "insufficient_evidence",
+        "product_audience": {
+          "primary": "",
+          "scene": "",
+          "core_need": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。"
+        },
+        "video_audience": {
+          "primary": "",
+          "scene": "",
+          "core_need": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+        },
+        "gap": {
+          "level": "medium",
+          "description": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+        },
+        "match_result": "partial",
+        "evidence": [
+          {
+            "source": "product_factpack",
+            "field": "persuasion_requirements.success_criteria",
+            "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "segment_id": null,
+            "confidence": null
+          },
+          {
+            "source": "video_factpack",
+            "field": "video_corpus.full_text",
+            "value": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+            "segment_id": null,
+            "confidence": null
+          }
+        ],
+        "summary": "证据不足，缺失字段：['product_audience.primary', 'video_audience.primary']。必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+      },
+      "hec_match": {
+        "status": "acceptable_deviation",
+        "product_expected": {
+          "hook_tag": "H1",
+          "effect_tag": "E1",
+          "cta_tag": "C4"
+        },
+        "video_actual": {
+          "hook_tag": "H5",
+          "effect_tag": "E1",
+          "cta_tag": "C4"
+        },
+        "dimension_results": [
+          {
+            "dimension": "hook",
+            "expected": "H1",
+            "actual": "H5",
+            "status": "acceptable_deviation",
+            "impact": "hook 偏移：应然 H1 → 实然 H5（effect 一致时属可接受偏差）。",
+            "suggestion": "如需精准对齐，可将 hook 标签调整为 H1。"
+          },
+          {
+            "dimension": "effect",
+            "expected": "E1",
+            "actual": "E1",
+            "status": "matched",
+            "impact": "effect 维度商品应然与视频实然一致（E1）。",
+            "suggestion": ""
+          },
+          {
+            "dimension": "cta",
+            "expected": "C4",
+            "actual": "C4",
+            "status": "matched",
+            "impact": "cta 维度商品应然与视频实然一致（C4）。",
+            "suggestion": ""
+          },
+          {
+            "dimension": "chain",
+            "expected": "H1/E1/C4",
+            "actual": "H5/E1/C4",
+            "status": "acceptable_deviation",
+            "impact": "actual={'H': 'H5', 'E': 'E1', 'C': 'C4'}；H_hit=False, E_hit=True, C_hit=True, full_combination_hit=False → acceptable_deviation。",
+            "suggestion": "对齐三轴组合至商品候选 HEC。"
+          }
+        ],
+        "acceptable_deviation_reason": "effect（说服核心）命中候选集合，hook/cta 偏移属可接受偏差；建议结合业务判断是否需要精准对齐。",
+        "hec_gap_summary": "hook H5 不在候选 H 集 ['H1']"
+      },
+      "slider_match": {
+        "status": "mixed_deviation",
+        "target_audience_reference": [
+          "年长中高消费力女性"
+        ],
+        "expected_slider_preference": {
+          "visual": "0.3-0.7",
+          "audio": "0.4-0.8",
+          "proof": "0.6-1.0",
+          "cta": "0.4-0.8"
+        },
+        "actual_slider_signature": {
+          "visual": 0.82,
+          "audio": 0.6,
+          "proof": 0.75,
+          "cta": 0.3
+        },
+        "axis_results": [
+          {
+            "axis": "visual",
+            "fit_status": "too_strong",
+            "expected": "0.3-0.7",
+            "actual": "0.82",
+            "judgment": "visual score=0.82，参照区间[0.30,0.70] → too_strong。",
+            "repair_direction": "visual 偏强（0.82 > 0.70），需收敛表现强度。",
+            "evidence": [
+              {
+                "source": "video_factpack",
+                "field": "slider_signature.visual",
+                "value": "0.82",
+                "segment_id": null,
+                "confidence": null
+              }
+            ]
+          },
+          {
+            "axis": "audio",
+            "fit_status": "fit",
+            "expected": "0.4-0.8",
+            "actual": "0.6",
+            "judgment": "audio score=0.60，参照区间[0.40,0.80] → fit。",
+            "repair_direction": "",
+            "evidence": [
+              {
+                "source": "video_factpack",
+                "field": "slider_signature.audio",
+                "value": "0.6",
+                "segment_id": null,
+                "confidence": null
+              }
+            ]
+          },
+          {
+            "axis": "proof",
+            "fit_status": "fit",
+            "expected": "0.6-1.0",
+            "actual": "0.75",
+            "judgment": "proof score=0.75，参照区间[0.60,1.00] → fit。",
+            "repair_direction": "",
+            "evidence": [
+              {
+                "source": "video_factpack",
+                "field": "slider_signature.proof",
+                "value": "0.75",
+                "segment_id": null,
+                "confidence": null
+              }
+            ]
+          },
+          {
+            "axis": "cta",
+            "fit_status": "too_weak",
+            "expected": "0.4-0.8",
+            "actual": "0.3",
+            "judgment": "cta score=0.30，参照区间[0.40,0.80] → too_weak。",
+            "repair_direction": "cta 偏弱（0.30 < 0.40），需加强表现强度。",
+            "evidence": [
+              {
+                "source": "video_factpack",
+                "field": "slider_signature.cta",
+                "value": "0.3",
+                "segment_id": null,
+                "confidence": null
+              }
+            ]
+          }
+        ],
+        "audience_acceptance_judgment": "参照人群「年长中高消费力女性」对四轴的接受度评估 → mixed_deviation。",
+        "slider_gap_summary": "偏离轴：['visual', 'cta']。"
+      },
+      "requirement_coverage": {
+        "status": "partial",
+        "completed_count": 10,
+        "total_count": 12,
+        "items": [
+          {
+            "requirement_id": "expose_current_pain",
+            "requirement_name": "暴露当前痛点",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「暴露当前痛点」命中关键词 ['蚊', '叮', '包', '红肿', '挑战', '困扰'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_pain",
+                "value": "蚊子太多被叮一身包很困扰",
+                "segment_id": "span_pain",
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_proof",
+                "value": "15分钟无包，700只蚊子挑战实测效果",
+                "segment_id": "span_proof",
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_cta",
+                "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+                "segment_id": "span_cta",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "prove_user_fit",
+            "requirement_name": "证明人群适配",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+            "actual": "要求「证明人群适配」命中关键词 ['小朋友', '家庭', '适合', '也能用'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要证明商品适合该用户的身份、肤质或使用习惯。 围绕「肤质适配」提供品类证据，满足购买判断标准 skin_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：skin_mismatch_risk，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_safety",
+                "value": "小朋友也能用，温和无味道无刺激",
+                "segment_id": "span_safety",
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_cta",
+                "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+                "segment_id": "span_cta",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "prove_scenario_fit",
+            "requirement_name": "证明场景适配",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+            "actual": "要求「证明场景适配」命中关键词 ['家用', '户外', '便携', '出门', '大瓶', '小瓶'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要证明商品适配用户的具体使用场景或流程。 围绕「护理流程适配」提供品类证据，满足购买判断标准 routine_fit。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：routine_conflict_risk，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_cta",
+                "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+                "segment_id": "span_cta",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "prove_core_benefit",
+            "requirement_name": "证明核心收益",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「证明核心收益」命中关键词 ['驱蚊', '防蚊', '无包', '效果'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要证明商品能带来其核心收益，是价值成立的通用兜底要求。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_proof",
+                "value": "15分钟无包，700只蚊子挑战实测效果",
+                "segment_id": "span_proof",
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_cta",
+                "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+                "segment_id": "span_cta",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "provide_visible_result",
+            "requirement_name": "提供可见效果",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+            "actual": "要求「提供可见效果」命中关键词 ['分钟', '无包', '挑战', '只', '效果', '实测', '可见'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要提供可被直接观察到的效果或结果证明。 围绕「使用效果」提供品类证据，满足购买判断标准 usage_effect。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：no_effect_risk，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_proof",
+                "value": "15分钟无包，700只蚊子挑战实测效果",
+                "segment_id": "span_proof",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "establish_basic_trust",
+            "requirement_name": "建立基础信任",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「建立基础信任」命中关键词 ['官方', '正品', '旗舰'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要建立用户对商品和商家的基础信任。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "profile_match.judgment",
+                "value": "要求「建立基础信任」命中关键词 ['官方', '正品', '旗舰'] → completed。",
+                "segment_id": null,
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "reduce_trial_risk",
+            "requirement_name": "降低试错风险",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「降低试错风险」命中关键词 ['无味道', '无味', '温和', '无刺激', '安全', '敏感肌'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要降低用户首次尝试的试错成本与心理风险。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_safety",
+                "value": "小朋友也能用，温和无味道无刺激",
+                "segment_id": "span_safety",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "prove_source_credibility",
+            "requirement_name": "证明来源可信",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+            "actual": "要求「证明来源可信」命中关键词 ['检测', '报告', '成分', '派卡瑞丁', '认证'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要证明商品来源、产地或成分来源可信。 围绕「成分来源可信」提供品类证据，满足购买判断标准 ingredient_credibility。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：ingredient_doubt_risk，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "profile_match.judgment",
+                "value": "要求「证明来源可信」命中关键词 ['检测', '报告', '成分', '派卡瑞丁', '认证'] → completed。",
+                "segment_id": null,
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "provide_authority_endorsement",
+            "requirement_name": "权威背书",
+            "required": true,
+            "completion_status": "weak",
+            "expected": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「权威背书」命中关键词 ['检测报告', '认证'] → partial。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "profile_match.judgment",
+                "value": "要求「权威背书」命中关键词 ['检测报告', '认证'] → partial。",
+                "segment_id": null,
+                "confidence": null
+              }
+            ],
+            "missing_reason": "视频对「权威背书」表达偏弱，建议强化证据与口播。",
+            "repair_direction": "视频对「权威背书」表达偏弱，建议强化证据与口播。"
+          },
+          {
+            "requirement_id": "resolve_safety_risk",
+            "requirement_name": "证明安全风险降低",
+            "required": true,
+            "completion_status": "completed",
+            "expected": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+            "actual": "要求「证明安全风险降低」命中关键词 ['安全', '温和', '无刺激', '小朋友', '也能用'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "证明客观安全风险被实际降低。 围绕「刺激与安全」提供品类证据，满足购买判断标准 irritation_risk。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激；需回应风险：irritation_risk，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_safety",
+                "value": "小朋友也能用，温和无味道无刺激",
+                "segment_id": "span_safety",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          },
+          {
+            "requirement_id": "prove_current_purchase_reason",
+            "requirement_name": "证明当下购买理由",
+            "required": true,
+            "completion_status": "weak",
+            "expected": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「证明当下购买理由」命中关键词 ['夏天'] → weak。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要给出当下立即购买的理由，推动行动。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "profile_match.judgment",
+                "value": "要求「证明当下购买理由」命中关键词 ['夏天'] → weak。",
+                "segment_id": null,
+                "confidence": null
+              }
+            ],
+            "missing_reason": "视频对「证明当下购买理由」表达偏弱，建议强化证据与口播。",
+            "repair_direction": "视频对「证明当下购买理由」表达偏弱，建议强化证据与口播。"
+          },
+          {
+            "requirement_id": "clarify_purchase_threshold",
+            "requirement_name": "明确购买门槛",
+            "required": false,
+            "completion_status": "completed",
+            "expected": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+            "actual": "要求「明确购买门槛」命中关键词 ['大瓶', '小瓶', '家用', '便携'] → completed。",
+            "matched_evidence_spans": [
+              {
+                "source": "product_understanding",
+                "field": "persuasion_requirements.success_criteria",
+                "value": "内容需要明确价格、优惠或下单门槛，降低行动阻力。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。",
+                "segment_id": null,
+                "confidence": null
+              },
+              {
+                "source": "video_factpack",
+                "field": "evidence_span:span_cta",
+                "value": "大瓶家用小瓶便携，家庭驱蚊一套搞定更划算",
+                "segment_id": "span_cta",
+                "confidence": null
+              }
+            ],
+            "missing_reason": "",
+            "repair_direction": ""
+          }
+        ],
+        "missing_required_requirements": [],
+        "weak_requirements": [
+          "provide_authority_endorsement",
+          "prove_current_purchase_reason"
+        ],
+        "summary": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+      },
+      "top_issues": [
+        {
+          "issue_id": "ISSUE-01",
+          "severity": "low",
+          "module": "requirement_coverage",
+          "title": "说服要求偏弱/部分满足",
+          "description": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+          "evidence": [
+            {
+              "source": "raw_output",
+              "field": "diagnosis_summary.repair_suggestions[0].issue_summary",
+              "value": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "related_requirement_id": "provide_authority_endorsement"
+        },
+        {
+          "issue_id": "ISSUE-02",
+          "severity": "low",
+          "module": "hec_match",
+          "title": "HEC acceptable_deviation",
+          "description": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+          "evidence": [
+            {
+              "source": "raw_output",
+              "field": "diagnosis_summary.repair_suggestions[1].issue_summary",
+              "value": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "related_requirement_id": null
+        },
+        {
+          "issue_id": "ISSUE-03",
+          "severity": "low",
+          "module": "slider_match",
+          "title": "Slider mixed_deviation",
+          "description": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+          "evidence": [
+            {
+              "source": "raw_output",
+              "field": "diagnosis_summary.repair_suggestions[2].issue_summary",
+              "value": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+              "segment_id": null,
+              "confidence": null
+            }
+          ],
+          "related_requirement_id": null
+        }
+      ],
+      "suggestions": [
+        {
+          "suggestion_id": "SUGG-01",
+          "priority": "P2",
+          "module": "requirement_coverage",
+          "action": "强化偏弱要求的证据呈现与表达充分度。",
+          "reason": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+          "expected_effect": "修复后预计提升 requirement_coverage 的诊断结论（low 级问题收敛）。",
+          "related_issue_id": "ISSUE-01"
+        },
+        {
+          "suggestion_id": "SUGG-02",
+          "priority": "P2",
+          "module": "hec_match",
+          "action": "对齐 hook/cta 标签，减少 HEC 偏移。",
+          "reason": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+          "expected_effect": "修复后预计提升 hec_match 的诊断结论（low 级问题收敛）。",
+          "related_issue_id": "ISSUE-02"
+        },
+        {
+          "suggestion_id": "SUGG-03",
+          "priority": "P2",
+          "module": "slider_match",
+          "action": "微调偏离轴强度，贴合参照人群偏好区间。",
+          "reason": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+          "expected_effect": "修复后预计提升 slider_match 的诊断结论（low 级问题收敛）。",
+          "related_issue_id": "ISSUE-03"
+        }
+      ]
+    },
+    "source_files": [
+      "outputs/runben_diagnosis/runben_full_diagnosis.json",
+      "outputs/runben_diagnosis/runben_video_diagnosis.json",
+      "outputs/runben_diagnosis/runben_diagnosis_report.md"
+    ]
+  }
+}

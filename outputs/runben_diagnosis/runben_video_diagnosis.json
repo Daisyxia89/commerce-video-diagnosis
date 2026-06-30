@@ -1,0 +1,648 @@
+{
+  "video_persuasion_diagnosis_result": {
+    "input_validation": {
+      "status": "passed",
+      "blocking_issues": [],
+      "warnings": [
+        "video_HEC 缺失，已回退读取 primary_hec 并归一化为 video_HEC（命名契约映射）。"
+      ]
+    },
+    "video_target_audience": {
+      "primary_audiences": [
+        {
+          "audience_group": "年长中高消费力女性",
+          "fit_level": "primary",
+          "reason": "Hook/场景→入场角色；人设→年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接、女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险；CTA→CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）。",
+          "evidence": [
+            "便携",
+            "出门",
+            "划算",
+            "包",
+            "叮",
+            "品质",
+            "学生",
+            "安全",
+            "官方",
+            "实测",
+            "家庭",
+            "家用",
+            "小朋友",
+            "成分",
+            "户外",
+            "报告",
+            "挑战",
+            "效果",
+            "旗舰",
+            "无包",
+            "检测",
+            "正品",
+            "派卡瑞丁",
+            "温和",
+            "蚊",
+            "认证",
+            "防蚊",
+            "露营",
+            "驱蚊"
+          ]
+        },
+        {
+          "audience_group": "年长低消费力女性",
+          "fit_level": "primary",
+          "reason": "Hook/场景→入场角色；人设→年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接、女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险；CTA→CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）。",
+          "evidence": [
+            "便携",
+            "出门",
+            "划算",
+            "包",
+            "叮",
+            "品质",
+            "学生",
+            "安全",
+            "官方",
+            "实测",
+            "家庭",
+            "家用",
+            "小朋友",
+            "成分",
+            "户外",
+            "报告",
+            "挑战",
+            "效果",
+            "旗舰",
+            "无包",
+            "检测",
+            "正品",
+            "派卡瑞丁",
+            "温和",
+            "蚊",
+            "认证",
+            "防蚊",
+            "露营",
+            "驱蚊"
+          ]
+        }
+      ],
+      "secondary_audiences": [
+        {
+          "audience_group": "年轻中高消费力女性",
+          "fit_level": "secondary",
+          "reason": "主性别下相邻年龄层的次级覆盖人群（跨年龄邻接）。",
+          "evidence": [
+            "便携",
+            "出门",
+            "划算",
+            "包",
+            "叮",
+            "品质",
+            "学生",
+            "安全",
+            "官方",
+            "实测",
+            "家庭",
+            "家用",
+            "小朋友",
+            "成分",
+            "户外",
+            "报告",
+            "挑战",
+            "效果",
+            "旗舰",
+            "无包",
+            "检测",
+            "正品",
+            "派卡瑞丁",
+            "温和",
+            "蚊",
+            "认证",
+            "防蚊",
+            "露营",
+            "驱蚊"
+          ]
+        },
+        {
+          "audience_group": "年轻低消费力女性",
+          "fit_level": "secondary",
+          "reason": "主性别下相邻年龄层的次级覆盖人群（跨年龄邻接）。",
+          "evidence": [
+            "便携",
+            "出门",
+            "划算",
+            "包",
+            "叮",
+            "品质",
+            "学生",
+            "安全",
+            "官方",
+            "实测",
+            "家庭",
+            "家用",
+            "小朋友",
+            "成分",
+            "户外",
+            "报告",
+            "挑战",
+            "效果",
+            "旗舰",
+            "无包",
+            "检测",
+            "正品",
+            "派卡瑞丁",
+            "温和",
+            "蚊",
+            "认证",
+            "防蚊",
+            "露营",
+            "驱蚊"
+          ]
+        }
+      ],
+      "mismatch_risk_audiences": [
+        {
+          "audience_group": "年轻低消费力男性",
+          "fit_level": "mismatch_risk",
+          "reason": "视频出现与主目标性别冲突的少数信号，可能误吸引「年轻低消费力男性」，属错配风险人群。",
+          "evidence": [
+            "便携",
+            "出门",
+            "划算",
+            "包",
+            "叮",
+            "品质",
+            "学生",
+            "安全",
+            "官方",
+            "实测",
+            "家庭",
+            "家用",
+            "小朋友",
+            "成分",
+            "户外",
+            "报告",
+            "挑战",
+            "效果",
+            "旗舰",
+            "无包",
+            "检测",
+            "正品",
+            "派卡瑞丁",
+            "温和",
+            "蚊",
+            "认证",
+            "防蚊",
+            "露营",
+            "驱蚊"
+          ]
+        }
+      ],
+      "axis_judgment": {
+        "age_axis": {
+          "value": "mature",
+          "evidence": [
+            "学生",
+            "家庭",
+            "家用",
+            "小朋友",
+            "防蚊",
+            "驱蚊"
+          ],
+          "reason": "年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接"
+        },
+        "gender_axis": {
+          "value": "female",
+          "evidence": [
+            "家庭",
+            "家用",
+            "小朋友",
+            "户外",
+            "蚊",
+            "防蚊",
+            "驱蚊"
+          ],
+          "reason": "女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险"
+        },
+        "consumption_power_axis": {
+          "value": "mixed",
+          "evidence": [
+            "划算",
+            "品质",
+            "安全",
+            "官方",
+            "实测",
+            "成分",
+            "报告",
+            "挑战",
+            "效果",
+            "旗舰",
+            "无包",
+            "检测",
+            "正品",
+            "派卡瑞丁",
+            "温和",
+            "认证"
+          ],
+          "reason": "CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）"
+        }
+      },
+      "reasoning_chain": {
+        "hook_scene_to_role": "Hook 信号（包、叮、实测、挑战、蚊）+ 场景信号（便携、出门、家庭、家用、户外、露营）→ 入场角色与场景。",
+        "persona_to_age_gender": "人设信号 → 年长信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数年轻信号（学生）→ 年轻为次级邻接；女性信号占主导（小朋友、家庭、家用、驱蚊、防蚊），存在少数男性信号（户外）→ 男性为错配风险。",
+        "cta_benefit_to_consumption_power": "CTA/利益点信号 → CTA 同时出现品质/官方与低价/划算信号，消费力判为 mixed（同人群跨消费力覆盖）。"
+      },
+      "evidence_summary": {
+        "hook_signals": [
+          "包",
+          "叮",
+          "实测",
+          "挑战",
+          "蚊"
+        ],
+        "scene_signals": [
+          "便携",
+          "出门",
+          "家庭",
+          "家用",
+          "户外",
+          "露营"
+        ],
+        "persona_signals": [
+          "学生",
+          "家庭",
+          "家用",
+          "小朋友",
+          "户外",
+          "蚊",
+          "防蚊",
+          "驱蚊"
+        ],
+        "cta_benefit_signals": [
+          "划算",
+          "品质",
+          "安全",
+          "官方",
+          "实测",
+          "成分",
+          "报告",
+          "挑战",
+          "效果",
+          "旗舰",
+          "无包",
+          "检测",
+          "正品",
+          "派卡瑞丁",
+          "温和",
+          "认证"
+        ]
+      },
+      "caveats": [
+        "存在 mixed 轴：视频人群信号边界不清，已展开多坐标覆盖。",
+        "存在少数/邻接人群信号，已分别归入次级覆盖或错配风险。"
+      ]
+    },
+    "audience_match_diagnosis": {
+      "match_status": "high_match",
+      "matched_audiences": [
+        "年长中高消费力女性"
+      ],
+      "uncovered_product_audiences": [],
+      "unexpected_video_audiences": [],
+      "judgment": "商品主目标 P=['年长中高消费力女性']；视频主目标 V=['年长中高消费力女性', '年长低消费力女性']；matched=['年长中高消费力女性']，uncovered=[]，unexpected=[] → high_match。",
+      "evidence": [
+        "年长中高消费力女性",
+        "年长低消费力女性"
+      ]
+    },
+    "profile_match_diagnosis": {
+      "status": "insufficient_evidence",
+      "product_audience": {
+        "primary": "",
+        "scene": "",
+        "core_need": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。"
+      },
+      "video_audience": {
+        "primary": "",
+        "scene": "",
+        "core_need": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+      },
+      "gap": {
+        "level": "medium",
+        "description": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。"
+      },
+      "match_result": "partial",
+      "evidence": [
+        {
+          "source": "product_factpack",
+          "field": "persuasion_requirements.success_criteria",
+          "value": "内容需要让用户感知到当前已经存在、可被察觉的问题或损失，建立需求成立的前提。 结合JTBD「物理安全与风险规避」；卖点：派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激，让用户对该判断点形成确定结论。"
+        },
+        {
+          "source": "video_factpack",
+          "field": "video_corpus.full_text",
+          "value": "实测700只蚊子挑战，看看这瓶驱蚊液到底防不防蚊，被叮一身红肿包真的很困扰 700只蚊子挑战 手臂放进蚊箱15分钟拿出来，一个包都没有，真的无包，驱蚊效果肉眼可见 15分钟 无包 成分温和，小朋友也能用，喷上去无味道不刺鼻，敏感肌也安全 小朋友也能用 · 无味道 认准官方旗舰店正品，派卡瑞丁成分通过检测报告认证，品质有保障 官方正品 · 检测报告 认证 大瓶家用更划算够全家一夏天，小瓶便携出门带，学生党宿舍、户外露营也适合，一套搞定 大瓶家用划算+小瓶便携 700只蚊子挑战实测，15分钟无包，驱蚊效果可见，官方品质保障 蚊子太多被叮一身包很困扰 15分钟无包，700只蚊子挑战实测效果 小朋友也能用，温和无味道无刺激 大瓶家用小瓶便携，家庭驱蚊一套搞定更划算"
+        }
+      ],
+      "summary": "证据不足，缺失字段：['product_audience.primary', 'video_audience.primary']。必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+      "match_status": "partial",
+      "requirement_results": [
+        {
+          "requirement_id": "expose_current_pain",
+          "requirement_name": "暴露当前痛点",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_pain",
+            "span_proof",
+            "span_cta"
+          ],
+          "judgment": "要求「暴露当前痛点」命中关键词 ['蚊', '叮', '包', '红肿', '挑战', '困扰'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_user_fit",
+          "requirement_name": "证明人群适配",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_safety",
+            "span_cta"
+          ],
+          "judgment": "要求「证明人群适配」命中关键词 ['小朋友', '家庭', '适合', '也能用'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_scenario_fit",
+          "requirement_name": "证明场景适配",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_cta"
+          ],
+          "judgment": "要求「证明场景适配」命中关键词 ['家用', '户外', '便携', '出门', '大瓶', '小瓶'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_core_benefit",
+          "requirement_name": "证明核心收益",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_proof",
+            "span_cta"
+          ],
+          "judgment": "要求「证明核心收益」命中关键词 ['驱蚊', '防蚊', '无包', '效果'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "provide_visible_result",
+          "requirement_name": "提供可见效果",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_proof"
+          ],
+          "judgment": "要求「提供可见效果」命中关键词 ['分钟', '无包', '挑战', '只', '效果', '实测', '可见'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "establish_basic_trust",
+          "requirement_name": "建立基础信任",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [],
+          "judgment": "要求「建立基础信任」命中关键词 ['官方', '正品', '旗舰'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "reduce_trial_risk",
+          "requirement_name": "降低试错风险",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_safety"
+          ],
+          "judgment": "要求「降低试错风险」命中关键词 ['无味道', '无味', '温和', '无刺激', '安全', '敏感肌'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_source_credibility",
+          "requirement_name": "证明来源可信",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [],
+          "judgment": "要求「证明来源可信」命中关键词 ['检测', '报告', '成分', '派卡瑞丁', '认证'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "provide_authority_endorsement",
+          "requirement_name": "权威背书",
+          "required": true,
+          "completion_status": "partial",
+          "matched_evidence_spans": [],
+          "judgment": "要求「权威背书」命中关键词 ['检测报告', '认证'] → partial。",
+          "repair_direction": "视频对「权威背书」表达偏弱，建议强化证据与口播。"
+        },
+        {
+          "requirement_id": "resolve_safety_risk",
+          "requirement_name": "证明安全风险降低",
+          "required": true,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_safety"
+          ],
+          "judgment": "要求「证明安全风险降低」命中关键词 ['安全', '温和', '无刺激', '小朋友', '也能用'] → completed。",
+          "repair_direction": ""
+        },
+        {
+          "requirement_id": "prove_current_purchase_reason",
+          "requirement_name": "证明当下购买理由",
+          "required": true,
+          "completion_status": "weak",
+          "matched_evidence_spans": [],
+          "judgment": "要求「证明当下购买理由」命中关键词 ['夏天'] → weak。",
+          "repair_direction": "视频对「证明当下购买理由」表达偏弱，建议强化证据与口播。"
+        },
+        {
+          "requirement_id": "clarify_purchase_threshold",
+          "requirement_name": "明确购买门槛",
+          "required": false,
+          "completion_status": "completed",
+          "matched_evidence_spans": [
+            "span_cta"
+          ],
+          "judgment": "要求「明确购买门槛」命中关键词 ['大瓶', '小瓶', '家用', '便携'] → completed。",
+          "repair_direction": ""
+        }
+      ],
+      "missing_required_requirements": [],
+      "weak_requirements": [
+        "provide_authority_endorsement",
+        "prove_current_purchase_reason"
+      ],
+      "information_miss_summary": "必讲缺失 []；偏弱/部分 ['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+      "profile_match_error": {},
+      "blocked_direction_hit": false,
+      "coverage_layers": {
+        "primary_coverage": {
+          "primary_requirement_ref": "primary_requirement",
+          "required_requirement_ids": [
+            "expose_current_pain",
+            "prove_user_fit",
+            "prove_scenario_fit",
+            "prove_core_benefit",
+            "provide_visible_result",
+            "establish_basic_trust",
+            "reduce_trial_risk",
+            "prove_source_credibility",
+            "provide_authority_endorsement",
+            "resolve_safety_risk",
+            "prove_current_purchase_reason"
+          ],
+          "covered_requirement_ids": [
+            "expose_current_pain",
+            "prove_user_fit",
+            "prove_scenario_fit",
+            "prove_core_benefit",
+            "provide_visible_result",
+            "establish_basic_trust",
+            "reduce_trial_risk",
+            "prove_source_credibility",
+            "provide_authority_endorsement",
+            "resolve_safety_risk",
+            "prove_current_purchase_reason"
+          ],
+          "missing_required_requirements": [],
+          "covered": true,
+          "judgment": "主说服要求覆盖：['expose_current_pain', 'prove_user_fit', 'prove_scenario_fit', 'prove_core_benefit', 'provide_visible_result', 'establish_basic_trust', 'reduce_trial_risk', 'prove_source_credibility', 'provide_authority_endorsement', 'resolve_safety_risk', 'prove_current_purchase_reason']。"
+        },
+        "secondary_coverage": {
+          "secondary_benefits": [],
+          "secondary_benefits_hit": [],
+          "overclaimed": false,
+          "secondary_without_primary": false,
+          "judgment": "次级收益命中 无，未越位。"
+        },
+        "blocked_direction_check": {
+          "blocked_directions": [],
+          "blocked_directions_hit": [],
+          "blocked_direction_hit": false,
+          "judgment": "未把任何已阻断方向（GR-02/03/04）当主诉。"
+        }
+      }
+    },
+    "hec_match_diagnosis": {
+      "match_status": "acceptable_deviation",
+      "candidates": [
+        {
+          "H": "H1",
+          "E": "E1",
+          "C": "C4"
+        }
+      ],
+      "actual_video_hec": {
+        "hook_tag": "H5",
+        "effect_tag": "E1",
+        "cta_tag": "C4"
+      },
+      "hook_hit": false,
+      "effect_hit": true,
+      "cta_hit": true,
+      "full_combination_hit": false,
+      "logic_chain_judgment": "actual={'H': 'H5', 'E': 'E1', 'C': 'C4'}；H_hit=False, E_hit=True, C_hit=True, full_combination_hit=False → acceptable_deviation。",
+      "hec_gap_summary": "hook H5 不在候选 H 集 ['H1']"
+    },
+    "slider_match_diagnosis": {
+      "match_status": "mixed_deviation",
+      "target_audience_reference": [
+        "年长中高消费力女性"
+      ],
+      "expected_slider_preference": {
+        "visual": {
+          "min": 0.3,
+          "max": 0.7
+        },
+        "audio": {
+          "min": 0.4,
+          "max": 0.8
+        },
+        "proof": {
+          "min": 0.6,
+          "max": 1.0
+        },
+        "cta": {
+          "min": 0.4,
+          "max": 0.8
+        }
+      },
+      "actual_slider_signature": {
+        "visual": 0.82,
+        "audio": 0.6,
+        "proof": 0.75,
+        "cta": 0.3
+      },
+      "axis_results": [
+        {
+          "axis": "visual",
+          "fit_status": "too_strong",
+          "judgment": "visual score=0.82，参照区间[0.30,0.70] → too_strong。",
+          "repair_direction": "visual 偏强（0.82 > 0.70），需收敛表现强度。"
+        },
+        {
+          "axis": "audio",
+          "fit_status": "fit",
+          "judgment": "audio score=0.60，参照区间[0.40,0.80] → fit。",
+          "repair_direction": ""
+        },
+        {
+          "axis": "proof",
+          "fit_status": "fit",
+          "judgment": "proof score=0.75，参照区间[0.60,1.00] → fit。",
+          "repair_direction": ""
+        },
+        {
+          "axis": "cta",
+          "fit_status": "too_weak",
+          "judgment": "cta score=0.30，参照区间[0.40,0.80] → too_weak。",
+          "repair_direction": "cta 偏弱（0.30 < 0.40），需加强表现强度。"
+        }
+      ],
+      "audience_acceptance_judgment": "参照人群「年长中高消费力女性」对四轴的接受度评估 → mixed_deviation。",
+      "slider_gap_summary": "偏离轴：['visual', 'cta']。"
+    },
+    "diagnosis_summary": {
+      "overall_status": "needs_minor_repair",
+      "key_findings": [
+        "人群匹配：high_match。",
+        "说服要求覆盖：partial。",
+        "HEC 匹配：acceptable_deviation。",
+        "Slider 匹配：mixed_deviation。"
+      ],
+      "priority_issues": [
+        "P2:profile",
+        "P2:hec",
+        "P2:slider"
+      ],
+      "repair_suggestions": [
+        {
+          "priority": "P2",
+          "issue_type": "profile",
+          "issue_summary": "说服要求偏弱/部分满足：['provide_authority_endorsement', 'prove_current_purchase_reason']。",
+          "repair_direction": "强化偏弱要求的证据呈现与表达充分度。",
+          "related_evidence_spans": []
+        },
+        {
+          "priority": "P2",
+          "issue_type": "hec",
+          "issue_summary": "HEC acceptable_deviation：hook H5 不在候选 H 集 ['H1']。",
+          "repair_direction": "对齐 hook/cta 标签，减少 HEC 偏移。",
+          "related_evidence_spans": []
+        },
+        {
+          "priority": "P2",
+          "issue_type": "slider",
+          "issue_summary": "Slider mixed_deviation：偏离轴：['visual', 'cta']。。",
+          "repair_direction": "微调偏离轴强度，贴合参照人群偏好区间。",
+          "related_evidence_spans": []
+        }
+      ]
+    }
+  }
+}

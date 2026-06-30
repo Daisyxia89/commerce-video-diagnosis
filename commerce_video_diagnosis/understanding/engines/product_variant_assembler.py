@@ -39,6 +39,9 @@ BANNED_PRESENTATION_KEYS = {
     "storyboard",
 }
 
+# PRD-3 / AC12：needs_review 哨兵值（上游已建立的契约，模块 4 复用，不重新推断）。
+NEEDS_REVIEW = "needs_review"
+
 LEGACY_HEC_KEYS = {"hook", "effect", "cta"}
 HOOK_SOFT_CONSTRAINT_ALLOWED_KEYS = {
     "trigger_cta_tags",
@@ -53,6 +56,22 @@ CTA_LABEL_FALLBACK = {
     "C5": "C5 效果留白/情绪定格",
 }
 
+# PRD 7.3.1 H→C 匹配规则总表：
+#   default_legal  = 推荐收口（默认合法），(H, C) 直接放行，不打风险标记。
+#   conditional    = 条件合法（软约束），保留组合但需进一步判定：
+#       - C1/C2（H5/H6/H7）：复用 hook 软约束契约判定，未满足前置能力时打 risk_tag。
+#       - C4/C5（H1/H2）：受 7.3.2 C4/C5 独立准入门槛约束。
+#   不在 default_legal ∪ conditional 内的 (H, C) → 硬约束排除（直接剔除）。
+H_TO_C_LEGALITY: dict[str, dict[str, frozenset[str]]] = {
+    "H1": {"default_legal": frozenset({"C1", "C2", "C3"}), "conditional": frozenset({"C4", "C5"})},
+    "H2": {"default_legal": frozenset({"C1", "C2", "C3"}), "conditional": frozenset({"C4", "C5"})},
+    "H3": {"default_legal": frozenset({"C1", "C2", "C3", "C4", "C5"}), "conditional": frozenset()},
+    "H4": {"default_legal": frozenset({"C1", "C2", "C3", "C4", "C5"}), "conditional": frozenset()},
+    "H5": {"default_legal": frozenset({"C3", "C4", "C5"}), "conditional": frozenset({"C1", "C2"})},
+    "H6": {"default_legal": frozenset({"C3", "C4", "C5"}), "conditional": frozenset({"C1", "C2"})},
+    "H7": {"default_legal": frozenset({"C3", "C4", "C5"}), "conditional": frozenset({"C1", "C2"})},
+}
+
 
 @dataclass(slots=True)
 class ProductVariantAssembler:
@@ -61,8 +80,17 @@ class ProductVariantAssembler:
     def assemble_product_ec_skeletons(self, candidate_set: CandidateSet | dict[str, Any]) -> list[dict[str, Any]]:
         candidate_payload = self._coerce_candidate_set(candidate_set)
         self._assert_candidate_set_boundary(candidate_payload)
-        effect_list = self._normalize_effect_candidates(candidate_payload.get("effect_list"))
-        cta_list = self._normalize_cta_candidates(candidate_payload.get("cta_list"))
+        # PRD-3（第 227-231 行）source_role 消费：模块 4 默认只用 source_role==primary 候选生成主链
+        # EC 骨架；source_role==secondary 不进入 primary 主链骨架枚举（含降级目标），不污染主链。
+        # 若后续需要 secondary 解释性变体，应作为非主链候选单独标记，不参与主 HEC Match 的 good 判定。
+        effect_list = self._select_primary_candidates(
+            self._normalize_effect_candidates(candidate_payload.get("effect_list")),
+            list_name="effect_list",
+        )
+        cta_list = self._select_primary_candidates(
+            self._normalize_cta_candidates(candidate_payload.get("cta_list")),
+            list_name="cta_list",
+        )
         available_cta_tags = {item["cta_tag"] for item in cta_list}
         cta_input_rank = self._build_cta_input_rank(cta_list)
 
@@ -116,6 +144,10 @@ class ProductVariantAssembler:
 
         if not product_ec_skeletons:
             raise ValueError("模块 4.1 组装后无合法 Product_EC_Skeletons。")
+        # PRD-3（第 237-241 行）/ AC7 来源回查后置断言（Crash Early）：EC 主链产物的每个
+        # (effect_tag, cta_tag) 必须能在 CandidateSet 回查到 source_role + source_requirement_ref，
+        # 且主链仅允许 source_role==primary；回查失败 raise（来源角色不得由模块 4 重新推断）。
+        self._assert_source_role_traceability(candidate_payload, product_ec_skeletons, require_primary=True)
         return product_ec_skeletons
 
     def assemble_product_hecs(
@@ -140,6 +172,15 @@ class ProductVariantAssembler:
             if self._should_prune(jtbd, candidate_variant):
                 continue
             soft_constraint_results, risk_flags = self._evaluate_hook_soft_constraints(hook=hook, skeleton=skeleton)
+            # PRD 7.3.1 H→C 约束匹配（替代旧版全笛卡尔积）：硬约束剔除非法 (H, C)，
+            # 软约束保留组合并打 risk_tag；C4/C5 复用 7.3.2 独立准入门槛。
+            is_legal, risk_tag = self._match_hook_to_cta(
+                hook_tag=hook["hook_tag"],
+                skeleton=skeleton,
+                risk_flags=risk_flags,
+            )
+            if not is_legal:
+                continue
             activation_tags = self._build_activation_tags(
                 hook_tag=hook["hook_tag"],
                 effect_tag=skeleton["effect_tag"],
@@ -156,6 +197,7 @@ class ProductVariantAssembler:
                 cta_label=skeleton["cta_label"],
                 activation_tags=activation_tags,
                 risk_flags=risk_flags,
+                risk_tag=risk_tag,
                 soft_constraint_results=soft_constraint_results,
                 route_tags=list(activation_tags),
             ).to_dict()
@@ -167,11 +209,44 @@ class ProductVariantAssembler:
             raise ValueError("模块 4.2 装配后无合法 Product_HECs。")
         return product_hecs
 
-    def assemble(self, jtbd: str, candidate_set: CandidateSet | dict[str, Any], *, product_id: str = "") -> list[dict[str, Any]]:
+    def assemble(self, jtbd: str, candidate_set: CandidateSet | dict[str, Any], *, product_id: str = "") -> dict[str, Any] | list[dict[str, Any]]:
         candidate_payload = self._coerce_candidate_set(candidate_set)
+        # PRD-3（第 233-236 行）/ AC12 needs_review early return：模块 4 入口（EC Skeleton 生成前）
+        # 校验，当 jtbd_level1 == "needs_review" 时跳过 HEC 生成，不产出 Product_EC_Skeletons /
+        # Product_HECs，返回 {status: "skipped", reason: "jtbd_insufficient"}。
+        if self._is_needs_review(jtbd, candidate_payload):
+            return {"status": "skipped", "reason": "jtbd_insufficient"}
         product_ec_skeletons = self.assemble_product_ec_skeletons(candidate_payload)
         core_h_list = candidate_payload["h_list"]
-        return self.assemble_product_hecs(jtbd, product_ec_skeletons, core_h_list, product_id=product_id)
+        product_hecs = self.assemble_product_hecs(jtbd, product_ec_skeletons, core_h_list, product_id=product_id)
+        # PRD-3（第 237-241 行）/ AC7 来源回查后置断言（Crash Early）：HEC 产物的每个
+        # (effect_tag, cta_tag) 必须能在 CandidateSet 回查到 source_role + source_requirement_ref。
+        self._assert_source_role_traceability(candidate_payload, product_hecs, require_primary=True)
+        return product_hecs
+
+    def _is_needs_review(self, jtbd: str, candidate_payload: dict[str, Any]) -> bool:
+        # 兼容读取 jtbd_level1 / jtbd 两个键（上游契约），以及入参 jtbd；任一命中哨兵即中止。
+        candidates = (
+            jtbd,
+            candidate_payload.get("jtbd_level1"),
+            candidate_payload.get("jtbd"),
+        )
+        return any(str(value or "").strip() == NEEDS_REVIEW for value in candidates)
+
+    def _select_primary_candidates(self, normalized: list[dict[str, Any]], *, list_name: str) -> list[dict[str, Any]]:
+        # PRD-3（第 227-231 行）：仅保留 source_role==primary 候选进入主链；source_role 不得由模块 4
+        # 重新推断，故缺失/为空直接 Crash Early。secondary 候选不进入 primary 主链枚举。
+        primary: list[dict[str, Any]] = []
+        for index, item in enumerate(normalized):
+            source_role = item.get("source_role")
+            if source_role in (None, ""):
+                raise ValueError(
+                    f"模块 4 来源回查失败 source_role_lost：CandidateSet.{list_name}[{index}] 缺少 source_role"
+                    "（来源角色不得由模块 4 重新推断）。"
+                )
+            if source_role == "primary":
+                primary.append(item)
+        return primary
 
     def _coerce_candidate_set(self, candidate_set: CandidateSet | dict[str, Any]) -> dict[str, Any]:
         if isinstance(candidate_set, CandidateSet):
@@ -217,6 +292,9 @@ class ProductVariantAssembler:
                     "label": label,
                     "completion_capabilities": [str(cap).strip() for cap in capabilities if str(cap).strip()],
                     "completion_reason_codes": [str(reason).strip() for reason in reason_codes if str(reason).strip()],
+                    # 来源角色透传（不重新推断），供主链 primary 过滤与 AC7 回查使用。
+                    "source_role": item.get("source_role"),
+                    "source_requirement_ref": item.get("source_requirement_ref"),
                 }
             )
         return normalized
@@ -248,6 +326,9 @@ class ProductVariantAssembler:
                     "close_strength": close_strength,
                     "required_effect_capabilities_any": [str(cap).strip() for cap in required_any if str(cap).strip()],
                     "fallback_priority": [str(tag).strip().upper() for tag in fallback_priority if str(tag).strip()],
+                    # 来源角色透传（不重新推断），供主链 primary 过滤与 AC7 回查使用。
+                    "source_role": item.get("source_role"),
+                    "source_requirement_ref": item.get("source_requirement_ref"),
                 }
             )
         return normalized
@@ -323,6 +404,75 @@ class ProductVariantAssembler:
                 f"effect_tag={effect_tag}, resolved_cta_tag={resolved_cta_tag} 应保留更早出现的 requested_cta_tag；"
                 f"当前 {current_requested_cta_tag} 的输入顺序早于已保留的 {existing_meta['requested_cta_tag']}。"
             )
+
+    def _assert_source_role_traceability(
+        self,
+        candidate_payload: dict[str, Any],
+        products: list[dict[str, Any]],
+        *,
+        require_primary: bool,
+    ) -> None:
+        """PRD-3（第 237-241 行）/ AC7 来源回查后置断言（Crash Early）。
+
+        模块 4 产物装配后，对输出的每个 ``(effect_tag, cta_tag)`` 必须能通过
+        ``CandidateSet + (effect_tag, cta_tag)`` 回查到对应 ``source_role`` + ``source_requirement_ref``。
+        来源角色**不得**由模块 4 重新推断；回查失败标记 ``source_role_lookup_failed`` / ``source_role_lost``
+        并 ``raise ValueError``（异常信息含标记与对应 tag）。
+        """
+        effect_list = candidate_payload.get("effect_list") or []
+        cta_list = candidate_payload.get("cta_list") or []
+        for product_item in products:
+            effect_tag = str(product_item.get("effect_tag") or "").strip().upper()
+            cta_tag = str(product_item.get("cta_tag") or "").strip().upper()
+            effect_role, _ = self._lookup_candidate_source(
+                effect_list, tag_key="effect_tag", tag_value=effect_tag, list_name="effect_list",
+            )
+            cta_role, _ = self._lookup_candidate_source(
+                cta_list, tag_key="cta_tag", tag_value=cta_tag, list_name="cta_list",
+            )
+            if require_primary and (effect_role != "primary" or cta_role != "primary"):
+                raise ValueError(
+                    "模块 4 来源回查失败 source_role_lost：主链产物 "
+                    f"(effect_tag={effect_tag}, cta_tag={cta_tag}) 仅允许 source_role=primary，"
+                    f"实际 effect_role={effect_role} / cta_role={cta_role}。"
+                )
+
+    def _lookup_candidate_source(
+        self,
+        candidates: Any,
+        *,
+        tag_key: str,
+        tag_value: str,
+        list_name: str,
+    ) -> tuple[str, str]:
+        """在 CandidateSet 列表中按 tag 回查 source_role + source_requirement_ref。
+
+        回查不到对应 tag → ``source_role_lookup_failed``；回查到但缺少 source_role /
+        source_requirement_ref → ``source_role_lost``。两者均 ``raise ValueError``。
+        """
+        if not isinstance(candidates, list):
+            raise ValueError(
+                f"模块 4 来源回查失败 source_role_lookup_failed：CandidateSet.{list_name} 非列表，"
+                f"无法回查 {tag_key}={tag_value} 的 source_role+source_requirement_ref。"
+            )
+        for item in candidates:
+            if not isinstance(item, dict):
+                continue
+            if str(item.get(tag_key) or "").strip().upper() == tag_value:
+                source_role = item.get("source_role")
+                source_requirement_ref = item.get("source_requirement_ref")
+                if not source_role or not source_requirement_ref:
+                    raise ValueError(
+                        "模块 4 来源回查失败 source_role_lost："
+                        f"CandidateSet.{list_name} 命中 {tag_key}={tag_value} 但缺少 "
+                        "source_role/source_requirement_ref（来源角色不得由模块 4 重新推断）。"
+                    )
+                return str(source_role), str(source_requirement_ref)
+        raise ValueError(
+            "模块 4 来源回查失败 source_role_lookup_failed："
+            f"CandidateSet.{list_name} 无法回查 {tag_key}={tag_value} 的 "
+            "source_role+source_requirement_ref（来源角色不得由模块 4 重新推断）。"
+        )
 
     def _resolve_fallback_cta(self, fallback_priority: list[str], available_cta_tags: set[str], requested_cta_tag: str) -> str:
         for candidate in fallback_priority:
@@ -434,6 +584,54 @@ class ProductVariantAssembler:
             risk_flag=None,
         ).to_dict()
         return [result], []
+
+    def _match_hook_to_cta(
+        self,
+        *,
+        hook_tag: str,
+        skeleton: dict[str, Any],
+        risk_flags: list[str],
+    ) -> tuple[bool, str]:
+        """PRD 7.3.1 H→C 匹配规则总表 + 7.3.2 C4/C5 准入门槛。
+
+        返回 ``(is_legal, risk_tag)``：
+        - 推荐收口（默认合法）→ ``(True, "")``，直接放行不打标。
+        - 条件合法（软约束）→ 保留组合，未满足条件时携带对应 ``risk_tag``。
+        - 既不在默认合法也不在条件合法 → ``(False, "")``，调用方硬约束剔除。
+        """
+        cta_tag = str(skeleton["cta_tag"]).strip().upper()
+        rule = H_TO_C_LEGALITY.get(str(hook_tag).strip().upper())
+        if rule is None:
+            # Hook 不在 7.3.1 总表内，按硬约束排除。
+            return False, ""
+        if cta_tag in rule["default_legal"]:
+            return True, ""
+        if cta_tag in rule["conditional"]:
+            if cta_tag in {"C4", "C5"}:
+                # 7.3.2 C4/C5 独立准入门槛：复用 EC 骨架层已落地的准入/降级逻辑。
+                return self._evaluate_c45_admission(skeleton)
+            # C1/C2 软约束（H5/H6/H7）：复用 hook 软约束契约判定结果。
+            # 前置能力满足 → risk_flags 为空 → 放行不打标；未满足 → 打对应 risk_tag。
+            return True, (risk_flags[0] if risk_flags else "")
+        # 硬约束排除。
+        return False, ""
+
+    def _evaluate_c45_admission(self, skeleton: dict[str, Any]) -> tuple[bool, str]:
+        """7.3.2 C4/C5 独立准入门槛复用判定。
+
+        当前 7.3.2 门槛已在 ``assemble_product_ec_skeletons`` 落地（passive_close 的
+        ``required_effect_capabilities_any`` + 准入失败强制降级到 C1/C2/C3）。能进入本阶段且
+        ``cta_tag`` 仍为 C4/C5 的骨架，均已通过该门槛，故直接放行、不打风险标记。
+
+        若未来 7.3.2 门槛迁移/未实现，可在此返回 ``(True, "requires_c45_gate")`` 留桩，
+        交由下游补齐独立准入校验。
+        """
+        resolution = skeleton.get("cta_resolution") or {}
+        resolution_type = str(resolution.get("resolution_type") or "").strip()
+        if resolution_type == "downgrade":
+            # 已被 7.3.2 降级的骨架不应再以 C4/C5 形态出现，保险起见硬约束排除。
+            return False, ""
+        return True, ""
 
     def _should_prune(self, jtbd: str, variant: dict[str, Any]) -> bool:
         cta_tag = str(variant.get("cta_tag") or "").strip().upper()

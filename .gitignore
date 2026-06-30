@@ -25,3 +25,6 @@ env/
 .Python
 .coverage
 htmlcov/
+
+# pydantic v1 vendor isolation (see README §5)
+vendor_pydantic1/

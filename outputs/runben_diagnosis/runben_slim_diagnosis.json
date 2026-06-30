@@ -1,0 +1,1190 @@
+{
+  "product_id": "runben_repellent_24p9",
+  "leaf_category": "宝宝防蚊水",
+  "shop_name": "润本官方旗舰店",
+  "product_name": "【A级驱蚊力】润本驱蚊液防蚊喷雾派卡瑞丁驱蚊水防蚊叮蚊怕花露水",
+  "price": 24.9,
+  "domain": "功能域",
+  "primary_task": "物理安全与风险规避",
+  "category_intent": "优先完成存量同类替换，证明在熟悉用法下换它更值。",
+  "product_intent": "官方信任资产极强，重点转向高价位的价值证明、价格锚定与算账。",
+  "category_intent_matrix": {
+    "ocean": "红海",
+    "competition_focus": "核心",
+    "frequency": "快消",
+    "domain_route_rule": "A_functional_competitor_rule",
+    "matrix_label": "红海-核心×快消",
+    "category_intent": "优先完成存量同类替换，证明在熟悉用法下换它更值。",
+    "competition_focus_reason": "风险降低仍发生在同路径内，只是更安全或更稳妥，因此判定为核心。",
+    "competition_focus_evidence_chain": [
+      {
+        "evidence_source": "JTBD推断",
+        "evidence_text": "派卡瑞丁15%/20% A级驱蚊力，防蚊8小时、耐汗保护7h"
+      },
+      {
+        "evidence_source": "JTBD推断",
+        "evidence_text": "7%款驱蚊酯日常居家温和不刺激，第三方检测0刺激、减少刺激"
+      },
+      {
+        "evidence_source": "JTBD推断",
+        "evidence_text": "干扰蚊子嗅觉识别，皮肤表面形成气味屏障，避险闻不到咬不着，更安心"
+      },
+      {
+        "evidence_source": "JTBD推断",
+        "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
+      }
+    ],
+    "difference_type_route_result": "functional.风险降低->核心",
+    "reasoning": [
+      "Step 1：根据商品文本判定品类状态为 红海。",
+      "Step 2：difference_domain + difference_type=functional.风险降低，进入证据复核。",
+      "证据链仅支持同路径更安全/更稳妥，未支持路径改写，因此判定为核心。",
+      "Step 3：消费频次判定为 快消。"
+    ]
+  },
+  "product_intent_matrix": {
+    "brand_tier": "大牌官方",
+    "trust_barrier": "极低",
+    "financial_risk": "高",
+    "relative_price_level": "高水位",
+    "matrix_label": "大牌官方×高水位",
+    "business_category": "宝宝防蚊水",
+    "median_price_threshold": 13.514187,
+    "price_value": 24.9,
+    "product_intent": "官方信任资产极强，重点转向高价位的价值证明、价格锚定与算账。",
+    "reasoning": [
+      "信任阻力：店铺 命中 brand_whitelist.csv，因此品牌层级判定为 大牌官方。",
+      "财务阻力：类目 宝宝防蚊水 的价格带中位数资产为 13.51，但外层仅用于审计留痕。",
+      "价格属性严格读取 engine_node 输出，当前水位为 高水位，因此财务风险为 高。"
+    ]
+  },
+  "reasoning_path": [
+    "规则树候选池：物理安全与风险规避；触发规则：safety_priority_rule",
+    "Stage A：命中物理安全硬边界。",
+    "物理安全在前置层唯一裁决，后续阶段不再重复改写 primary_task。",
+    "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。",
+    "Stage D：仅执行越权/最小证据/审计字段断言，本轮未发生任务改写。",
+    "Step 1：根据商品文本判定品类状态为 红海。",
+    "Step 2：difference_domain + difference_type=functional.风险降低，进入证据复核。",
+    "证据链仅支持同路径更安全/更稳妥，未支持路径改写，因此判定为核心。",
+    "Step 3：消费频次判定为 快消。",
+    "信任阻力：店铺 命中 brand_whitelist.csv，因此品牌层级判定为 大牌官方。",
+    "财务阻力：类目 宝宝防蚊水 的价格带中位数资产为 13.51，但外层仅用于审计留痕。",
+    "价格属性严格读取 engine_node 输出，当前水位为 高水位，因此财务风险为 高。"
+  ],
+  "warnings": [],
+  "product_target_audience": {
+    "primary_audiences": [
+      {
+        "audience_group": "年长中高消费力女性",
+        "fit_level": "primary",
+        "reason": "任务「物理安全与风险规避」对应购买角色「风险责任人」；命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性；大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。"
+      }
+    ],
+    "secondary_audiences": [
+      {
+        "audience_group": "年长低消费力女性",
+        "fit_level": "secondary",
+        "reason": "购买角色「风险责任人」下，大牌官方套装/分量价值也可覆盖低消费力人群，作为次级目标。"
+      }
+    ],
+    "weak_fit_audiences": [],
+    "reasoning_chain": {
+      "task_to_role": "唯一任务「物理安全与风险规避」对应购买角色「风险责任人」。",
+      "role_category_to_age_gender": "购买角色「风险责任人」叠加品类信号：命中年长品类信号（宝宝、驱蚊）→ 年长；命中女性权重品类信号（婴、宝宝、驱蚊）且无男性信号 → 女性。",
+      "brand_price_to_consumption_power": "大牌官方 + 高水位（高于类目中位价，为品质/品牌付溢价）→ 中高消费力。",
+      "persuasion_profile_to_audience": "需满足说服要求「暴露当前痛点(expose_current_pain)」、「证明人群适配(prove_user_fit)」、「证明场景适配(prove_scenario_fit)」（profile 共 12 条说服要求，其中 required/high 优先项 11 条）→ 因此核心说服对象指向「年长中高消费力女性」。"
+    },
+    "caveats": [
+      "大牌官方且高水位：若强调套装/分量价值，也可覆盖低消费力人群（追加低消费力 secondary）。"
+    ]
+  },
+  "category": "宝宝防蚊水",
+  "jtbd": "物理安全与风险规避",
+  "resistance_profile": {
+    "domain": "功能域",
+    "category_matrix": "红海-核心×快消",
+    "ocean": "红海",
+    "competition_focus": "核心",
+    "frequency": "快消",
+    "trust_barrier": "极低",
+    "financial_risk": "高",
+    "brand_tier": "大牌官方",
+    "relative_price_level": "高水位",
+    "channel_risk": "无风险",
+    "endorsement": null
+  },
+  "core_intent": {
+    "category_intent": "优先完成存量同类替换，证明在熟悉用法下换它更值。",
+    "product_intent": "官方信任资产极强，重点转向高价位的价值证明、价格锚定与算账。",
+    "category_strategy_intent": "R02_存量同类替换",
+    "product_strategy_intent": "P02_价值证明",
+    "intent_pair_key": "R02×P02",
+    "core_e": [
+      {
+        "code": "E1",
+        "label": "E1 效果测评",
+        "effect_tag": "E1",
+        "completion_capabilities": [
+          "functional_proof_complete"
+        ],
+        "completion_reason_codes": [
+          "capability_from_e1:functional_proof_complete"
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "E6",
+        "label": "E6 成分/参数科普",
+        "effect_tag": "E6",
+        "completion_capabilities": [
+          "functional_proof_complete",
+          "identity_binding_complete"
+        ],
+        "completion_reason_codes": [
+          "capability_from_e6:functional_proof_complete",
+          "capability_from_e6:identity_binding_complete"
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      }
+    ],
+    "core_c": [
+      {
+        "code": "C4",
+        "label": "C4 人群/场景总结",
+        "cta_tag": "C4",
+        "close_strength": "passive_close",
+        "required_effect_capabilities_any": [
+          "functional_proof_complete",
+          "scenario_proof_complete"
+        ],
+        "fallback_priority": [
+          "C3",
+          "C1",
+          "C2"
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      }
+    ],
+    "candidate_h": [
+      {
+        "code": "H1",
+        "label": "H1 痛点/焦虑直击",
+        "hook_tag": "H1",
+        "soft_constraint_contract": null,
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "H5",
+        "label": "H5 反常识与悬念",
+        "hook_tag": "H5",
+        "soft_constraint_contract": {
+          "trigger_cta_tags": [
+            "C1",
+            "C2"
+          ],
+          "required_effect_capabilities_all": [
+            "answer_revealed"
+          ],
+          "unmet_risk_flag": "rhythm_discount"
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "H6",
+        "label": "H6 场景/人群代入",
+        "hook_tag": "H6",
+        "soft_constraint_contract": {
+          "trigger_cta_tags": [
+            "C1",
+            "C2"
+          ],
+          "required_effect_capabilities_all": [
+            "identity_binding_complete"
+          ],
+          "unmet_risk_flag": "resonance_risk"
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "H7",
+        "label": "H7 明星/权威同款",
+        "hook_tag": "H7",
+        "soft_constraint_contract": {
+          "trigger_cta_tags": [
+            "C1",
+            "C2"
+          ],
+          "required_effect_capabilities_all": [
+            "identity_binding_complete"
+          ],
+          "unmet_risk_flag": "resonance_risk"
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      }
+    ],
+    "primary_effect": "E1",
+    "primary_cta": "C4"
+  },
+  "candidate_set": {
+    "h_list": [
+      {
+        "code": "H1",
+        "label": "H1 痛点/焦虑直击",
+        "hook_tag": "H1",
+        "soft_constraint_contract": null,
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "H5",
+        "label": "H5 反常识与悬念",
+        "hook_tag": "H5",
+        "soft_constraint_contract": {
+          "trigger_cta_tags": [
+            "C1",
+            "C2"
+          ],
+          "required_effect_capabilities_all": [
+            "answer_revealed"
+          ],
+          "unmet_risk_flag": "rhythm_discount"
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "H6",
+        "label": "H6 场景/人群代入",
+        "hook_tag": "H6",
+        "soft_constraint_contract": {
+          "trigger_cta_tags": [
+            "C1",
+            "C2"
+          ],
+          "required_effect_capabilities_all": [
+            "identity_binding_complete"
+          ],
+          "unmet_risk_flag": "resonance_risk"
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "H7",
+        "label": "H7 明星/权威同款",
+        "hook_tag": "H7",
+        "soft_constraint_contract": {
+          "trigger_cta_tags": [
+            "C1",
+            "C2"
+          ],
+          "required_effect_capabilities_all": [
+            "identity_binding_complete"
+          ],
+          "unmet_risk_flag": "resonance_risk"
+        },
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      }
+    ],
+    "effect_list": [
+      {
+        "code": "E1",
+        "label": "E1 效果测评",
+        "effect_tag": "E1",
+        "completion_capabilities": [
+          "functional_proof_complete"
+        ],
+        "completion_reason_codes": [
+          "capability_from_e1:functional_proof_complete"
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      },
+      {
+        "code": "E6",
+        "label": "E6 成分/参数科普",
+        "effect_tag": "E6",
+        "completion_capabilities": [
+          "functional_proof_complete",
+          "identity_binding_complete"
+        ],
+        "completion_reason_codes": [
+          "capability_from_e6:functional_proof_complete",
+          "capability_from_e6:identity_binding_complete"
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      }
+    ],
+    "cta_list": [
+      {
+        "code": "C4",
+        "label": "C4 人群/场景总结",
+        "cta_tag": "C4",
+        "close_strength": "passive_close",
+        "required_effect_capabilities_any": [
+          "functional_proof_complete",
+          "scenario_proof_complete"
+        ],
+        "fallback_priority": [
+          "C3",
+          "C1",
+          "C2"
+        ],
+        "source_role": "primary",
+        "source_requirement_ref": "primary_requirement"
+      }
+    ],
+    "schema_version": "v0.5",
+    "jtbd": "物理安全与风险规避",
+    "persuasion_route": "先把客观风险说清，再证明当前商品如何通过更稳妥的路径降低真实受伤或事故风险。",
+    "r_rule": "R02_存量同类替换",
+    "p_rule": "P02_价值证明",
+    "task_domain": "functional",
+    "rule_version": "JTBD_dict_v1_2026-06-24"
+  },
+  "product_ec_skeletons": [
+    {
+      "effect_tag": "E1",
+      "cta_tag": "C4",
+      "schema_version": "v0.5",
+      "effect_label": "E1 效果测评",
+      "cta_label": "C4 人群/场景总结",
+      "effect_capabilities_snapshot": [
+        "functional_proof_complete"
+      ],
+      "cta_resolution": {
+        "requested_cta_tag": "C4",
+        "resolved_cta_tag": "C4",
+        "resolution_type": "direct",
+        "reason_codes": []
+      }
+    },
+    {
+      "effect_tag": "E6",
+      "cta_tag": "C4",
+      "schema_version": "v0.5",
+      "effect_label": "E6 成分/参数科普",
+      "cta_label": "C4 人群/场景总结",
+      "effect_capabilities_snapshot": [
+        "functional_proof_complete",
+        "identity_binding_complete"
+      ],
+      "cta_resolution": {
+        "requested_cta_tag": "C4",
+        "resolved_cta_tag": "C4",
+        "resolution_type": "direct",
+        "reason_codes": []
+      }
+    }
+  ],
+  "product_hecs": [
+    {
+      "hook_tag": "H1",
+      "effect_tag": "E1",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v1",
+      "schema_version": "v0.5",
+      "hook_label": "H1 痛点/焦虑直击",
+      "effect_label": "E1 效果测评",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H1",
+      "effect_tag": "E6",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v2",
+      "schema_version": "v0.5",
+      "hook_label": "H1 痛点/焦虑直击",
+      "effect_label": "E6 成分/参数科普",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H5",
+      "effect_tag": "E1",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v3",
+      "schema_version": "v0.5",
+      "hook_label": "H5 反常识与悬念",
+      "effect_label": "E1 效果测评",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H5",
+      "effect_tag": "E6",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v4",
+      "schema_version": "v0.5",
+      "hook_label": "H5 反常识与悬念",
+      "effect_label": "E6 成分/参数科普",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H6",
+      "effect_tag": "E1",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v5",
+      "schema_version": "v0.5",
+      "hook_label": "H6 场景/人群代入",
+      "effect_label": "E1 效果测评",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H6",
+      "effect_tag": "E6",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v6",
+      "schema_version": "v0.5",
+      "hook_label": "H6 场景/人群代入",
+      "effect_label": "E6 成分/参数科普",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H7",
+      "effect_tag": "E1",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v7",
+      "schema_version": "v0.5",
+      "hook_label": "H7 明星/权威同款",
+      "effect_label": "E1 效果测评",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需强测评/打假人设激活",
+        "需特定人群场景共鸣激活"
+      ]
+    },
+    {
+      "hook_tag": "H7",
+      "effect_tag": "E6",
+      "cta_tag": "C4",
+      "variant_id": "runben_repellent_24p9-v8",
+      "schema_version": "v0.5",
+      "hook_label": "H7 明星/权威同款",
+      "effect_label": "E6 成分/参数科普",
+      "cta_label": "C4 人群/场景总结",
+      "activation_tags": [
+        "需特定人群场景共鸣激活"
+      ],
+      "risk_flags": [],
+      "risk_tag": "",
+      "soft_constraint_results": [],
+      "route_tags": [
+        "需特定人群场景共鸣激活"
+      ]
+    }
+  ],
+  "assertions": [
+    "已采用 Stage A 前置门槛 + Stage B 功能候选池 + Stage C 候选池内归并 + Stage D 只 veto 的四段式 JTBD 引擎。",
+    "JTBD 一级任务严格限制在 11 个标准任务内，且不得越出规则树候选池。",
+    "物理安全只允许在 Stage A 强唯一锁定，Stage D 仅校验最小证据与越权，不再重复改写 primary_task。",
+    "竞争焦点必须优先读取 difference_type 路由，品牌白名单必须走字典路由，价格属性必须锚定 engine_node 输出。",
+    "P1 降级词表已外置到 config/keyword_rules.yaml，命中规则需写入 source_evidence；若缺少追溯信息则直接断言失败。"
+  ],
+  "evidence": {
+    "input": {
+      "leaf_category": "宝宝防蚊水",
+      "shop_name": "润本官方旗舰店",
+      "second_level_category": "驱蚊用品",
+      "third_level_category": "宝宝防蚊水",
+      "category_path": "",
+      "brand_name": "润本",
+      "product_name": "【A级驱蚊力】润本驱蚊液防蚊喷雾派卡瑞丁驱蚊水防蚊叮蚊怕花露水",
+      "price": "24.9",
+      "core_selling_point": "派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激",
+      "product_detail_summary": "",
+      "field_provenance": null,
+      "core_selling_point_source": "caller_provided.core_selling_points",
+      "target_people": "婴幼儿/儿童/家庭日常户外人群",
+      "differentiator": "",
+      "bridge_comparison_object": "同类旧方案",
+      "bridge_comparison_object_evidence_type": "jtbd_inferred",
+      "bridge_difference_domain": "functional",
+      "bridge_difference_type": "风险降低",
+      "bridge_source_evidence": [
+        "派卡瑞丁15%/20% A级驱蚊力，防蚊8小时、耐汗保护7h",
+        "7%款驱蚊酯日常居家温和不刺激，第三方检测0刺激、减少刺激",
+        "干扰蚊子嗅觉识别，皮肤表面形成气味屏障，避险闻不到咬不着，更安心",
+        "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
+      ],
+      "bridge_evidence_source": "商品信息",
+      "product_id": "runben_repellent_24p9",
+      "sample_tags": null,
+      "engine_node": {
+        "relative_price_level": "高水位"
+      }
+    },
+    "module1_output": {
+      "leaf_category": "宝宝防蚊水",
+      "shop_name": "润本官方旗舰店",
+      "product_name": "【A级驱蚊力】润本驱蚊液防蚊喷雾派卡瑞丁驱蚊水防蚊叮蚊怕花露水",
+      "price": "24.9",
+      "core_selling_point": "派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激",
+      "core_selling_point_source": "caller_provided.core_selling_points",
+      "target_people": "婴幼儿人群",
+      "differentiator": {
+        "comparison_object": "同类旧方案",
+        "comparison_object_evidence_type": "jtbd_inferred",
+        "difference_domain": "functional",
+        "difference_type": "风险降低",
+        "conclusion": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯",
+        "evidence_chain": [
+          {
+            "evidence_source": "JTBD推断",
+            "evidence_text": "派卡瑞丁15%/20% A级驱蚊力，防蚊8小时、耐汗保护7h"
+          },
+          {
+            "evidence_source": "JTBD推断",
+            "evidence_text": "7%款驱蚊酯日常居家温和不刺激，第三方检测0刺激、减少刺激"
+          },
+          {
+            "evidence_source": "JTBD推断",
+            "evidence_text": "干扰蚊子嗅觉识别，皮肤表面形成气味屏障，避险闻不到咬不着，更安心"
+          },
+          {
+            "evidence_source": "JTBD推断",
+            "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
+          }
+        ],
+        "summary": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
+      },
+      "second_level_category": "驱蚊用品",
+      "third_level_category": "宝宝防蚊水"
+    },
+    "llm_proposal": {
+      "domain": "功能域",
+      "primary_task": "物理安全与风险规避",
+      "reasoning": "规则树前置锁定为物理安全与风险规避。",
+      "reasoning_path": [
+        "Stage A：命中物理安全硬边界。",
+        "物理安全在前置层唯一裁决，后续阶段不再重复改写 primary_task。"
+      ],
+      "candidate_tasks": [
+        "物理安全与风险规避"
+      ],
+      "candidate_reasons": {
+        "物理安全与风险规避": [
+          "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。"
+        ]
+      },
+      "excluded_tasks": {
+        "生存/运转维系": [
+          "已被物理安全强唯一前置裁决覆盖。"
+        ],
+        "缺陷修复/冲突消除": [
+          "已被物理安全强唯一前置裁决覆盖。"
+        ],
+        "降本增效/懒人替代": [
+          "已被物理安全强唯一前置裁决覆盖。"
+        ]
+      },
+      "triggered_rule": "safety_priority_rule",
+      "gate_reasons": [
+        "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。"
+      ],
+      "trace_tokens": [],
+      "evidence_chain": [
+        {
+          "evidence_source": "目标人群",
+          "evidence_text": "婴幼儿人群"
+        },
+        {
+          "evidence_source": "核心卖点",
+          "evidence_text": "派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激"
+        },
+        {
+          "evidence_source": "差异结论",
+          "evidence_text": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "派卡瑞丁15%/20% A级驱蚊力，防蚊8小时、耐汗保护7h"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "7%款驱蚊酯日常居家温和不刺激，第三方检测0刺激、减少刺激"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "干扰蚊子嗅觉识别，皮肤表面形成气味屏障，避险闻不到咬不着，更安心"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
+        }
+      ],
+      "functional_facts": [],
+      "candidate_pool": [
+        {
+          "task_name": "物理安全与风险规避",
+          "supporting_fact_ids": [],
+          "mapping_reason": "Stage A 已基于客观伤害/可预见风险证据完成硬锁定。",
+          "priority": "hard_gate"
+        }
+      ],
+      "subcategory_context": "stage_a_hard_gate",
+      "veto_trace": [],
+      "secondary_benefits": [],
+      "non_selected_task_reasons": []
+    },
+    "gated_proposal": {
+      "domain": "功能域",
+      "primary_task": "物理安全与风险规避",
+      "reasoning": "规则树前置锁定为物理安全与风险规避。",
+      "reasoning_path": [
+        "Stage A：命中物理安全硬边界。",
+        "物理安全在前置层唯一裁决，后续阶段不再重复改写 primary_task。"
+      ],
+      "candidate_tasks": [
+        "物理安全与风险规避"
+      ],
+      "candidate_reasons": {
+        "物理安全与风险规避": [
+          "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。"
+        ]
+      },
+      "excluded_tasks": {
+        "生存/运转维系": [
+          "已被物理安全强唯一前置裁决覆盖。"
+        ],
+        "缺陷修复/冲突消除": [
+          "已被物理安全强唯一前置裁决覆盖。"
+        ],
+        "降本增效/懒人替代": [
+          "已被物理安全强唯一前置裁决覆盖。"
+        ]
+      },
+      "triggered_rule": "safety_priority_rule",
+      "gate_reasons": [
+        "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。"
+      ],
+      "trace_tokens": [],
+      "evidence_chain": [
+        {
+          "evidence_source": "目标人群",
+          "evidence_text": "婴幼儿人群"
+        },
+        {
+          "evidence_source": "核心卖点",
+          "evidence_text": "派卡瑞丁A级驱蚊力，长效防蚊驱虫，温和无刺激"
+        },
+        {
+          "evidence_source": "差异结论",
+          "evidence_text": "该驱蚊水含15%/20%派卡瑞丁有A级驱蚊力，能防蚊8小时、耐汗保护7小时，7%款驱蚊酯日常居家温和不刺激，经第三方检测0刺激、可减少刺激，能干扰蚊子嗅觉识别，在皮肤表面形成气味屏障，且安全可溯"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "派卡瑞丁15%/20% A级驱蚊力，防蚊8小时、耐汗保护7h"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "7%款驱蚊酯日常居家温和不刺激，第三方检测0刺激、减少刺激"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "干扰蚊子嗅觉识别，皮肤表面形成气味屏障，避险闻不到咬不着，更安心"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
+        }
+      ],
+      "functional_facts": [],
+      "candidate_pool": [
+        {
+          "task_name": "物理安全与风险规避",
+          "supporting_fact_ids": [],
+          "mapping_reason": "Stage A 已基于客观伤害/可预见风险证据完成硬锁定。",
+          "priority": "hard_gate"
+        }
+      ],
+      "subcategory_context": "stage_a_hard_gate",
+      "veto_trace": [],
+      "secondary_benefits": [],
+      "non_selected_task_reasons": []
+    },
+    "hard_gate_notes": [
+      "Stage A 物理安全门槛成立：存在客观伤害或可预见风险证据。",
+      "Stage D：仅执行越权/最小证据/审计字段断言，本轮未发生任务改写。"
+    ],
+    "category_intent_matrix": {
+      "ocean": "红海",
+      "competition_focus": "核心",
+      "frequency": "快消",
+      "domain_route_rule": "A_functional_competitor_rule",
+      "matrix_label": "红海-核心×快消",
+      "category_intent": "优先完成存量同类替换，证明在熟悉用法下换它更值。",
+      "competition_focus_reason": "风险降低仍发生在同路径内，只是更安全或更稳妥，因此判定为核心。",
+      "competition_focus_evidence_chain": [
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "派卡瑞丁15%/20% A级驱蚊力，防蚊8小时、耐汗保护7h"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "7%款驱蚊酯日常居家温和不刺激，第三方检测0刺激、减少刺激"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "干扰蚊子嗅觉识别，皮肤表面形成气味屏障，避险闻不到咬不着，更安心"
+        },
+        {
+          "evidence_source": "JTBD推断",
+          "evidence_text": "广告审查号：粤农药广审（视）01260018号；第三方检测报告 2200938-1 / SHG211647 / ET2025-230，安全可溯"
+        }
+      ],
+      "difference_type_route_result": "functional.风险降低->核心",
+      "reasoning": [
+        "Step 1：根据商品文本判定品类状态为 红海。",
+        "Step 2：difference_domain + difference_type=functional.风险降低，进入证据复核。",
+        "证据链仅支持同路径更安全/更稳妥，未支持路径改写，因此判定为核心。",
+        "Step 3：消费频次判定为 快消。"
+      ]
+    },
+    "product_intent_matrix": {
+      "brand_tier": "大牌官方",
+      "trust_barrier": "极低",
+      "financial_risk": "高",
+      "relative_price_level": "高水位",
+      "matrix_label": "大牌官方×高水位",
+      "business_category": "宝宝防蚊水",
+      "median_price_threshold": 13.514187,
+      "price_value": 24.9,
+      "product_intent": "官方信任资产极强，重点转向高价位的价值证明、价格锚定与算账。",
+      "reasoning": [
+        "信任阻力：店铺 命中 brand_whitelist.csv，因此品牌层级判定为 大牌官方。",
+        "财务阻力：类目 宝宝防蚊水 的价格带中位数资产为 13.51，但外层仅用于审计留痕。",
+        "价格属性严格读取 engine_node 输出，当前水位为 高水位，因此财务风险为 高。"
+      ]
+    },
+    "module3_context": {
+      "candidate_set": {
+        "h_list": [
+          {
+            "code": "H1",
+            "label": "H1 痛点/焦虑直击",
+            "hook_tag": "H1",
+            "soft_constraint_contract": null,
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          },
+          {
+            "code": "H5",
+            "label": "H5 反常识与悬念",
+            "hook_tag": "H5",
+            "soft_constraint_contract": {
+              "trigger_cta_tags": [
+                "C1",
+                "C2"
+              ],
+              "required_effect_capabilities_all": [
+                "answer_revealed"
+              ],
+              "unmet_risk_flag": "rhythm_discount"
+            },
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          },
+          {
+            "code": "H6",
+            "label": "H6 场景/人群代入",
+            "hook_tag": "H6",
+            "soft_constraint_contract": {
+              "trigger_cta_tags": [
+                "C1",
+                "C2"
+              ],
+              "required_effect_capabilities_all": [
+                "identity_binding_complete"
+              ],
+              "unmet_risk_flag": "resonance_risk"
+            },
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          },
+          {
+            "code": "H7",
+            "label": "H7 明星/权威同款",
+            "hook_tag": "H7",
+            "soft_constraint_contract": {
+              "trigger_cta_tags": [
+                "C1",
+                "C2"
+              ],
+              "required_effect_capabilities_all": [
+                "identity_binding_complete"
+              ],
+              "unmet_risk_flag": "resonance_risk"
+            },
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          }
+        ],
+        "effect_list": [
+          {
+            "code": "E1",
+            "label": "E1 效果测评",
+            "effect_tag": "E1",
+            "completion_capabilities": [
+              "functional_proof_complete"
+            ],
+            "completion_reason_codes": [
+              "capability_from_e1:functional_proof_complete"
+            ],
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          },
+          {
+            "code": "E6",
+            "label": "E6 成分/参数科普",
+            "effect_tag": "E6",
+            "completion_capabilities": [
+              "functional_proof_complete",
+              "identity_binding_complete"
+            ],
+            "completion_reason_codes": [
+              "capability_from_e6:functional_proof_complete",
+              "capability_from_e6:identity_binding_complete"
+            ],
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          }
+        ],
+        "cta_list": [
+          {
+            "code": "C4",
+            "label": "C4 人群/场景总结",
+            "cta_tag": "C4",
+            "close_strength": "passive_close",
+            "required_effect_capabilities_any": [
+              "functional_proof_complete",
+              "scenario_proof_complete"
+            ],
+            "fallback_priority": [
+              "C3",
+              "C1",
+              "C2"
+            ],
+            "source_role": "primary",
+            "source_requirement_ref": "primary_requirement"
+          }
+        ],
+        "schema_version": "v0.5",
+        "jtbd": "物理安全与风险规避",
+        "persuasion_route": "先把客观风险说清，再证明当前商品如何通过更稳妥的路径降低真实受伤或事故风险。",
+        "r_rule": "R02_存量同类替换",
+        "p_rule": "P02_价值证明",
+        "task_domain": "functional",
+        "rule_version": "JTBD_dict_v1_2026-06-24"
+      }
+    },
+    "product_ec_skeletons": [
+      {
+        "effect_tag": "E1",
+        "cta_tag": "C4",
+        "schema_version": "v0.5",
+        "effect_label": "E1 效果测评",
+        "cta_label": "C4 人群/场景总结",
+        "effect_capabilities_snapshot": [
+          "functional_proof_complete"
+        ],
+        "cta_resolution": {
+          "requested_cta_tag": "C4",
+          "resolved_cta_tag": "C4",
+          "resolution_type": "direct",
+          "reason_codes": []
+        }
+      },
+      {
+        "effect_tag": "E6",
+        "cta_tag": "C4",
+        "schema_version": "v0.5",
+        "effect_label": "E6 成分/参数科普",
+        "cta_label": "C4 人群/场景总结",
+        "effect_capabilities_snapshot": [
+          "functional_proof_complete",
+          "identity_binding_complete"
+        ],
+        "cta_resolution": {
+          "requested_cta_tag": "C4",
+          "resolved_cta_tag": "C4",
+          "resolution_type": "direct",
+          "reason_codes": []
+        }
+      }
+    ],
+    "product_hecs": [
+      {
+        "hook_tag": "H1",
+        "effect_tag": "E1",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v1",
+        "schema_version": "v0.5",
+        "hook_label": "H1 痛点/焦虑直击",
+        "effect_label": "E1 效果测评",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H1",
+        "effect_tag": "E6",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v2",
+        "schema_version": "v0.5",
+        "hook_label": "H1 痛点/焦虑直击",
+        "effect_label": "E6 成分/参数科普",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H5",
+        "effect_tag": "E1",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v3",
+        "schema_version": "v0.5",
+        "hook_label": "H5 反常识与悬念",
+        "effect_label": "E1 效果测评",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H5",
+        "effect_tag": "E6",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v4",
+        "schema_version": "v0.5",
+        "hook_label": "H5 反常识与悬念",
+        "effect_label": "E6 成分/参数科普",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H6",
+        "effect_tag": "E1",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v5",
+        "schema_version": "v0.5",
+        "hook_label": "H6 场景/人群代入",
+        "effect_label": "E1 效果测评",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H6",
+        "effect_tag": "E6",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v6",
+        "schema_version": "v0.5",
+        "hook_label": "H6 场景/人群代入",
+        "effect_label": "E6 成分/参数科普",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H7",
+        "effect_tag": "E1",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v7",
+        "schema_version": "v0.5",
+        "hook_label": "H7 明星/权威同款",
+        "effect_label": "E1 效果测评",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需强测评/打假人设激活",
+          "需特定人群场景共鸣激活"
+        ]
+      },
+      {
+        "hook_tag": "H7",
+        "effect_tag": "E6",
+        "cta_tag": "C4",
+        "variant_id": "runben_repellent_24p9-v8",
+        "schema_version": "v0.5",
+        "hook_label": "H7 明星/权威同款",
+        "effect_label": "E6 成分/参数科普",
+        "cta_label": "C4 人群/场景总结",
+        "activation_tags": [
+          "需特定人群场景共鸣激活"
+        ],
+        "risk_flags": [],
+        "risk_tag": "",
+        "soft_constraint_results": [],
+        "route_tags": [
+          "需特定人群场景共鸣激活"
+        ]
+      }
+    ],
+    "assembly_status": null,
+    "keyword_rule_traces": []
+  },
+  "metadata": {
+    "engine": "ProductDiagnosisEngine",
+    "module": "commerce_video_diagnosis/understanding/engines/product_diagnoser.py",
+    "architecture": "product_diagnosis_v3_jtbd_four_stage",
+    "classifier_mode": "llm_default",
+    "max_retries": 3,
+    "keyword_rule_trace_count": 0,
+    "content_goal": "purchase"
+  },
+  "schema_version": "v2.2",
+  "secondary_benefits": [],
+  "non_selected_task_reasons": [],
+  "persuasion_requirement_profile_summary": {
+    "main_persuasion_route": {
+      "primary_jtbd": {
+        "level1": "功能域",
+        "level2": "物理安全与风险规避"
+      },
+      "category_resistance": {
+        "rule": "红海-核心 × 快消",
+        "summary": "在红海-核心、快消的品类竞争态势下组织购买判断主路径。"
+      },
+      "product_conversion_barrier": {
+        "rule": "极低 × 高水位"
+      }
+    },
+    "profile_version": "v3.1",
+    "content_goal": "purchase",
+    "persuasion_requirements_count": 12
+  }
+}
