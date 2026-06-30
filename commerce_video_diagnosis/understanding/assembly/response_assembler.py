@@ -329,6 +329,11 @@ def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[st
     profile = pd.get("persuasion_requirement_profile") or {}
     pta = pd.get("product_target_audience") or {}
     product_hecs = pd.get("product_hecs") or []
+    assembly_status = pd.get("assembly_status")
+    is_out_of_scope_for_mvp = (
+        isinstance(assembly_status, Mapping)
+        and assembly_status.get("status") == "out_of_scope_for_mvp"
+    )
 
     # --- 1. basic_info（含 audience_hint：原模块 1 target_people 线索；core_selling_points）---
     product_name = _require(pd.get("product_name"), "product_understanding.basic_info.product_name")
@@ -356,18 +361,19 @@ def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[st
     # --- 2. product_fact_vector（F2：独立 6 维事实向量）---
     product_fact_vector = build_product_fact_vector(pd)
 
-    # --- 3. module3（透传第一批引擎产出；profile 为空/缺 persuasion_requirements 必须 Crash Early）---
-    if not isinstance(profile, Mapping) or not profile or not profile.get("persuasion_requirements"):
-        raise ContractAssemblyError(
-            "product_understanding.module3.persuasion_requirement_profile 为空或缺 persuasion_requirements（Crash Early）。"
-        )
-    if not isinstance(pta, Mapping) or not pta:
-        raise ContractAssemblyError(
-            "product_understanding.module3.product_target_audience 为空（Crash Early）。"
-        )
+    # --- 3. module3（透传第一批引擎产出；非 scope-gate 状态下保持 Crash Early）---
+    if not is_out_of_scope_for_mvp:
+        if not isinstance(profile, Mapping) or not profile or not profile.get("persuasion_requirements"):
+            raise ContractAssemblyError(
+                "product_understanding.module3.persuasion_requirement_profile 为空或缺 persuasion_requirements（Crash Early）。"
+            )
+        if not isinstance(pta, Mapping) or not pta:
+            raise ContractAssemblyError(
+                "product_understanding.module3.product_target_audience 为空（Crash Early）。"
+            )
     module3 = {
-        "persuasion_requirement_profile": dict(profile),
-        "product_target_audience": dict(pta),
+        "persuasion_requirement_profile": dict(profile) if isinstance(profile, Mapping) else {},
+        "product_target_audience": dict(pta) if isinstance(pta, Mapping) else {},
     }
 
     # --- 4. candidate_set（沿用 core_intent 来源；F6 补 derived_from 可追溯）---
@@ -379,7 +385,9 @@ def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[st
         "primary_cta": core_intent.get("primary_cta"),
     }
     # F6：derived_from —— requirement_ids 来源 profile（真实 id），audience_groups 来源 primary_audiences
-    reqs = [r for r in (profile.get("persuasion_requirements") or []) if isinstance(r, Mapping)]
+    reqs = []
+    if isinstance(profile, Mapping):
+        reqs = [r for r in (profile.get("persuasion_requirements") or []) if isinstance(r, Mapping)]
     requirement_ids = [
         r.get("requirement_id")
         for r in reqs
@@ -388,39 +396,59 @@ def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[st
     if not requirement_ids:
         # 无 required/high 命中则回退全部真实 requirement_id（仍来源 profile，不另造）
         requirement_ids = [r.get("requirement_id") for r in reqs if r.get("requirement_id")]
-    audience_groups = [
-        a.get("audience_group")
-        for a in (pta.get("primary_audiences") or [])
-        if isinstance(a, Mapping) and a.get("audience_group")
-    ]
-    if not requirement_ids:
-        raise ContractAssemblyError(
-            "candidate_set.derived_from.requirement_ids 为空（profile 已保证非空，Crash Early）。"
-        )
-    if not audience_groups:
-        raise ContractAssemblyError(
-            "candidate_set.derived_from.audience_groups 为空（primary_audiences 已保证非空，Crash Early）。"
-        )
+
+    audience_groups: list[str] = []
+    if isinstance(pta, Mapping):
+        audience_groups = [
+            a.get("audience_group")
+            for a in (pta.get("primary_audiences") or [])
+            if isinstance(a, Mapping) and a.get("audience_group")
+        ]
+
+    if not is_out_of_scope_for_mvp:
+        if not requirement_ids:
+            raise ContractAssemblyError(
+                "candidate_set.derived_from.requirement_ids 为空（profile 已保证非空，Crash Early）。"
+            )
+        if not audience_groups:
+            raise ContractAssemblyError(
+                "candidate_set.derived_from.audience_groups 为空（primary_audiences 已保证非空，Crash Early）。"
+            )
+
     candidate_set["derived_from"] = {
+        "status": "out_of_scope_for_mvp" if is_out_of_scope_for_mvp else "ok",
         "requirement_ids": requirement_ids,
         "audience_groups": audience_groups,
     }
 
     # --- 5. product_hec（F7：每维裸 tag → {code,name,definition} 三元组；definition 必来自字典）---
-    if not product_hecs or not isinstance(product_hecs[0], Mapping):
-        raise ContractAssemblyError("product_understanding.product_hec 无可靠来源（product_hecs 为空）。")
-    product_hec: list[dict[str, Any]] = []
-    for idx, hec in enumerate(product_hecs):
-        if not isinstance(hec, Mapping):
-            raise ContractAssemblyError(f"product_understanding.product_hec[{idx}] 非法（非对象）。")
-        product_hec.append(
+    if is_out_of_scope_for_mvp:
+        # PRD-0：scope gate 命中时允许 Product_HECs 为空；装配层必须返回「状态化空结构」而非 Crash。
+        product_hec = [
             {
-                "variant_id": hec.get("variant_id"),
-                "hook": _build_hec_triple(hec.get("hook_tag"), hec.get("hook_label"), "hook", idx),
-                "effect": _build_hec_triple(hec.get("effect_tag"), hec.get("effect_label"), "effect", idx),
-                "cta": _build_hec_triple(hec.get("cta_tag"), hec.get("cta_label"), "cta", idx),
+                "status": "out_of_scope_for_mvp",
+                "reason": "当前商品命中 MVP 暂不支持的场景，未生成推荐 HEC。",
+                "hook": None,
+                "effect": None,
+                "cta": None,
+                "code_name_definition_ready": False,
             }
-        )
+        ]
+    else:
+        if not product_hecs or not isinstance(product_hecs[0], Mapping):
+            raise ContractAssemblyError("product_understanding.product_hec 无可靠来源（product_hecs 为空）。")
+        product_hec: list[dict[str, Any]] = []
+        for idx, hec in enumerate(product_hecs):
+            if not isinstance(hec, Mapping):
+                raise ContractAssemblyError(f"product_understanding.product_hec[{idx}] 非法（非对象）。")
+            product_hec.append(
+                {
+                    "variant_id": hec.get("variant_id"),
+                    "hook": _build_hec_triple(hec.get("hook_tag"), hec.get("hook_label"), "hook", idx),
+                    "effect": _build_hec_triple(hec.get("effect_tag"), hec.get("effect_label"), "effect", idx),
+                    "cta": _build_hec_triple(hec.get("cta_tag"), hec.get("cta_label"), "cta", idx),
+                }
+            )
 
     # --- 6. evidence（统一 schema；标注 product_fact_vector / product_hec 来源）---
     primary_hec = product_hec[0]
@@ -435,7 +463,11 @@ def build_product_understanding(product_diagnosis: Mapping[str, Any]) -> dict[st
         _evidence(
             "product_understanding",
             "product_hec",
-            f"{primary_hec['hook']['code']}/{primary_hec['effect']['code']}/{primary_hec['cta']['code']}",
+            (
+                "out_of_scope_for_mvp"
+                if is_out_of_scope_for_mvp
+                else f"{primary_hec['hook']['code']}/{primary_hec['effect']['code']}/{primary_hec['cta']['code']}"
+            ),
         ),
     ]
 
