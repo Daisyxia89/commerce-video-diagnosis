@@ -731,6 +731,7 @@ product_diagnoser:
   # 第五批：通用 gift_context 送礼场景识别字典（三类：意图 / 时机 / 对象）。
   # 全部查表，不做 LLM 语义推断；缺该节点时引擎 Crash Early（见 understanding/gift_context.py）。
   # 不是父亲节/爸爸特例：父亲节/爸爸只是 hla 样本证据，框架对任意送礼对象/时机/意图通用生效。
+  # 注意：避免过短关键词（如单字），防止在标题/ASR 中误触发。
   gift_context:
     # 送礼意图（intent）：命中即视为存在送礼信号之一。
     intent_keywords:
@@ -751,6 +752,7 @@ product_diagnoser:
       - 心意
       - 仪式感
     # 送礼时机（scene）：每个 scene 含 keywords；可选 implies_recipient（时机隐含的受礼者）。
+    # scenes 列表顺序即匹配优先级：先出现的 scene 优先命中。
     scenes:
       - scene: 父亲节
         keywords: [父亲节]
@@ -777,6 +779,7 @@ product_diagnoser:
       - scene: 纪念日节日
         keywords: [纪念日, 节日礼物]
     # 送礼对象（recipient）：每个 recipient 含 keywords + 受礼者画像 + 购买决策者 + 关系。
+    # recipients 列表顺序即匹配优先级：先出现的 recipient 优先命中。
     recipients:
       - recipient: 爸爸
         demographic: 中年男性

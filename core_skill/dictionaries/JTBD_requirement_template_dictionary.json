@@ -1,0 +1,96 @@
+{
+  "dictionary_id": "JTBD_requirement_template_dictionary",
+  "version": "v3.1_phase1_4jtbd",
+  "note": "把通用 requirement 按 JTBD 实例化为业务可读表达。一期覆盖 4 个功能型二级标签；不新增通用 requirement_id，requirement_id 必须命中 active 白名单。",
+  "templates": [
+    {
+      "jtbd_level1": "功能任务",
+      "jtbd_level2": "生存/运转维系",
+      "requirements": [
+        {
+          "requirement_id": "prove_core_benefit",
+          "instantiated_requirement_name": "刚需稳定满足",
+          "instantiated_success_criteria": "让用户明确感知商品能稳定满足基础供给、正常运转或持续可用的刚需。",
+          "required": true,
+          "default_priority_override": "high",
+          "default_sequence_rank_override": null
+        },
+        {
+          "requirement_id": "clarify_usage_scenario",
+          "instantiated_requirement_name": "明确日常运转场景",
+          "instantiated_success_criteria": "让用户明确商品适用于自己的日常运转维系场景，并能判断持续使用相关性。",
+          "required": true,
+          "default_priority_override": null,
+          "default_sequence_rank_override": null
+        }
+      ]
+    },
+    {
+      "jtbd_level1": "功能任务",
+      "jtbd_level2": "缺陷修复/冲突消除",
+      "requirements": [
+        {
+          "requirement_id": "expose_current_pain",
+          "instantiated_requirement_name": "暴露已发生的问题",
+          "instantiated_success_criteria": "先让用户感知已经发生且可感知的具体问题或冲突，建立修复需求。",
+          "required": true,
+          "default_priority_override": "high",
+          "default_sequence_rank_override": null
+        },
+        {
+          "requirement_id": "provide_visible_result",
+          "instantiated_requirement_name": "证明修复结果可见",
+          "instantiated_success_criteria": "必须让用户看到明确的修复结果或前后差异，证明问题被真实解决。",
+          "required": true,
+          "default_priority_override": "high",
+          "default_sequence_rank_override": null
+        }
+      ]
+    },
+    {
+      "jtbd_level1": "功能任务",
+      "jtbd_level2": "降本增效/懒人替代",
+      "requirements": [
+        {
+          "requirement_id": "prove_new_solution_efficiency",
+          "instantiated_requirement_name": "证明新方案更省事",
+          "instantiated_success_criteria": "证明新方案相比旧方案更省事、省时或省步骤。",
+          "required": true,
+          "default_priority_override": "high",
+          "default_sequence_rank_override": null
+        },
+        {
+          "requirement_id": "prove_effect_not_degraded",
+          "instantiated_requirement_name": "证明效果不缩水",
+          "instantiated_success_criteria": "证明在更省事或更低成本的同时，核心体验或结果没有明显下降。",
+          "required": true,
+          "default_priority_override": "high",
+          "default_sequence_rank_override": null
+        }
+      ]
+    },
+    {
+      "jtbd_level1": "功能任务",
+      "jtbd_level2": "物理安全与风险规避",
+      "requirements": [
+        {
+          "requirement_id": "resolve_safety_risk",
+          "instantiated_requirement_name": "证明安全风险降低",
+          "instantiated_success_criteria": "证明客观安全风险被实际降低。",
+          "required": true,
+          "default_priority_override": "high",
+          "default_sequence_rank_override": null
+        },
+        {
+          "requirement_id": "provide_authority_endorsement",
+          "instantiated_requirement_name": "权威背书",
+          "instantiated_success_criteria": "当商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据时，提供可验证的安全依据或权威背书。",
+          "required": false,
+          "activation_condition": "商品输入中存在检测、认证、资质、标准、专业机构或其他可追溯权威证据。",
+          "default_priority_override": "medium",
+          "default_sequence_rank_override": null
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "dictionary_id": "category_purchase_criteria_dictionary",
+  "version": "v3.1_phase1_4groups",
+  "note": "维护品类购买判断标准、证据要求、风险点及对应 derived_requirement_id。derived_requirement_id 一期手工维护，必须命中 23 条 active 白名单（A-DICT-7）。criterion_id / evidence_id / risk_id 仅在审核通过后进入线上。",
+  "category_groups": [
+    {
+      "category_group": "食品生鲜",
+      "decision_criteria": [
+        {"criterion_id": "taste_quality", "criterion_name": "口味体验", "default_decision_gap": "proof_gap", "derived_requirement_id": "prove_effect_not_degraded", "default_priority": "high", "evidence_requirements": ["taste_demonstration"], "risk_points": ["taste_gap"], "mapping_note": "当主诉求包含省事、低价、替代旧方案或速食场景时，该映射最准确；否则作为口味体验证明的 active 白名单兜底。"},
+        {"criterion_id": "freshness", "criterion_name": "新鲜度", "default_decision_gap": "proof_gap", "derived_requirement_id": "prove_quality_stability", "default_priority": "high", "evidence_requirements": ["freshness_demonstration"], "risk_points": ["spoilage_risk"]},
+        {"criterion_id": "portion_value", "criterion_name": "分量划算", "default_decision_gap": "value_gap", "derived_requirement_id": "prove_price_reasonableness", "default_priority": "medium", "evidence_requirements": ["portion_demonstration"], "risk_points": ["overpriced_risk"]},
+        {"criterion_id": "food_safety", "criterion_name": "食品安全", "default_decision_gap": "risk_gap", "derived_requirement_id": "resolve_safety_risk", "default_priority": "high", "evidence_requirements": ["safety_certificate"], "risk_points": ["food_safety_risk"]},
+        {"criterion_id": "origin_credibility", "criterion_name": "产地来源可信", "default_decision_gap": "trust_gap", "derived_requirement_id": "prove_source_credibility", "default_priority": "medium", "evidence_requirements": ["origin_proof"], "risk_points": ["origin_doubt_risk"]}
+      ]
+    },
+    {
+      "category_group": "美妆个护",
+      "decision_criteria": [
+        {"criterion_id": "skin_fit", "criterion_name": "肤质适配", "default_decision_gap": "fit_gap", "derived_requirement_id": "prove_user_fit", "default_priority": "high", "evidence_requirements": ["skin_type_guidance"], "risk_points": ["skin_mismatch_risk"]},
+        {"criterion_id": "usage_effect", "criterion_name": "使用效果", "default_decision_gap": "proof_gap", "derived_requirement_id": "provide_visible_result", "default_priority": "high", "evidence_requirements": ["before_after_demonstration"], "risk_points": ["no_effect_risk"]},
+        {"criterion_id": "irritation_risk", "criterion_name": "刺激与安全", "default_decision_gap": "risk_gap", "derived_requirement_id": "resolve_safety_risk", "default_priority": "high", "evidence_requirements": ["irritation_test"], "risk_points": ["irritation_risk"]},
+        {"criterion_id": "ingredient_credibility", "criterion_name": "成分来源可信", "default_decision_gap": "trust_gap", "derived_requirement_id": "prove_source_credibility", "default_priority": "medium", "evidence_requirements": ["ingredient_proof"], "risk_points": ["ingredient_doubt_risk"]},
+        {"criterion_id": "routine_fit", "criterion_name": "护理流程适配", "default_decision_gap": "fit_gap", "derived_requirement_id": "prove_scenario_fit", "default_priority": "medium", "evidence_requirements": ["routine_guidance"], "risk_points": ["routine_conflict_risk"], "mapping_note": "一期因 active 白名单约束，用 prove_scenario_fit 承接；二期若启用 prove_usage_threshold_acceptable，可迁移。"}
+      ]
+    },
+    {
+      "category_group": "服饰鞋包",
+      "decision_criteria": [
+        {"criterion_id": "style_fit", "criterion_name": "风格适配", "default_decision_gap": "fit_gap", "derived_requirement_id": "prove_user_fit", "default_priority": "high", "evidence_requirements": ["style_reference"], "risk_points": ["style_mismatch_risk"]},
+        {"criterion_id": "size_fit", "criterion_name": "尺码适配", "default_decision_gap": "fit_gap", "derived_requirement_id": "prove_spec_fit", "default_priority": "high", "evidence_requirements": ["size_guidance"], "risk_points": ["size_mismatch_risk"]},
+        {"criterion_id": "material_quality", "criterion_name": "材质品质", "default_decision_gap": "proof_gap", "derived_requirement_id": "prove_quality_stability", "default_priority": "medium", "evidence_requirements": ["material_demonstration"], "risk_points": ["material_gap_risk"]},
+        {"criterion_id": "return_policy", "criterion_name": "退换无忧", "default_decision_gap": "risk_gap", "derived_requirement_id": "reduce_trial_risk", "default_priority": "medium", "evidence_requirements": ["return_policy_proof"], "risk_points": ["return_difficulty_risk"]},
+        {"criterion_id": "occasion_fit", "criterion_name": "场合适配", "default_decision_gap": "fit_gap", "derived_requirement_id": "prove_scenario_fit", "default_priority": "medium", "evidence_requirements": ["occasion_reference"], "risk_points": ["occasion_mismatch_risk"]}
+      ]
+    },
+    {
+      "category_group": "居家日用",
+      "decision_criteria": [
+        {"criterion_id": "use_effect", "criterion_name": "使用效果", "default_decision_gap": "proof_gap", "derived_requirement_id": "provide_visible_result", "default_priority": "high", "evidence_requirements": ["effect_demonstration"], "risk_points": ["no_effect_risk"]},
+        {"criterion_id": "durability_value", "criterion_name": "耐用划算", "default_decision_gap": "value_gap", "derived_requirement_id": "prove_price_reasonableness", "default_priority": "medium", "evidence_requirements": ["durability_demonstration"], "risk_points": ["short_lifespan_risk"]},
+        {"criterion_id": "ease_of_use", "criterion_name": "上手易用", "default_decision_gap": "fit_gap", "derived_requirement_id": "prove_new_solution_efficiency", "default_priority": "medium", "evidence_requirements": ["usage_guidance"], "risk_points": ["hard_to_use_risk"]},
+        {"criterion_id": "material_safety", "criterion_name": "材质安全", "default_decision_gap": "risk_gap", "derived_requirement_id": "resolve_safety_risk", "default_priority": "high", "evidence_requirements": ["material_safety_proof"], "risk_points": ["material_safety_risk"]},
+        {"criterion_id": "quality_consistency", "criterion_name": "品质稳定", "default_decision_gap": "proof_gap", "derived_requirement_id": "prove_quality_stability", "default_priority": "medium", "evidence_requirements": ["quality_demonstration"], "risk_points": ["quality_gap_risk"]}
+      ]
+    }
+  ]
+}

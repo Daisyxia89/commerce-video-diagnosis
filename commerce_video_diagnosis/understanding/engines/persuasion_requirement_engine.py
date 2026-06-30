@@ -1,6 +1,6 @@
 """说服要求建模引擎（Persuasion Requirement Modeling Engine）—— V3.1 一期。
 
-独立旁路引擎：由 product_diagnoser.py 在商品诊断完成后调用，产出
+由 ProductDiagnosisEngine.diagnose() 主链路调用，产出
 ``persuasion_requirement_profile``。一期严格遵守 PRD1 边界：
 
 - 线上 requirement 仅允许 23 条 active MVP 白名单（PRD1 §8.2 / §12.1.1）；

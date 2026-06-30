@@ -21,15 +21,24 @@
 
 ## 2. 关键枚举口径
 
-### 2.1 Profile Match
+### 2.1 Profile Match & Audience Match
 
-`profile_match` 用于表达商品目标人群与视频目标人群之间的画像匹配关系。
+`profile_match`：用于判断视频是否覆盖商品侧 `persuasion_requirement_profile` 中 required/high requirements，即"该说的有没有说"。
 
-核心口径：
+枚举值：
 
-- `matched`：视频目标人群与商品目标人群一致，或可被判定为同一核心消费人群。
-- `partially_matched`：视频目标人群与商品目标人群存在交集，但存在范围扩大、场景偏移或细分人群不完全一致。
-- `mismatched`：视频目标人群与商品目标人群明显不一致，核心画像发生偏移。
+- `matched`：视频已覆盖全部 required 且覆盖大部分 high requirements。
+- `partially_matched`：视频覆盖部分 required/high requirements，但存在关键要求缺失。
+- `mismatched`：视频未覆盖 required requirements，核心说服链路缺失。
+- `unknown`：信息不足，无法稳定判断覆盖关系。
+
+`audience_match`：用于判断视频实际吸引的人是否覆盖商品应该优先说服的人。
+
+枚举值：
+
+- `matched`：视频实际吸引的人群与商品目标人群一致。
+- `partially_matched`：视频实际吸引的人群与商品目标人群存在交集，但有偏移。
+- `mismatched`：视频实际吸引的人群与商品目标人群明显不一致。
 - `unknown`：信息不足，无法稳定判断匹配关系。
 
 ### 2.2 Slider Match
@@ -92,7 +101,40 @@ python3 jg_independent_acceptance.py
 
 若未达到 `11/11 Pass`，则本交付包不得判定为通过，需要根据脚本输出定位失败字段并修复后重新打包。
 
-## 5. PRD 文档链接表
+## 5. Pydantic V1 隔离安装说明
+
+本项目的数据模型（`core_skill/schemas/protocols.py` 等）基于 **pydantic v1** 语法
+（`@validator`、`class Config`、`root_validator`）。若全局环境已安装 pydantic v2 且不能降级，
+请使用 `vendor_pydantic1` + `PYTHONPATH` 方式隔离：
+
+```bash
+# 1. 在项目根创建 vendor 目录并安装 pydantic v1
+pip install --target ./vendor_pydantic1 "pydantic>=1.10,<2"
+
+# 2. 运行时将 vendor 目录加到 PYTHONPATH 最前面（优先于全局 pydantic v2）
+export PYTHONPATH="$(pwd)/vendor_pydantic1:$PYTHONPATH"
+
+# 3. 验证版本
+python -c "import pydantic; print(pydantic.VERSION)"  # 应输出 1.10.x
+
+# 4. 正常运行测试
+pytest tests/
+```
+
+> 提示：`vendor_pydantic1/` 已被 `.gitignore` 忽略，不会被意外提交。
+
+## 6. Schema 备注
+
+### `conversion_barriers`
+
+`conversion_barriers` 为 `list[str]` 可读解释层，位于 `product_fact_vector` 内部，
+用于以自然语言描述影响转化的障碍因素（如"价格水位偏高，需强化价值证明"）。
+
+**不是结构化对象**，不替代六维结构化枚举（cognition_attribute / frequency_attribute /
+trust_attribute / price_attribute / endorsement_attribute / channel_risk_attribute），
+仅作补充说明供人工快速理解。
+
+## 7. PRD 文档链接表
 
 <table header-row="true" header-col="false" col-widths="220,780">
     <tr>
